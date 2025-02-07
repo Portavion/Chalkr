@@ -16,6 +16,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import SignInScreen from "../screens/SignInScreen";
 
+import * as SQLite from "expo-sqlite";
+import { drizzle } from "drizzle-orm/expo-sqlite";
+import { usersTable } from "../../db/schema";
+import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
+import migrations from "../..//drizzle/migrations";
+const expo = SQLite.openDatabaseSync("db.db");
+const db = drizzle(expo);
+
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
@@ -25,6 +33,10 @@ export default function Index() {
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
   });
+  const { success, error } = useMigrations(db, migrations);
+  const [items, setItems] = useState<(typeof usersTable.$inferSelect)[] | null>(
+    null,
+  );
 
   const checkLocalUser = async () => {
     try {
@@ -59,6 +71,41 @@ export default function Index() {
     return () => unsubscribe();
   }, []);
 
+  useEffect(() => {
+    if (!success) return;
+
+    (async () => {
+      await db.delete(usersTable);
+
+      await db.insert(usersTable).values([
+        {
+          name: "John",
+          age: 30,
+          email: "john@example.com",
+        },
+      ]);
+
+      const users = await db.select().from(usersTable);
+      setItems(users);
+    })();
+  }, [success]);
+
+  if (!success) {
+    return (
+      <View>
+        <Text>Migration is in progress...</Text>
+      </View>
+    );
+  }
+
+  if (items === null || items.length === 0) {
+    return (
+      <View>
+        <Text>Empty</Text>
+      </View>
+    );
+  }
+
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center">
@@ -70,6 +117,9 @@ export default function Index() {
   return user ? (
     <View>
       <Text> Logged In as {user.email}</Text>
+      {items.map((item) => (
+        <Text key={item.id}>{item.email}</Text>
+      ))}
     </View>
   ) : (
     <SignInScreen promptAsync={promptAsync} />
