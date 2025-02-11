@@ -1,5 +1,4 @@
 import { Text, View, Button, ActivityIndicator } from "react-native";
-import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
 
 import * as Google from "expo-auth-session/providers/google";
@@ -18,9 +17,10 @@ import SignInScreen from "../screens/SignInScreen";
 
 import * as SQLite from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { usersTable } from "../../db/schema";
+import { usersTable, workoutsTable } from "../../db/schema";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../..//drizzle/migrations";
+import { eq } from "drizzle-orm";
 const expo = SQLite.openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -28,15 +28,13 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
+  const [dbUsers, setDbUsers] = useState();
   const [loading, setLoading] = useState<Boolean>(false);
   //TODO: add to .env
   const [request, response, promptAsync] = Google.useAuthRequest({
     iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
   });
   const { success, error } = useMigrations(db, migrations);
-  const [items, setItems] = useState<(typeof usersTable.$inferSelect)[] | null>(
-    null,
-  );
 
   const checkLocalUser = async () => {
     try {
@@ -65,26 +63,45 @@ export default function Index() {
       if (user) {
         setUser(user);
         await AsyncStorage.setItem("@user", JSON.stringify(user));
+        const userDb = await db
+          .select()
+          .from(usersTable)
+          .where(eq(usersTable.email, String(user.email)));
+
+        if (!userDb) {
+          await db.insert(usersTable).values([
+            {
+              email: String(user.email),
+            },
+          ]);
+        }
       } else {
       }
     });
     return () => unsubscribe();
   }, []);
 
+  let workouts;
+
   useEffect(() => {
     if (!success) return;
+    if (!user) return;
 
     (async () => {
-      await db.delete(usersTable);
+      const userDb = await db
+        .select()
+        .from(usersTable)
+        .where(eq(usersTable.email, String(user.email)));
 
-      await db.insert(usersTable).values([
-        {
-          email: "john@example.com",
-        },
-      ]);
+      workouts = await db.select().from(workoutsTable);
 
-      const users = await db.select().from(usersTable);
-      setItems(users);
+      if (userDb.length === 0) {
+        await db.insert(usersTable).values([
+          {
+            email: String(user.email),
+          },
+        ]);
+      }
     })();
   }, [success]);
 
@@ -95,14 +112,7 @@ export default function Index() {
       </View>
     );
   }
-
-  if (items === null || items.length === 0) {
-    return (
-      <View>
-        <Text>Empty</Text>
-      </View>
-    );
-  }
+  console.log(workouts);
 
   if (loading) {
     return (
@@ -111,13 +121,9 @@ export default function Index() {
       </View>
     );
   }
-
   return user ? (
     <View>
       <Text> Logged In as {user.email}</Text>
-      {items.map((item) => (
-        <Text key={item.id}>{item.email}</Text>
-      ))}
     </View>
   ) : (
     <SignInScreen promptAsync={promptAsync} />

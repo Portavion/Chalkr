@@ -9,6 +9,13 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState, useEffect } from "react";
 import { BlurView } from "expo-blur";
 
+import * as SQLite from "expo-sqlite";
+import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
+import { workoutsTable } from "../../db/schema";
+import { openDatabaseSync } from "expo-sqlite";
+const expo = openDatabaseSync("db.db");
+const db = drizzle(expo);
+
 export default function WorkoutScreen() {
   const [grade, setGrade] = useState(0);
   const [selectedStyle, setSelectedStyle] = useState<ClimbingStyle>();
@@ -17,6 +24,7 @@ export default function WorkoutScreen() {
   const [workoutTimer, setWorkoutTimer] = useState(0);
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [workoutId, setWorkoutId] = useState(0);
 
   const handleIncrement = () => {
     setGrade(grade + 1);
@@ -28,9 +36,19 @@ export default function WorkoutScreen() {
     }
   };
 
-  const handleRecord = () => {
+  const handleRecord = async () => {
     if (!isWorkoutStarted) {
       setIsWorkoutStarted(true);
+      try {
+        const newWorkout = await db
+          .insert(workoutsTable)
+          .values([{}])
+          .returning();
+        console.log("new workout");
+        console.log(newWorkout[0]);
+      } catch (error) {
+        alert("Couldn't create workout");
+      }
     }
     if (isClimbing) {
       setShowModal(true);

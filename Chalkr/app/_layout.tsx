@@ -7,7 +7,6 @@ export default function RootLayout() {
     <UserProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="signup" options={{ title: "Signup" }} />
       </Stack>
     </UserProvider>
   );
