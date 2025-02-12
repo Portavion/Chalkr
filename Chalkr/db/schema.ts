@@ -10,10 +10,24 @@ export const workoutsTable = sqliteTable("workouts_table", {
   id: int().primaryKey({ autoIncrement: true }),
   date: text().default(sql`(CURRENT_DATE)`),
   timestamp: text().default(sql`CURRENT_TIMESTAMP`),
-  notes: text(),
   climb_time: int(),
   rest_time: int(),
   warmup_time: int(),
+});
+
+export const workoutAscentTable = sqliteTable("workout_ascent", {
+  id: int().primaryKey({ autoIncrement: true }),
+  workout_id: int().references(() => workoutsTable.id),
+  ascent_id: int().references(() => ascentsTable.id),
+});
+
+export const ascentsTable = sqliteTable("ascents", {
+  id: int().primaryKey({ autoIncrement: true }),
+  boulder_id: int().references(() => boulderProblemsTable.id),
+  ascentTime: int(),
+  grade: int(),
+  isSuccess: int({ mode: "boolean" }),
+  style: text(),
 });
 
 export const boulderProblemsTable = sqliteTable("boulder_problems_table", {

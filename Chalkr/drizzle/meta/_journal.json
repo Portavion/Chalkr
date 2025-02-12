@@ -15,6 +15,20 @@
       "when": 1739288576123,
       "tag": "0001_mature_yellow_claw",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1739375533501,
+      "tag": "0002_overrated_mad_thinker",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1739377007713,
+      "tag": "0003_busy_sabretooth",
+      "breakpoints": true
     }
   ]
 }
