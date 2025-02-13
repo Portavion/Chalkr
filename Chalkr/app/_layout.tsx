@@ -6,7 +6,10 @@ export default function RootLayout() {
   return (
     <UserProvider>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(tabs)"
+          options={{ title: "Home", headerShown: false }}
+        />
         <Stack.Screen
           name="workoutDetails/[id]"
           options={{ title: "Workout Details" }}

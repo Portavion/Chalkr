@@ -1,6 +1,6 @@
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, SafeAreaView, Text } from "react-native";
+import { View, SafeAreaView, Text, TouchableOpacity } from "react-native";
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import {
@@ -10,7 +10,6 @@ import {
 } from "../../db/schema";
 import { openDatabaseSync } from "expo-sqlite";
 import { and, count, eq, inArray, sql } from "drizzle-orm";
-import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -133,6 +132,27 @@ const WorkoutDetailsScreen: React.FC = () => {
     fetchAscentsStats();
   }, [id]);
 
+  const handleDeleteWorkout = async (id: number) => {
+    const deletedWorkout = await db
+      .delete(workoutsTable)
+      .where(eq(workoutsTable.id, id))
+      .returning();
+
+    const deletedAscentsWorkoutMatch = await db
+      .delete(workoutAscentTable)
+      .where(eq(workoutAscentTable.workout_id, deletedWorkout[0].id))
+      .returning();
+
+    for (let ascent of deletedAscentsWorkoutMatch) {
+      if (ascent.ascent_id) {
+        await db
+          .delete(ascentsTable)
+          .where(eq(ascentsTable.id, ascent.ascent_id));
+      }
+    }
+    router.back();
+  };
+
   return (
     <SafeAreaView className="flex flex-col items-center content-center justify-around">
       <Text className="my-5 text-xl font-bold">Workout {workoutId}</Text>
@@ -157,20 +177,20 @@ const WorkoutDetailsScreen: React.FC = () => {
       </View>
       {/* Ascent stats */}
       <View className="flex mb-5 flex-col items-center justify-center">
-        <Text className="text-black ml-4">Total boulders: {ascentCount}</Text>
+        <Text className="text-black ml-4">Total climbs: {ascentCount}</Text>
         {/* Timing stats: avg rest and climbing time, ration climbing for resting */}
         <Text className="text-black ml-4">
-          Successful boulders: {ascentSuccessCount} (
+          Successful climbs: {ascentSuccessCount} (
           {Math.floor((100 * ascentSuccessCount) / ascentCount)}% success rate)
         </Text>
         <Text className="text-black ml-4">
-          Boulders failed: {ascentFailCount}
+          Failed Climbs: {ascentFailCount}
         </Text>
       </View>
       {/* Grade Distribution */}
       <Text className="text-xl font-bold">Grades climbed:</Text>
       {gradeDistribution?.map((grade) => (
-        <View>
+        <View key={String(grade.grade)}>
           <Text className="text-black ml-4">
             V{grade.grade}: {grade.ascentCount} climbs (
             {Math.floor(100 * (grade.successfulAttempts / grade.ascentCount))}%
@@ -181,7 +201,7 @@ const WorkoutDetailsScreen: React.FC = () => {
       {/* Style Distribution */}
       <Text className="mt-5 text-xl font-bold">Styles climbed:</Text>
       {styleDistribution?.map((style) => (
-        <View>
+        <View key={String(style.style)}>
           <Text className="text-black ml-4">
             {style.style}: {style.ascentCount} climbs (
             {Math.floor(100 * (style.successfulAttempts / style.ascentCount))}%
@@ -191,6 +211,19 @@ const WorkoutDetailsScreen: React.FC = () => {
       ))}
       {/* stats */}
       {/* stats */}
+      <View className="mt-32">
+        {/* <Link href="/(tabs)" asChild> */}
+        <TouchableOpacity
+          id={String(workoutId)}
+          onPress={() => {
+            handleDeleteWorkout(workoutId);
+          }}
+          className="flex items-center rounded-md border border-input bg-red-800 px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+        >
+          <Text className="text-white">Delete workout</Text>
+        </TouchableOpacity>
+        {/* </Link> */}
+      </View>
     </SafeAreaView>
   );
 };
