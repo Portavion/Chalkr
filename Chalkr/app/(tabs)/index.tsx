@@ -7,6 +7,7 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
+import { Link } from "expo-router";
 
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
@@ -196,6 +197,19 @@ export default function Index() {
             >
               <Ionicons name="trash-outline" size={16} color={"white"} />
             </TouchableOpacity>
+            <Link href={`/workoutDetails/${workout.id}`} asChild>
+              <TouchableOpacity
+                id={workout.id}
+                //TODO: navigate to details page
+                className="flex items-center w-12 rounded-md border border-input bg-amber-700 px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+              >
+                <Ionicons
+                  name="information-circle-outline"
+                  size={16}
+                  color={"white"}
+                />
+              </TouchableOpacity>
+            </Link>
           </View>
         ))}
     </View>

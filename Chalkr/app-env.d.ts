@@ -8,3 +8,11 @@ type ClimbAttempt = {
   id: number;
   style: ClimbingStyle;
 };
+type ClimbingWorkout = {
+  id: number;
+  date: string;
+  timestamp: string;
+  climb_time: number;
+  rest_time: number;
+  warmup_time: number;
+};

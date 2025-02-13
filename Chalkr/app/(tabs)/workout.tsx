@@ -17,7 +17,7 @@ import {
   workoutsTable,
 } from "../../db/schema";
 import { openDatabaseSync } from "expo-sqlite";
-import { eq } from "drizzle-orm";
+import { eq, inArray, sum } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -100,12 +100,38 @@ export default function WorkoutScreen() {
       alert("finish logging the current climb first");
     } else {
       handleRestTimeLog();
+
+      const workoutAscents = await db
+        .selectDistinct({ id: workoutAscentTable.ascent_id })
+        .from(workoutAscentTable)
+        .where(eq(workoutAscentTable.workout_id, workoutId));
+
+      const workoutAscentIds = workoutAscents
+        .map((ascent) => ascent?.id)
+        .filter((id): id is number => id !== null && id !== undefined);
+
+      const sumClimbTime = await db
+        .select({
+          total: sum(ascentsTable.ascentTime),
+        })
+        .from(ascentsTable)
+        .where(inArray(ascentsTable.id, workoutAscentIds));
+      const sumRestTime = await db
+        .select({
+          total: sum(ascentsTable.restTime),
+        })
+        .from(ascentsTable)
+        .where(inArray(ascentsTable.id, workoutAscentIds));
+
+      const totalClimbTime = sumClimbTime[0]?.total || 0;
+      const totalRestTime = sumRestTime[0]?.total || 0;
+
       await db
         .update(workoutsTable)
         .set({
-          climb_time: workoutTimer,
+          climb_time: Number(totalClimbTime),
           //TODO: sum the total rest time and ascending time
-          rest_time: 0,
+          rest_time: Number(totalRestTime),
         })
         .where(eq(workoutsTable.id, workoutId))
         .returning();
