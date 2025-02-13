@@ -10,8 +10,7 @@ import { useState, useEffect } from "react";
 import { BlurView } from "expo-blur";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
 
-import * as SQLite from "expo-sqlite";
-import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
+import { drizzle } from "drizzle-orm/expo-sqlite";
 import {
   ascentsTable,
   workoutAscentTable,
@@ -34,13 +33,7 @@ export default function WorkoutScreen() {
   const [showModal, setShowModal] = useState(false);
 
   const [workoutId, setWorkoutId] = useState(0);
-  const [lastClimb, setLastClimb] = useState<ClimbAttempt>({
-    ascentTime: 0,
-    isSent: false,
-    grade: 0,
-    id: 0,
-    style: "",
-  });
+  const [lastAscentId, setLastAscentId] = useState<number>(0);
 
   const handleRecord = async () => {
     // starting the workout and initialising the new workout in the db
@@ -59,6 +52,9 @@ export default function WorkoutScreen() {
     // showing the completion modal if finished climbing
     if (isClimbing) {
       setShowModal(true);
+    } else {
+      //we are not climbing so we can update the rest time of previous boulder
+      handleRestTimeLog();
     }
     // switch to rest / climbing mode and resets the rest or climbing timer
     setIsClimbing(!isClimbing);
@@ -68,13 +64,6 @@ export default function WorkoutScreen() {
 
   const handleAscentLog = async (isSuccess: boolean) => {
     setShowModal(false);
-    setLastClimb((previousClimb) => ({
-      ascentTime: lastTimer,
-      isSent: isSuccess,
-      grade: grade,
-      id: 1,
-      style: selectedStyle,
-    }));
 
     const addedAscent = await db
       .insert(ascentsTable)
@@ -87,6 +76,8 @@ export default function WorkoutScreen() {
       })
       .returning();
 
+    setLastAscentId(addedAscent[0].id);
+
     const addedWorkoutAscent = await db
       .insert(workoutAscentTable)
       .values({
@@ -96,14 +87,24 @@ export default function WorkoutScreen() {
       .returning();
   };
 
+  const handleRestTimeLog = async () => {
+    await db
+      .update(ascentsTable)
+      .set({ restTime: sectionTimer })
+      .where(eq(ascentsTable.id, lastAscentId))
+      .returning();
+  };
+
   const handleStopWorkout = async () => {
     if (isClimbing) {
       alert("finish logging the current climb first");
     } else {
-      const updateWorkout = await db
+      handleRestTimeLog();
+      await db
         .update(workoutsTable)
         .set({
           climb_time: workoutTimer,
+          //TODO: sum the total rest time and ascending time
           rest_time: 0,
         })
         .where(eq(workoutsTable.id, workoutId))

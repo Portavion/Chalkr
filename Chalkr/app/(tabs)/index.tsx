@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
@@ -22,7 +23,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import SignInScreen from "../screens/SignInScreen";
 
 import * as SQLite from "expo-sqlite";
-import { drizzle } from "drizzle-orm/expo-sqlite";
+import { drizzle, useLiveQuery } from "drizzle-orm/expo-sqlite";
 import {
   ascentsTable,
   usersTable,
@@ -40,7 +41,7 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
   const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [dbUsers, setDbUsers] = useState();
+  // const [dbUsers, setDbUsers] = useState();
   const [loading, setLoading] = useState<Boolean>(false);
   //TODO: add to .env
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -104,11 +105,8 @@ export default function Index() {
         .from(usersTable)
         .where(eq(usersTable.email, String(user.email)));
 
-      // await db.delete(workoutAscentTable);
-      // await db.delete(ascentsTable);
-
-      const fetchedWorkouts = await db.select().from(workoutsTable);
-      setWorkoutList(fetchedWorkouts);
+      // const fetchedWorkouts = await db.select().from(workoutsTable);
+      // setWorkoutList(fetchedWorkouts);
 
       if (userDb.length === 0) {
         await db.insert(usersTable).values([
@@ -120,20 +118,34 @@ export default function Index() {
     })();
   }, [success]);
 
+  useFocusEffect(
+    React.useCallback(() => {
+      //do something when the screen is focused
+      let isActive = true;
+      const fetchWorkout = async () => {
+        const fetchedWorkouts = await db.select().from(workoutsTable);
+        if (isActive) {
+          setWorkoutList(fetchedWorkouts);
+        }
+      };
+      fetchWorkout();
+      return () => {
+        //do something when the screen is unfocused
+        isActive = false;
+      };
+    }, []),
+  );
+
   const handleDeleteWorkout = async (id: number) => {
     const deletedWorkout = await db
       .delete(workoutsTable)
       .where(eq(workoutsTable.id, id))
       .returning();
-    console.log("delete workouts");
-    console.log(deletedWorkout);
 
     const deletedAscentsWorkoutMatch = await db
       .delete(workoutAscentTable)
       .where(eq(workoutAscentTable.workout_id, deletedWorkout[0].id))
       .returning();
-    console.log("delete workout ascent match");
-    console.log(deletedAscentsWorkoutMatch);
 
     for (let ascent of deletedAscentsWorkoutMatch) {
       if (ascent.ascent_id) {
@@ -145,8 +157,8 @@ export default function Index() {
 
     const fetchedWorkouts = await db.select().from(workoutsTable);
     setWorkoutList(fetchedWorkouts);
-    const workoutAscentMatch = await db.select().from(workoutAscentTable);
-    const ascents = await db.select().from(ascentsTable);
+    await db.select().from(workoutAscentTable);
+    await db.select().from(ascentsTable);
   };
 
   if (!success) {

@@ -25,6 +25,7 @@ export const ascentsTable = sqliteTable("ascents", {
   id: int().primaryKey({ autoIncrement: true }),
   boulder_id: int().references(() => boulderProblemsTable.id),
   ascentTime: int(),
+  restTime: int(),
   grade: int(),
   isSuccess: int({ mode: "boolean" }),
   style: text(),
@@ -37,19 +38,5 @@ export const boulderProblemsTable = sqliteTable("boulder_problems_table", {
   area: text(),
   description: text(),
   photo_url: text(),
-  style: int().references(() => boulderStylesTable.id),
-});
-
-export const workoutProblems = sqliteTable("workout_problems", {
-  id: int().primaryKey({ autoIncrement: true }),
-  workout_id: int().references(() => workoutsTable.id),
-  problem_id: int().references(() => boulderProblemsTable.id),
-  sent: int({ mode: "boolean" }),
-  flash: int({ mode: "boolean" }),
-  attempts: int(),
-});
-
-export const boulderStylesTable = sqliteTable("boulder_styles_table", {
-  id: int().primaryKey({ autoIncrement: true }),
-  name: text().notNull().unique(),
+  style: text(),
 });
