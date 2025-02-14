@@ -154,59 +154,128 @@ const WorkoutDetailsScreen: React.FC = () => {
   };
 
   return (
-    <SafeAreaView className="flex flex-col items-center content-center justify-around">
-      <Text className="my-5 text-xl font-bold">Workout {workoutId}</Text>
+    <SafeAreaView className="flex flex-col content-center justify-around">
+      <Text className="my-2 text-xl font-bold ml-5">Workout {workoutId}</Text>
       {/* Basic stats */}
-      <View className="flex flex-col items-center justify-center">
-        <Text className="text-black ml-4">Date: {workout?.timestamp}</Text>
-        <Text className="text-black ml-4">
-          Session duration: {Math.floor(duration / 360)} hours{" "}
-          {Math.floor((duration % 360) / 60)} min {duration % 60}s
+      <View className="flex flex-col justify-center">
+        <Text className="text-black font-semibold ml-5  pb-4 ">
+          {workout?.timestamp}
         </Text>
-        <Text className="text-black ml-4">
-          Climbing time:
-          {Math.floor(climbingTime / 360)} hours{" "}
-          {Math.floor((climbingTime % 360) / 60)} min {climbingTime % 60}s
-        </Text>
-        <Text className="text-black ml-4">
-          Resting time:
-          {Math.floor(restingTime / 360)} hours{" "}
-          {Math.floor((restingTime % 360) / 60)} min {restingTime % 60}s
-        </Text>
-        <Text className="text-black ml-4"></Text>
+
+        <Text className="text-black font-semibold pb-2 ml-7 ">Timing</Text>
+        <View className="bg-amber-50">
+          <View className="flex flex-row items-center  mb-0.5">
+            <Text className="text-black pl-10 w-60">Climb time</Text>
+            <Text className="text-black w-24">
+              {climbingTime >= 360 && (
+                <>
+                  {Math.floor(climbingTime / 360)
+                    .toString()
+                    .padStart(2, "0")}
+                  :
+                </>
+              )}
+              {Math.floor((climbingTime % 360) / 60)
+                .toString()
+                .padStart(2, "0")}
+              :{(climbingTime % 60).toString().padStart(2, "0")}
+            </Text>
+          </View>
+
+          <View className="flex flex-row items-center mb-0.5">
+            <Text className="text-black pl-10 w-60">Total rest</Text>
+            <Text className="text-black w-24">
+              {restingTime >= 360 && (
+                <>
+                  {Math.floor(restingTime / 360)
+                    .toString()
+                    .padStart(2, "0")}
+                  :
+                </>
+              )}
+              {Math.floor((restingTime % 360) / 60)
+                .toString()
+                .padStart(2, "0")}
+              :{(restingTime % 60).toString().padStart(2, "0")}
+            </Text>
+          </View>
+
+          <View className="flex flex-row mb-0.5">
+            <Text className="text-black pl-10 w-60">Total time</Text>
+            <Text className="text-black w-24">
+              {duration >= 360 && (
+                <>
+                  {Math.floor(duration / 360)
+                    .toString()
+                    .padStart(2, "0")}
+                  :
+                </>
+              )}
+              {Math.floor((duration % 360) / 60)
+                .toString()
+                .padStart(2, "0")}
+              :{(duration % 60).toString().padStart(2, "0")}
+            </Text>
+          </View>
+        </View>
       </View>
       {/* Ascent stats */}
-      <View className="flex mb-5 flex-col items-center justify-center">
-        <Text className="text-black ml-4">Total climbs: {ascentCount}</Text>
-        {/* Timing stats: avg rest and climbing time, ration climbing for resting */}
-        <Text className="text-black ml-4">
-          Successful climbs: {ascentSuccessCount} (
-          {Math.floor((100 * ascentSuccessCount) / ascentCount)}% success rate)
-        </Text>
-        <Text className="text-black ml-4">
-          Failed Climbs: {ascentFailCount}
-        </Text>
+      <Text className="text-black font-semibold pt-4 pb-2 ml-7 ">Climbs</Text>
+      <View className="text-black bg-amber-50">
+        <View className="flex flex-row items-center mb-0.5">
+          <Text className="text-black pl-10 w-60">Total climbs</Text>
+          <Text>{ascentCount}</Text>
+        </View>
+        <View className="flex flex-row items-center mb-0.5">
+          {/* Timing stats: avg rest and climbing time, ration climbing for resting */}
+          <Text className="text-black  pl-10 w-60">Completed climbs</Text>
+          <Text>{ascentSuccessCount}</Text>
+        </View>
+        <View className="flex flex-row items-center mb-0.5">
+          <Text className="text-black  pl-10 w-60">Failed Climbs</Text>
+          <Text>{ascentFailCount}</Text>
+        </View>
+        <View className="flex flex-row items-center mb-0.5">
+          <Text className="text-black  pl-10 w-60">Send Rate</Text>
+          <Text>{Math.floor((100 * ascentSuccessCount) / ascentCount)}%</Text>
+        </View>
       </View>
       {/* Grade Distribution */}
-      <Text className="text-xl font-bold">Grades climbed:</Text>
+      <Text className="text-black font-semibold pt-4 pb-2 ml-7  ">Grades</Text>
       {gradeDistribution?.map((grade) => (
         <View key={String(grade.grade)}>
-          <Text className="text-black ml-4">
-            V{grade.grade}: {grade.ascentCount} climbs (
-            {Math.floor(100 * (grade.successfulAttempts / grade.ascentCount))}%
-            success rate)
-          </Text>
+          <View className="bg-amber-50">
+            <View className="flex flex-row items-center mb-0.5">
+              <Text className="text-black pl-10 w-60">
+                V{grade.grade}: {grade.ascentCount} climbs
+              </Text>
+              <Text>
+                {Math.floor(
+                  100 * (grade.successfulAttempts / grade.ascentCount),
+                )}
+                % success
+              </Text>
+            </View>
+          </View>
         </View>
       ))}
       {/* Style Distribution */}
-      <Text className="mt-5 text-xl font-bold">Styles climbed:</Text>
+      <Text className="text-black font-semibold pt-4 pb-2 ml-7  ">Styles</Text>
       {styleDistribution?.map((style) => (
         <View key={String(style.style)}>
-          <Text className="text-black ml-4">
-            {style.style}: {style.ascentCount} climbs (
-            {Math.floor(100 * (style.successfulAttempts / style.ascentCount))}%
-            success rate) )
-          </Text>
+          <View className="bg-amber-50">
+            <View className="flex flex-row items-center mb-0.5">
+              <Text className="text-black pl-10 w-60">
+                {style.style}: {style.ascentCount} climbs
+              </Text>
+              <Text>
+                {Math.floor(
+                  100 * (style.successfulAttempts / style.ascentCount),
+                )}
+                % success
+              </Text>
+            </View>
+          </View>
         </View>
       ))}
       {/* stats */}
@@ -218,7 +287,7 @@ const WorkoutDetailsScreen: React.FC = () => {
           onPress={() => {
             handleDeleteWorkout(workoutId);
           }}
-          className="flex items-center rounded-md border border-input bg-red-800 px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+          className="flex items-center mx-44 rounded-md border border-input bg-red-800 px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
         >
           <Text className="text-white">Delete workout</Text>
         </TouchableOpacity>

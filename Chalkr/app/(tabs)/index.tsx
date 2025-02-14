@@ -1,4 +1,11 @@
-import { Text, View, ActivityIndicator, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  ActivityIndicator,
+  TouchableOpacity,
+  SafeAreaView,
+} from "react-native";
+import { Avatar, Divider, Icon, ListItem } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
@@ -40,6 +47,16 @@ export default function Index() {
     ClimbingWorkout[] | undefined
   >();
   const { success, error } = useMigrations(db, migrations);
+  const [expandedWorkouts, setExpandedWorkouts] = useState<{
+    [workoutId: number]: boolean;
+  }>({});
+
+  const handlePress = (workoutId: number) => {
+    setExpandedWorkouts({
+      ...expandedWorkouts,
+      [workoutId]: !expandedWorkouts[workoutId],
+    });
+  };
 
   const checkLocalUser = async () => {
     try {
@@ -142,7 +159,7 @@ export default function Index() {
     );
   }
 
-  if (workoutList?.length === 0) {
+  if (user && workoutList?.length === 0) {
     return (
       <View className="flex-1 items-center justify-center">
         <Text>No workouts</Text>
@@ -151,29 +168,93 @@ export default function Index() {
   }
 
   return user ? (
-    <View>
-      {workoutList &&
-        workoutList.map((workout) => (
-          <View
-            key={workout.id}
-            className="flex flex-row justify-around mx-24 items-center"
-          >
-            <Text className="text-center py-3">{workout.timestamp}</Text>
-            <Link href={`/workoutDetails/${workout.id}`} asChild>
-              <TouchableOpacity
-                id={`${workout.id}`}
-                className="flex items-center w-12 rounded-md border border-input bg-amber-700 px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-              >
-                <Ionicons
-                  name="information-circle-outline"
-                  size={16}
-                  color={"white"}
-                />
-              </TouchableOpacity>
-            </Link>
-          </View>
-        ))}
-    </View>
+    <SafeAreaView className="flex-1">
+      <View className="py-5">
+        {workoutList &&
+          workoutList.map((workout) => (
+            // cards
+            <View
+              key={workout.id}
+              className="pb-6 flex flex-row justify-center items-center"
+            >
+              <View className="bg-white rounded-xl p-5 shadow-sm w-2/3 h-auto justify-center items-center">
+                <ListItem.Accordion
+                  content={
+                    <>
+                      <Text className="text-lg">
+                        {" "}
+                        {String(workout.timestamp).split(" ", 1)},{" "}
+                        {String(workout.timestamp).split(" ", 2)[1]}
+                      </Text>
+                    </>
+                  }
+                  isExpanded={expandedWorkouts[workout.id] || false}
+                  icon={
+                    <Icon name={"chevron-down"} type="material-community" />
+                  }
+                  // noIcon={true}
+                  onPress={() => {
+                    handlePress(workout.id);
+                  }}
+                >
+                  {/* rest */}
+                  {/* header */}
+                  <View className=""></View>
+                  {/* content */}
+                  <View>
+                    <Text className="text-lg ">
+                      {Number(workout.climb_time) + Number(workout.rest_time)}
+                    </Text>
+                    <Text className="text-sm font-extralight">Total time </Text>
+                    <View className="flex flex-row my-4 content-between ">
+                      <View className="flex flex-col">
+                        <Divider style={{ width: "90%" }} width={1} />
+                        <Text className="text-lg mr-6">
+                          {Math.floor(Number(workout.climb_time) / 60)
+                            .toString()
+                            .padStart(2, "0")}
+                          :
+                          {Math.floor(Number(workout.climb_time) % 60)
+                            .toString()
+                            .padStart(2, "0")}
+                        </Text>
+                        <Text className="text-sm  mr-6 font-extralight">
+                          Climb time
+                        </Text>
+                      </View>
+                      <View className="flex flex-col">
+                        <Divider style={{ width: "90%" }} width={1} />
+                        <Text className="text-lg mr-6 ">
+                          {Math.floor(Number(workout.rest_time) / 60)
+                            .toString()
+                            .padStart(2, "0")}
+                          :
+                          {Math.floor(Number(workout.rest_time) % 60)
+                            .toString()
+                            .padStart(2, "0")}
+                        </Text>
+                        <Text className="text-sm  mr-6 font-extralight">
+                          Rest time
+                        </Text>
+                      </View>
+                    </View>
+                  </View>
+                  <View className="flex items-center content-center">
+                    <Link href={`/workoutDetails/${workout.id}`} asChild>
+                      <TouchableOpacity
+                        id={`${workout.id}`}
+                        className="flex items-center rounded-md border border-amber-400 bg-amber-200 px-2 py-1 text-xs "
+                      >
+                        <Text className="text-black text-xs">details</Text>
+                      </TouchableOpacity>
+                    </Link>
+                  </View>
+                </ListItem.Accordion>
+              </View>
+            </View>
+          ))}
+      </View>
+    </SafeAreaView>
   ) : (
     <SignInScreen promptAsync={promptAsync} />
   );
