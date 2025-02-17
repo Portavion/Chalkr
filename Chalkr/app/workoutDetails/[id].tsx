@@ -37,7 +37,9 @@ const WorkoutDetailsScreen: React.FC = () => {
     }[]
   >();
 
-  const workoutId = id.length > 0 ? Number(id[0]) : Number(id);
+  console.log(id);
+  const workoutId = id.length > 0 ? Number(id) : Number(id);
+  console.log("details for workout: " + workoutId);
 
   useEffect(() => {
     const fetchWorkout = async () => {

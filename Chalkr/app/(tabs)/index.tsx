@@ -24,7 +24,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import SignInScreen from "../screens/SignInScreen";
 
-import * as SQLite from "expo-sqlite";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { usersTable, workoutsTable } from "../../db/schema";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
@@ -33,6 +32,9 @@ import { eq } from "drizzle-orm";
 import { Ionicons } from "@expo/vector-icons";
 const expo = SQLite.openDatabaseSync("db.db");
 const db = drizzle(expo);
+
+import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
+import * as SQLite from "expo-sqlite";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -56,6 +58,7 @@ export default function Index() {
       ...expandedWorkouts,
       [workoutId]: !expandedWorkouts[workoutId],
     });
+    console.log("extending workout:" + workoutId);
   };
 
   const checkLocalUser = async () => {

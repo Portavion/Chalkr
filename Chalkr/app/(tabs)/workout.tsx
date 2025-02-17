@@ -116,6 +116,7 @@ export default function WorkoutScreen() {
         })
         .from(ascentsTable)
         .where(inArray(ascentsTable.id, workoutAscentIds));
+
       const sumRestTime = await db
         .select({
           total: sum(ascentsTable.restTime),
@@ -147,6 +148,7 @@ export default function WorkoutScreen() {
     if (isWorkoutStarted) {
       const id = setInterval(() => {
         setSectionTimer((c) => c + 1);
+        setWorkoutTimer((c) => c + 1);
       }, 1000);
       return () => {
         if (isWorkoutStarted) {
@@ -154,20 +156,20 @@ export default function WorkoutScreen() {
         }
       };
     }
-  }, [isWorkoutStarted, isClimbing]);
-
-  useEffect(() => {
-    if (isWorkoutStarted) {
-      const idWorkout = setInterval(() => {
-        setWorkoutTimer((c) => c + 1);
-      }, 1000);
-      return () => {
-        if (isWorkoutStarted) {
-          clearInterval(idWorkout);
-        }
-      };
-    }
   }, [isWorkoutStarted]);
+
+  // useEffect(() => {
+  //   if (isWorkoutStarted) {
+  //     const idWorkout = setInterval(() => {
+  //       setWorkoutTimer((c) => c + 1);
+  //     }, 1000);
+  //     return () => {
+  //       if (isWorkoutStarted) {
+  //         clearInterval(idWorkout);
+  //       }
+  //     };
+  //   }
+  // }, [isWorkoutStarted]);
 
   return (
     <View className="flex flex-1 justify-center items-center">
