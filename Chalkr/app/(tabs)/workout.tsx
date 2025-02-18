@@ -4,11 +4,14 @@ import {
   View,
   TouchableOpacity,
   ActionSheetIOS,
+  AppState,
+  AppStateStatus,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { BlurView } from "expo-blur";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
+import { differenceInSeconds } from "date-fns";
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import {
@@ -18,6 +21,7 @@ import {
 } from "../../db/schema";
 import { openDatabaseSync } from "expo-sqlite";
 import { eq, inArray, sum } from "drizzle-orm";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -25,10 +29,14 @@ export default function WorkoutScreen() {
   const [grade, setGrade] = useState(0);
   const [selectedStyle, setSelectedStyle] = useState<ClimbingStyle>("");
   const [isClimbing, setIsClimbing] = useState(false);
+  const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
+
   const [sectionTimer, setSectionTimer] = useState(0);
   const [lastTimer, setLastTimer] = useState(0);
   const [workoutTimer, setWorkoutTimer] = useState(0);
-  const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
+
+  const appState = useRef(AppState.currentState);
+  const [elapsed, setElapsed] = useState(0);
 
   const [showModal, setShowModal] = useState(false);
 
@@ -39,6 +47,7 @@ export default function WorkoutScreen() {
     // starting the workout and initialising the new workout in the db
     if (!isWorkoutStarted) {
       setIsWorkoutStarted(true);
+      recordStartTime();
       try {
         const newWorkout = await db
           .insert(workoutsTable)
@@ -90,7 +99,7 @@ export default function WorkoutScreen() {
   const handleRestTimeLog = async () => {
     await db
       .update(ascentsTable)
-      .set({ restTime: sectionTimer })
+      .set({ restTime: lastTimer })
       .where(eq(ascentsTable.id, lastAscentId))
       .returning();
   };
@@ -144,9 +153,39 @@ export default function WorkoutScreen() {
     }
   };
 
+  const recordStartTime = async () => {
+    try {
+      const now = new Date();
+      await AsyncStorage.setItem("@start_time", now.toISOString());
+    } catch (err) {
+      // TODO: handle errors from setItem properly
+      console.warn(err);
+    }
+  };
+
+  const getElapsedTime = async () => {
+    try {
+      const startTime = await AsyncStorage.getItem("@start_time");
+      const now = new Date();
+      if (startTime) {
+        return differenceInSeconds(now, Date.parse(startTime));
+      } else {
+        return 0;
+      }
+    } catch (err) {
+      // TODO: handle errors from setItem properly
+      console.warn(err);
+    }
+  };
+
   useEffect(() => {
     if (isWorkoutStarted) {
       const id = setInterval(() => {
+        if (elapsed !== 0) {
+          setSectionTimer((c) => c + elapsed);
+          setWorkoutTimer((c) => c + elapsed);
+          setElapsed(0);
+        }
         setSectionTimer((c) => c + 1);
         setWorkoutTimer((c) => c + 1);
       }, 1000);
@@ -158,18 +197,28 @@ export default function WorkoutScreen() {
     }
   }, [isWorkoutStarted]);
 
-  // useEffect(() => {
-  //   if (isWorkoutStarted) {
-  //     const idWorkout = setInterval(() => {
-  //       setWorkoutTimer((c) => c + 1);
-  //     }, 1000);
-  //     return () => {
-  //       if (isWorkoutStarted) {
-  //         clearInterval(idWorkout);
-  //       }
-  //     };
-  //   }
-  // }, [isWorkoutStarted]);
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange,
+    );
+    return () => subscription.remove();
+  }, []);
+
+  const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+    if (
+      appState.current.match(/inactive|background/) &&
+      nextAppState === "active"
+    ) {
+      // We just became active again: recalculate elapsed time based
+      // on what we stored in AsyncStorage when we started.
+      const elapsed = await getElapsedTime(); // Update the elapsed seconds state
+      if (elapsed) {
+        setElapsed(elapsed);
+      }
+    }
+    appState.current = nextAppState;
+  };
 
   return (
     <View className="flex flex-1 justify-center items-center">
