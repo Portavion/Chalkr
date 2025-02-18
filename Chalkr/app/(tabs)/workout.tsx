@@ -22,6 +22,7 @@ import {
 import { openDatabaseSync } from "expo-sqlite";
 import { eq, inArray, sum } from "drizzle-orm";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import AscentStats from "@/components/workoutStats/AscentStats";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -39,6 +40,7 @@ export default function WorkoutScreen() {
   const [elapsed, setElapsed] = useState(0);
 
   const [showModal, setShowModal] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
   const [workoutId, setWorkoutId] = useState(0);
   const [lastAscentId, setLastAscentId] = useState<number>(0);
@@ -73,6 +75,7 @@ export default function WorkoutScreen() {
 
   const handleAscentLog = async (isSuccess: boolean) => {
     setShowModal(false);
+    setRefresh(false);
 
     const addedAscent = await db
       .insert(ascentsTable)
@@ -87,13 +90,14 @@ export default function WorkoutScreen() {
 
     setLastAscentId(addedAscent[0].id);
 
-    const addedWorkoutAscent = await db
+    await db
       .insert(workoutAscentTable)
       .values({
         workout_id: workoutId,
         ascent_id: addedAscent[0].id,
       })
       .returning();
+    setRefresh(true);
   };
 
   const handleRestTimeLog = async () => {
@@ -233,6 +237,8 @@ export default function WorkoutScreen() {
           </TouchableOpacity>
         </View>
       )}
+      {/* Ascent stats */}
+      <AscentStats id={workoutId} refresh={refresh} reset={!isWorkoutStarted} />
       {/* Grade component */}
       <GradeSelector grade={grade} setGrade={setGrade} />
       {/* Climbing Style component */}

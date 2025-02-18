@@ -9,7 +9,8 @@ import {
   workoutsTable,
 } from "../../db/schema";
 import { openDatabaseSync } from "expo-sqlite";
-import { and, count, eq, inArray, sql } from "drizzle-orm";
+import { count, eq, sql } from "drizzle-orm";
+import AscentStats from "@/components/workoutStats/AscentStats";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -19,9 +20,7 @@ const WorkoutDetailsScreen: React.FC = () => {
   const [duration, setDuration] = useState(0);
   const [climbingTime, setClimbingTime] = useState(0);
   const [restingTime, setRestingTime] = useState(0);
-  const [ascentCount, setAscentCount] = useState(0);
-  const [ascentFailCount, setAscentFailCount] = useState(0);
-  const [ascentSuccessCount, setAscentSuccessCount] = useState(0);
+
   const [gradeDistribution, setGradeDistribution] = useState<
     {
       grade: number | null;
@@ -37,9 +36,7 @@ const WorkoutDetailsScreen: React.FC = () => {
     }[]
   >();
 
-  console.log(id);
   const workoutId = id.length > 0 ? Number(id) : Number(id);
-  console.log("details for workout: " + workoutId);
 
   useEffect(() => {
     const fetchWorkout = async () => {
@@ -57,42 +54,6 @@ const WorkoutDetailsScreen: React.FC = () => {
     };
 
     const fetchAscentsStats = async () => {
-      const ascents = await db
-        .selectDistinct({ id: workoutAscentTable.ascent_id })
-        .from(workoutAscentTable)
-        .where(eq(workoutAscentTable.workout_id, workoutId));
-      const ascentsIds = ascents
-        .map((ascent) => ascent?.id)
-        .filter((id) => id !== null);
-
-      const countAscents = await db
-        .select({ total: count(ascentsTable.id) })
-        .from(ascentsTable)
-        .where(inArray(ascentsTable.id, ascentsIds));
-      setAscentCount(countAscents[0]?.total);
-
-      const countSuccessfulAscents = await db
-        .select({ total: count(ascentsTable.id) })
-        .from(ascentsTable)
-        .where(
-          and(
-            inArray(ascentsTable.id, ascentsIds),
-            eq(ascentsTable.isSuccess, true),
-          ),
-        );
-      setAscentSuccessCount(countSuccessfulAscents[0]?.total);
-
-      const countFailedAscent = await db
-        .select({ total: count(ascentsTable.id) })
-        .from(ascentsTable)
-        .where(
-          and(
-            inArray(ascentsTable.id, ascentsIds),
-            eq(ascentsTable.isSuccess, false),
-          ),
-        );
-      setAscentFailCount(countFailedAscent[0]?.total);
-
       const gradeDistributionData = await db
         .select({
           grade: ascentsTable.grade,
@@ -221,27 +182,10 @@ const WorkoutDetailsScreen: React.FC = () => {
           </View>
         </View>
       </View>
+
       {/* Ascent stats */}
-      <Text className="text-black font-semibold pt-4 pb-2 ml-7 ">Climbs</Text>
-      <View className="text-black bg-amber-50">
-        <View className="flex flex-row items-center mb-0.5">
-          <Text className="text-black pl-10 w-60">Total climbs</Text>
-          <Text>{ascentCount}</Text>
-        </View>
-        <View className="flex flex-row items-center mb-0.5">
-          {/* Timing stats: avg rest and climbing time, ration climbing for resting */}
-          <Text className="text-black  pl-10 w-60">Completed climbs</Text>
-          <Text>{ascentSuccessCount}</Text>
-        </View>
-        <View className="flex flex-row items-center mb-0.5">
-          <Text className="text-black  pl-10 w-60">Failed Climbs</Text>
-          <Text>{ascentFailCount}</Text>
-        </View>
-        <View className="flex flex-row items-center mb-0.5">
-          <Text className="text-black  pl-10 w-60">Send Rate</Text>
-          <Text>{Math.floor((100 * ascentSuccessCount) / ascentCount)}%</Text>
-        </View>
-      </View>
+      <AscentStats id={workoutId} />
+
       {/* Grade Distribution */}
       <Text className="text-black font-semibold pt-4 pb-2 ml-7  ">Grades</Text>
       {gradeDistribution?.map((grade) => (
