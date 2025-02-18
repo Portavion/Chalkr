@@ -45,15 +45,15 @@ export default function GradeDistribution({ id }: { id: number }) {
 
   return (
     <>
-      <Text className="text-black font-semibold pt-4 pb-2 ml-7  ">Grades</Text>
+      <Text className="text-black font-bold pt-4 ml-7 text-xl ">Grades</Text>
       {gradeDistribution?.map((grade) => (
         <View key={String(grade.grade)}>
           <View>
             <View className="flex flex-row items-center mb-0.5">
-              <Text className="text-black pl-10 w-60">
+              <Text className="text-black pl-10 w-60 text-lg">
                 V{grade.grade}: {grade.ascentCount} climbs
               </Text>
-              <Text>
+              <Text className="text-black  w-60 text-lg">
                 {Math.floor(
                   100 * (grade.successfulAttempts / grade.ascentCount),
                 )}

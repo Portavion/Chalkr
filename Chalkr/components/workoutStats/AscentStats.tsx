@@ -73,24 +73,26 @@ export default function AscentStats({
 
   return (
     <>
-      <Text className="text-black font-semibold pt-4 pb-2 ml-7 ">Climbs</Text>
+      <Text className="text-black font-bold pt-4 ml-7 text-xl ">Climbs</Text>
       <View className="text-black ">
         <View className="flex flex-row items-center mb-0.5">
-          <Text className="text-black pl-10 w-60">Total climbs</Text>
-          <Text>{ascentCount}</Text>
+          <Text className="text-black pl-10 w-60 text-lg">Total climbs</Text>
+          <Text className="text-black  w-60 text-lg">{ascentCount}</Text>
         </View>
-        <View className="flex flex-row items-center mb-0.5">
+        <View className="flex flex-row items-center mb-0.5 text-lg">
           {/* Timing stats: avg rest and climbing time, ration climbing for resting */}
-          <Text className="text-black  pl-10 w-60">Completed climbs</Text>
-          <Text>{ascentSuccessCount}</Text>
+          <Text className="text-black  pl-10 w-60 text-lg">
+            Completed climbs
+          </Text>
+          <Text className="text-black  w-60 text-lg">{ascentSuccessCount}</Text>
         </View>
         <View className="flex flex-row items-center mb-0.5">
-          <Text className="text-black  pl-10 w-60">Failed Climbs</Text>
-          <Text>{ascentFailCount}</Text>
+          <Text className="text-black  pl-10 w-60 text-lg">Failed Climbs</Text>
+          <Text className="text-black  w-60 text-lg">{ascentFailCount}</Text>
         </View>
         <View className="flex flex-row items-center mb-0.5">
-          <Text className="text-black  pl-10 w-60">Send Rate</Text>
-          <Text>
+          <Text className="text-black  pl-10 w-60 text-lg">Send Rate</Text>
+          <Text className="text-black  w-60 text-lg">
             {ascentCount !== 0
               ? Math.floor((100 * ascentSuccessCount) / ascentCount)
               : 0}

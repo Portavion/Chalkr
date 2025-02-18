@@ -36,15 +36,15 @@ export default function TimingStats({ id }: { id: number }) {
   return (
     <>
       <View className="flex flex-col justify-center">
-        <Text className="text-black font-semibold ml-5  pb-4 ">
+        <Text className="text-black pb-2 ml-5 text-sm ">
           {workout?.timestamp}
         </Text>
 
-        <Text className="text-black font-semibold pb-2 ml-7 ">Timing</Text>
+        <Text className="text-black font-bold pt-4 ml-7 text-xl ">Timing</Text>
         <View>
           <View className="flex flex-row items-center  mb-0.5">
-            <Text className="text-black pl-10 w-60">Climb time</Text>
-            <Text className="text-black w-24">
+            <Text className="text-black pl-10 w-60 text-lg">Climb time</Text>
+            <Text className="text-black w-24 text-lg">
               {climbingTime >= 360 && (
                 <>
                   {Math.floor(climbingTime / 360)
@@ -61,8 +61,8 @@ export default function TimingStats({ id }: { id: number }) {
           </View>
 
           <View className="flex flex-row items-center mb-0.5">
-            <Text className="text-black pl-10 w-60">Total rest</Text>
-            <Text className="text-black w-24">
+            <Text className="text-black pl-10 w-60 text-lg">Total rest</Text>
+            <Text className="text-black w-24 text-lg">
               {restingTime >= 360 && (
                 <>
                   {Math.floor(restingTime / 360)
@@ -78,9 +78,9 @@ export default function TimingStats({ id }: { id: number }) {
             </Text>
           </View>
 
-          <View className="flex flex-row mb-0.5">
-            <Text className="text-black pl-10 w-60">Total time</Text>
-            <Text className="text-black w-24">
+          <View className="flex flex-row mb-0.5 text-lg">
+            <Text className="text-black pl-10 w-60 text-lg">Total time</Text>
+            <Text className="text-black w-24 text-lg">
               {duration >= 360 && (
                 <>
                   {Math.floor(duration / 360)
