@@ -1,15 +1,10 @@
-import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, SafeAreaView, Text, TouchableOpacity } from "react-native";
+import { View, Text } from "react-native";
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import {
-  ascentsTable,
-  workoutAscentTable,
-  workoutsTable,
-} from "../../db/schema";
+import { ascentsTable, workoutAscentTable } from "../../db/schema";
 import { openDatabaseSync } from "expo-sqlite";
-import { and, count, eq, inArray, sql } from "drizzle-orm";
+import { and, count, eq, inArray } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -79,7 +74,7 @@ export default function AscentStats({
   return (
     <>
       <Text className="text-black font-semibold pt-4 pb-2 ml-7 ">Climbs</Text>
-      <View className="text-black bg-amber-50">
+      <View className="text-black ">
         <View className="flex flex-row items-center mb-0.5">
           <Text className="text-black pl-10 w-60">Total climbs</Text>
           <Text>{ascentCount}</Text>

@@ -41,7 +41,7 @@ export default function TimingStats({ id }: { id: number }) {
         </Text>
 
         <Text className="text-black font-semibold pb-2 ml-7 ">Timing</Text>
-        <View className="bg-amber-50">
+        <View>
           <View className="flex flex-row items-center  mb-0.5">
             <Text className="text-black pl-10 w-60">Climb time</Text>
             <Text className="text-black w-24">

@@ -48,7 +48,7 @@ export default function StyleDistribution({ id }: { id: number }) {
       <Text className="text-black font-semibold pt-4 pb-2 ml-7  ">Styles</Text>
       {styleDistribution?.map((style) => (
         <View key={String(style.style)}>
-          <View className="bg-amber-50">
+          <View>
             <View className="flex flex-row items-center mb-0.5">
               <Text className="text-black pl-10 w-60">
                 {style.style}: {style.ascentCount} climbs
