@@ -19,8 +19,8 @@ export default function AscentStats({
   reset = false,
 }: {
   id: number;
-  refresh: boolean;
-  reset: boolean;
+  refresh?: boolean;
+  reset?: boolean;
 }) {
   const [ascentCount, setAscentCount] = useState(0);
   const [ascentFailCount, setAscentFailCount] = useState(0);

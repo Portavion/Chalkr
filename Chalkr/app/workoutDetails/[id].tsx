@@ -11,6 +11,7 @@ import {
 import { openDatabaseSync } from "expo-sqlite";
 import { count, eq, sql } from "drizzle-orm";
 import AscentStats from "@/components/workoutStats/AscentStats";
+import GradeDistribution from "@/components/workoutStats/GradeDistribution";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -21,13 +22,6 @@ const WorkoutDetailsScreen: React.FC = () => {
   const [climbingTime, setClimbingTime] = useState(0);
   const [restingTime, setRestingTime] = useState(0);
 
-  const [gradeDistribution, setGradeDistribution] = useState<
-    {
-      grade: number | null;
-      ascentCount: number;
-      successfulAttempts: number;
-    }[]
-  >();
   const [styleDistribution, setStyleDistribution] = useState<
     {
       style: string | null;
@@ -54,24 +48,6 @@ const WorkoutDetailsScreen: React.FC = () => {
     };
 
     const fetchAscentsStats = async () => {
-      const gradeDistributionData = await db
-        .select({
-          grade: ascentsTable.grade,
-          ascentCount: count(), // Count the number of ascents per grade
-          successfulAttempts: count(
-            sql`CASE WHEN ${ascentsTable.isSuccess} = 1 THEN 1 END`,
-          ),
-        })
-        .from(ascentsTable)
-        .innerJoin(
-          workoutAscentTable,
-          eq(ascentsTable.id, workoutAscentTable.ascent_id),
-        )
-        .where(eq(workoutAscentTable.workout_id, workoutId))
-        .groupBy(ascentsTable.grade);
-
-      setGradeDistribution(gradeDistributionData);
-
       const styleDistributionData = await db
         .select({
           style: ascentsTable.style,
@@ -187,24 +163,8 @@ const WorkoutDetailsScreen: React.FC = () => {
       <AscentStats id={workoutId} />
 
       {/* Grade Distribution */}
-      <Text className="text-black font-semibold pt-4 pb-2 ml-7  ">Grades</Text>
-      {gradeDistribution?.map((grade) => (
-        <View key={String(grade.grade)}>
-          <View className="bg-amber-50">
-            <View className="flex flex-row items-center mb-0.5">
-              <Text className="text-black pl-10 w-60">
-                V{grade.grade}: {grade.ascentCount} climbs
-              </Text>
-              <Text>
-                {Math.floor(
-                  100 * (grade.successfulAttempts / grade.ascentCount),
-                )}
-                % success
-              </Text>
-            </View>
-          </View>
-        </View>
-      ))}
+      <GradeDistribution id={workoutId} />
+
       {/* Style Distribution */}
       <Text className="text-black font-semibold pt-4 pb-2 ml-7  ">Styles</Text>
       {styleDistribution?.map((style) => (
