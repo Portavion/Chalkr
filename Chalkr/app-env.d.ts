@@ -1,6 +1,12 @@
 // @ts-ignore
 /// <reference types="nativewind/types" />
-type ClimbingStyle = "slab" | "dyno" | "traverse" | "overhang" | "cave" | "";
+type ClimbingStyle =
+  | "slab"
+  | "dyno"
+  | "traverse"
+  | "overhang"
+  | "cave"
+  | "other";
 type ClimbAttempt = {
   ascentTime: number;
   isSent: boolean;

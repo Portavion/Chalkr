@@ -11,7 +11,7 @@ export default function GradeSelector({
 }) {
   return (
     <View className="flex flex-row justify-center items-center mb-10">
-      <Text className="mr-8">Grade: </Text>
+      <Text className="mr-8 text-lg">Grade: </Text>
       <TouchableOpacity
         testID="decrement-button"
         onPress={() => {
@@ -22,7 +22,7 @@ export default function GradeSelector({
       >
         <Ionicons name="remove-circle-outline" size={32} className="mr-3" />
       </TouchableOpacity>
-      <Text className="">V{grade}</Text>
+      <Text className=" text-lg">V{grade}</Text>
       <TouchableOpacity
         testID="increment-button"
         onPress={() => setGrade(grade + 1)}
