@@ -58,7 +58,6 @@ export default function Index() {
       ...expandedWorkouts,
       [workoutId]: !expandedWorkouts[workoutId],
     });
-    console.log("extending workout:" + workoutId);
   };
 
   const checkLocalUser = async () => {
