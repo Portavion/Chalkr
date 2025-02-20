@@ -36,6 +36,9 @@ const useWorkoutData = () => {
     isSuccess: boolean,
     style: string,
   ) => {
+    //TODO: check if boulderId exists and if not create a new one
+    //TODO: add a button to select an existing boulder
+    //TODO: make a page or modal to list all boulder problems
     try {
       const addedAscent = await db
         .insert(ascentsTable)

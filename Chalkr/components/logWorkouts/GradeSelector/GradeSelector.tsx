@@ -10,7 +10,7 @@ export default function GradeSelector({
   setGrade: React.Dispatch<React.SetStateAction<number>>;
 }) {
   return (
-    <View className="flex flex-row justify-center items-center mb-10">
+    <View className="flex flex-row justify-center items-center my-2">
       <Text className="mr-8 text-lg">Grade: </Text>
       <TouchableOpacity
         testID="decrement-button"

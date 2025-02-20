@@ -3,7 +3,6 @@ import {
   Text,
   View,
   TouchableOpacity,
-  ActionSheetIOS,
   AppState,
   AppStateStatus,
 } from "react-native";
@@ -17,11 +16,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import AscentStats from "@/components/workoutStats/AscentStats";
 import useWorkoutData from "@/hooks/useWorkoutData";
 
-import { cssInterop } from "nativewind";
-import { Image } from "expo-image";
-cssInterop(Image, { className: "style" });
-import PlaceholderImage from "@/assets/images/boulder.png";
 import * as ImagePicker from "expo-image-picker";
+
+import StopWorkoutButton from "@/components/logWorkouts/StopWorkoutButton";
+import ProblemPicture from "@/components/logWorkouts/ProblemPicture";
+import ClimbingStyleSelector from "@/components/logWorkouts/ClimbingStyleSelector";
+import WorkoutTimer from "@/components/logWorkouts/WorkoutTimer";
+import WorkoutSectionTimer from "@/components/logWorkouts/WorkoutSectionTimer";
+import RecordButton from "@/components/logWorkouts/RecordButton";
+import LoggingModal from "@/components/logWorkouts/LoggingModal";
 
 export default function WorkoutScreen() {
   const [grade, setGrade] = useState(0);
@@ -84,6 +87,7 @@ export default function WorkoutScreen() {
       await updateWorkoutTimer();
 
       setIsWorkoutStarted(false);
+      setBoulderImg(undefined);
       setSectionTimer(0);
       setIsClimbing(false);
       setWorkoutTimer(0);
@@ -178,33 +182,16 @@ export default function WorkoutScreen() {
 
   return (
     <View className="flex flex-auto mt-2 items-center">
-      {/* Stop workout component */}
       {isWorkoutStarted && (
-        <View className="absolute bottom-3">
-          <TouchableOpacity
-            onPress={handleStopWorkout}
-            className="flex h-9 flex-row items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-lg shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-          >
-            <Text>Stop the workout</Text>
-          </TouchableOpacity>
-        </View>
+        <StopWorkoutButton handleStopWorkout={handleStopWorkout} />
       )}
-      {/* photo of boulder */}
-      <View className="flex items-center">
-        <Image
-          source={boulderImg || PlaceholderImage}
-          className="w-[320px] h-[320px]"
-        />
-        <TouchableOpacity
-          onPress={pickImageAsync}
-          className="flex flex-row items-center justify-around w-1/4 rounded-md border border-input bg-transparent px-3 py-2 text-lg shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-        >
-          <Text>Take a photo</Text>
-        </TouchableOpacity>
-      </View>
 
-      {/* Ascent stats */}
-      <View className="">
+      <ProblemPicture
+        boulderPhotoUri={boulderImg}
+        pickPhotoAsync={pickImageAsync}
+      />
+
+      <View className="translate-x-20">
         <AscentStats
           id={workoutId}
           refresh={refresh}
@@ -212,139 +199,35 @@ export default function WorkoutScreen() {
           size={"small"}
         />
       </View>
-      {/* Grade component */}
+
       <GradeSelector grade={grade} setGrade={setGrade} />
-      {/* Climbing Style component */}
-      <View className="flex flex-row justify-center items-center mb-2">
-        <Text className="mr-8 text-lg">Style : </Text>
-        <TouchableOpacity
-          onPress={() => showActionSheet(setSelectedStyle)}
-          className="flex h-9 w-1/4 flex-row items-center justify-between whitespace-nowrap rounded-md border border-input bg-transparent px-3 py-2 text-lg shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
-        >
-          <Text className="text-lg">{selectedStyle}</Text>
-          <Ionicons name="chevron-down-sharp" />
-        </TouchableOpacity>
-      </View>
-      {/*  timer */}
-      <View className="absolute flex-row bottom-40 ">
-        <View className="" style={{ width: 80 }}>
-          <Text className="text-lg">
-            {!isClimbing ? "Resting" : "Climbing"} :{" "}
-          </Text>
-        </View>
-        <View className="w-15 flex-row justify-center">
-          <Text className="text-lg">
-            {Math.floor(sectionTimer / 60)
-              .toString()
-              .padStart(2, "0") +
-              ":" +
-              (sectionTimer % 60).toString().padStart(2, "0")}
-          </Text>
-        </View>
-      </View>
-      {/* Record / stop button */}
-      <View className="absolute bottom-20">
-        <TouchableOpacity onPress={handleRecord}>
-          {!isClimbing ? (
-            <Ionicons name="radio-button-on" size={64} color={"orange"} />
-          ) : (
-            <View>
-              <View>
-                <Ionicons name="radio-button-off" size={64} color={"orange"} />
-              </View>
-              <View className="absolute left-1/4 top-1/4">
-                <Ionicons name="square" size={32} color={"orange"} />
-              </View>
-            </View>
-          )}
-        </TouchableOpacity>
-      </View>
-      {/* workout timer */}
-      <View className="absolute flex-row bottom-14">
-        <View className="" style={{ width: 120 }}>
-          <Text className="text-lg">Total workout:</Text>
-        </View>
-        <View className="w-15 flex-row justify-center">
-          <Text className="text-lg">
-            {Math.floor(workoutTimer / (60 * 60))
-              .toString()
-              .padStart(2, "0") +
-              ":" +
-              Math.floor(workoutTimer / 60)
-                .toString()
-                .padStart(2, "0") +
-              ":" +
-              (workoutTimer % 60).toString().padStart(2, "0")}
-          </Text>
-        </View>
-      </View>
-      {/* Logging modal */}
+
+      <ClimbingStyleSelector
+        selectedStyle={selectedStyle}
+        setSelectedStyle={setSelectedStyle}
+      />
+
+      <WorkoutSectionTimer
+        isClimbing={isClimbing}
+        sectionTimer={sectionTimer}
+      />
+
+      <RecordButton handleRecord={handleRecord} isClimbing={isClimbing} />
+
+      <WorkoutTimer workoutTimer={workoutTimer} />
+
       {showModal && (
-        <Modal animationType="slide" transparent={true} visible={showModal}>
-          <BlurView
-            intensity={20}
-            className="flex-1 justify-center items-center"
-          >
-            <View className="bg-white border rounded-xl">
-              <View className="flex justify-center content-center items-center my-5 mx-5 ">
-                <Text className="mb-5 text-lg">
-                  Was your attempt successful?
-                </Text>
-                <View className="flex flex-row justify-around gap-10 items-center ">
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleAscentLog(true);
-                    }}
-                  >
-                    <Ionicons
-                      name="checkmark-circle-outline"
-                      size={32}
-                      color={"green"}
-                    />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => {
-                      handleAscentLog(false);
-                    }}
-                  >
-                    <Ionicons
-                      name="remove-circle"
-                      size={32}
-                      color={"#DC2626"}
-                    />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </BlurView>
-        </Modal>
+        <LoggingModal
+          boulderPhotoUri={boulderImg}
+          pickPhotoAsync={pickImageAsync}
+          handleAscentLog={handleAscentLog}
+          showModal={showModal}
+          grade={grade}
+          setGrade={setGrade}
+          selectedStyle={selectedStyle}
+          setSelectedStyle={setSelectedStyle}
+        />
       )}
     </View>
   );
 }
-
-const showActionSheet = (
-  setSelectedStyle: React.Dispatch<React.SetStateAction<ClimbingStyle>>,
-) => {
-  ActionSheetIOS.showActionSheetWithOptions(
-    {
-      options: ["Slab", "Dyno", "Overhang", "Traverse", "Cave", "Other"],
-      userInterfaceStyle: "dark",
-    },
-    (buttonIndex) => {
-      if (buttonIndex === 0) {
-        setSelectedStyle("slab");
-      } else if (buttonIndex === 1) {
-        setSelectedStyle("dyno");
-      } else if (buttonIndex === 2) {
-        setSelectedStyle("overhang");
-      } else if (buttonIndex === 3) {
-        setSelectedStyle("traverse");
-      } else if (buttonIndex === 4) {
-        setSelectedStyle("cave");
-      } else {
-        setSelectedStyle("other");
-      }
-    },
-  );
-};
