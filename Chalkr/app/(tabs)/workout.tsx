@@ -6,7 +6,6 @@ import {
   ActionSheetIOS,
   AppState,
   AppStateStatus,
-  Button,
 } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState, useEffect, useRef } from "react";
@@ -14,23 +13,14 @@ import { BlurView } from "expo-blur";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
 import { differenceInSeconds } from "date-fns";
 
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import {
-  ascentsTable,
-  workoutAscentTable,
-  workoutsTable,
-} from "../../db/schema";
-import { openDatabaseSync } from "expo-sqlite";
-import { eq, inArray, sum } from "drizzle-orm";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AscentStats from "@/components/workoutStats/AscentStats";
-const expo = openDatabaseSync("db.db");
-const db = drizzle(expo);
+import useWorkoutData from "@/hooks/useWorkoutData";
 
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 cssInterop(Image, { className: "style" });
-const PlaceholderImage = require("@/assets/images/boulder.png");
+import PlaceholderImage from "@/assets/images/boulder.png";
 import * as ImagePicker from "expo-image-picker";
 
 export default function WorkoutScreen() {
@@ -50,30 +40,27 @@ export default function WorkoutScreen() {
   const [refresh, setRefresh] = useState(false);
   const [boulderImg, setBoulderImg] = useState<undefined | string>();
 
-  const [workoutId, setWorkoutId] = useState(0);
-  const [lastAscentId, setLastAscentId] = useState<number>(0);
+  const {
+    workoutId,
+    createNewWorkout,
+    logAscent,
+    updateAscentRestTime,
+    updateWorkoutTimer,
+  } = useWorkoutData();
 
   const handleRecord = async () => {
     // starting the workout and initialising the new workout in the db
     if (!isWorkoutStarted) {
       setIsWorkoutStarted(true);
       recordStartTime();
-      try {
-        const newWorkout = await db
-          .insert(workoutsTable)
-          .values([{}])
-          .returning();
-        setWorkoutId(newWorkout[0].id);
-      } catch (error) {
-        alert("Couldn't create workout");
-      }
+      await createNewWorkout();
     }
     // showing the completion modal if finished climbing
     if (isClimbing) {
       setShowModal(true);
     } else {
       //we are not climbing so we can update the rest time of previous boulder
-      handleRestTimeLog();
+      updateAscentRestTime(sectionTimer);
     }
     // switch to rest / climbing mode and resets the rest or climbing timer
     setIsClimbing(!isClimbing);
@@ -84,79 +71,17 @@ export default function WorkoutScreen() {
   const handleAscentLog = async (isSuccess: boolean) => {
     setShowModal(false);
     setRefresh(false);
-
-    const addedAscent = await db
-      .insert(ascentsTable)
-      .values({
-        boulder_id: 0,
-        ascentTime: lastTimer,
-        grade: grade,
-        isSuccess: isSuccess,
-        style: selectedStyle,
-      })
-      .returning();
-
-    setLastAscentId(addedAscent[0].id);
-
-    await db
-      .insert(workoutAscentTable)
-      .values({
-        workout_id: workoutId,
-        ascent_id: addedAscent[0].id,
-      })
-      .returning();
+    await logAscent(0, lastTimer, grade, isSuccess, selectedStyle);
     setRefresh(true);
-  };
-
-  const handleRestTimeLog = async () => {
-    await db
-      .update(ascentsTable)
-      .set({ restTime: lastTimer })
-      .where(eq(ascentsTable.id, lastAscentId))
-      .returning();
   };
 
   const handleStopWorkout = async () => {
     if (isClimbing) {
       alert("finish logging the current climb first");
     } else {
-      handleRestTimeLog();
+      await updateAscentRestTime(sectionTimer);
 
-      const workoutAscents = await db
-        .selectDistinct({ id: workoutAscentTable.ascent_id })
-        .from(workoutAscentTable)
-        .where(eq(workoutAscentTable.workout_id, workoutId));
-
-      const workoutAscentIds = workoutAscents
-        .map((ascent) => ascent?.id)
-        .filter((id): id is number => id !== null && id !== undefined);
-
-      const sumClimbTime = await db
-        .select({
-          total: sum(ascentsTable.ascentTime),
-        })
-        .from(ascentsTable)
-        .where(inArray(ascentsTable.id, workoutAscentIds));
-
-      const sumRestTime = await db
-        .select({
-          total: sum(ascentsTable.restTime),
-        })
-        .from(ascentsTable)
-        .where(inArray(ascentsTable.id, workoutAscentIds));
-
-      const totalClimbTime = sumClimbTime[0]?.total || 0;
-      const totalRestTime = sumRestTime[0]?.total || 0;
-
-      await db
-        .update(workoutsTable)
-        .set({
-          climb_time: Number(totalClimbTime),
-          //TODO: sum the total rest time and ascending time
-          rest_time: Number(totalRestTime),
-        })
-        .where(eq(workoutsTable.id, workoutId))
-        .returning();
+      await updateWorkoutTimer();
 
       setIsWorkoutStarted(false);
       setSectionTimer(0);

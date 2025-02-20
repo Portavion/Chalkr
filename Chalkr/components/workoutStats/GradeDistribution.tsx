@@ -18,6 +18,7 @@ export default function GradeDistribution({ id }: { id: number }) {
   >();
 
   const workoutId = id;
+  //TODO: change to useWorkoutData hook
 
   useEffect(() => {
     const fetchAscentsStats = async () => {

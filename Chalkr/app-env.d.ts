@@ -1,5 +1,7 @@
 // @ts-ignore
 /// <reference types="nativewind/types" />
+declare module "*.png";
+
 type ClimbingStyle =
   | "slab"
   | "dyno"

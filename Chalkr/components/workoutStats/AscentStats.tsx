@@ -8,6 +8,7 @@ import { and, count, eq, inArray } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
+//TODO: change to useWorkoutData hook
 export default function AscentStats({
   id,
   refresh = false,

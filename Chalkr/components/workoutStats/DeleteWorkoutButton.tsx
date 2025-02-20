@@ -14,6 +14,7 @@ import { eq } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 export default function workoutStats({ id }: { id: number }) {
+  //TODO: change to useWorkoutData hook
   const workoutId = id;
   const handleDeleteWorkout = async (id: number) => {
     const deletedWorkout = await db

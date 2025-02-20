@@ -129,6 +129,7 @@ export default function Index() {
     React.useCallback(() => {
       //do something when the screen is focused
       let isActive = true;
+      //TODO: add fetchWorkout hook to useWorkoutData
       const fetchWorkout = async () => {
         const fetchedWorkouts = (await db
           .select()

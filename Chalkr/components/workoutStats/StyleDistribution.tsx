@@ -19,6 +19,7 @@ export default function StyleDistribution({ id }: { id: number }) {
 
   const workoutId = id;
 
+  //TODO: change to useWorkoutData hook
   useEffect(() => {
     const fetchAscentsStats = async () => {
       const styleDistributionData = await db

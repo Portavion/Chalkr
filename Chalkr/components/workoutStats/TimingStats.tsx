@@ -15,6 +15,7 @@ export default function TimingStats({ id }: { id: number }) {
   const [restingTime, setRestingTime] = useState(0);
 
   const workoutId = id;
+  //TODO: change to useWorkoutData hook
 
   useEffect(() => {
     const fetchWorkout = async () => {
