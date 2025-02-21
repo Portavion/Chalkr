@@ -167,12 +167,20 @@ const useWorkoutData = () => {
       .where(eq(workoutsTable.id, workoutId));
   };
 
+  const resetDb = async () => {
+    await db.delete(workoutAscentTable);
+    await db.delete(ascentsTable);
+    await db.delete(boulderProblemsTable);
+    await db.delete(workoutsTable);
+  };
+
   return {
     workoutId,
     createNewWorkout,
     logAscent,
     updateAscentRestTime,
     updateWorkoutTimer,
+    resetDb,
   };
 };
 export default useWorkoutData;

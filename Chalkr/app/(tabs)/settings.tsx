@@ -3,16 +3,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUser } from "../context/UserContext";
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import useWorkoutData from "@/hooks/useWorkoutData";
 
 export default function AboutScreen() {
   const { user, loading } = useUser();
+
+  const { resetDb } = useWorkoutData();
 
   if (!user) {
     return <Text>Error, you need to be logged. </Text>;
   }
   return (
     <View className="flex flex-1 bg-slate-800 justify-center items-center">
-      <Text className="text-white">Setting screen</Text>
+      <Text className="text-white text-3xl">Settings screen</Text>
       <Button
         title="Sign Out"
         onPress={async () => {
@@ -20,6 +23,7 @@ export default function AboutScreen() {
           await signOut(FIREBASE_AUTH);
         }}
       />
+      <Button title="Reset DB" onPress={resetDb} />
     </View>
   );
 }
