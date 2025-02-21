@@ -41,7 +41,7 @@ const useWorkoutData = () => {
     name: string = "",
     area: string = "",
     description: string = "",
-    photoUri: string = "",
+    photoUri: null | string = null,
     isNew: boolean = false,
   ) => {
     if (isNew || !id) {
@@ -88,13 +88,20 @@ const useWorkoutData = () => {
     grade: number,
     isSuccess: boolean,
     style: string,
-    photoUri: string | undefined,
+    photoUri: string | null = null,
   ) => {
-    //TODO: check if boulderId exists and if not create a new one
     //TODO: add a button to select an existing boulder
     //TODO: make a page or modal to list all boulder problems
     // const existingProblem = await retrieveProblem(boulderId);
-    const problem = await logProblem(boulderId, grade, style, photoUri);
+    const problem = await logProblem(
+      boulderId,
+      grade,
+      style,
+      "",
+      "",
+      "",
+      photoUri,
+    );
     if (!problem) {
       console.log("error processing problem");
       return;
@@ -174,6 +181,16 @@ const useWorkoutData = () => {
     await db.delete(workoutsTable);
   };
 
+  const fetchProblems = async () => {
+    try {
+      const problem = await db.select().from(boulderProblemsTable);
+      return problem;
+    } catch (error) {
+      console.log("error fetching problems: " + error);
+    }
+    return;
+  };
+
   return {
     workoutId,
     createNewWorkout,
@@ -181,6 +198,7 @@ const useWorkoutData = () => {
     updateAscentRestTime,
     updateWorkoutTimer,
     resetDb,
+    fetchProblems,
   };
 };
 export default useWorkoutData;

@@ -17,7 +17,7 @@ export default function ClimbingStyleSelector({
       <Text className="mr-8 text-lg">Style : </Text>
       <TouchableOpacity
         onPress={() => showActionSheet(setSelectedStyle)}
-        className="flex h-10 w-1/4 flex-row items-center justify-between whitespace-nowrap rounded-md border border-input bg-slate-50 px-3 py-2 text-lg shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
+        className="flex h-fit w-fit flex-row items-center justify-between whitespace-nowrap rounded-md border border-input bg-slate-50 px-3 py-2 text-lg shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
       >
         <Text className="text-lg text-center">{selectedStyle}</Text>
         <Ionicons name="chevron-down-sharp" />

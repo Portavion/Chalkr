@@ -41,7 +41,7 @@ export default function WorkoutScreen() {
 
   const [showModal, setShowModal] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [boulderImg, setBoulderImg] = useState<undefined | string>();
+  const [boulderImg, setBoulderImg] = useState<null | string>(null);
   const [boulderId, setBoulderId] = useState<number | undefined>();
 
   const {
@@ -101,7 +101,7 @@ export default function WorkoutScreen() {
       await updateWorkoutTimer();
 
       setIsWorkoutStarted(false);
-      setBoulderImg(undefined);
+      setBoulderImg(null);
       setSectionTimer(0);
       setIsClimbing(false);
       setWorkoutTimer(0);
@@ -188,7 +188,7 @@ export default function WorkoutScreen() {
       result = await ImagePicker.launchCameraAsync({});
     } catch (error) {}
 
-    if (!result?.canceled) {
+    if (!result?.canceled && result) {
       setBoulderImg(result?.assets[0].uri);
     } else {
       alert("You did not select any image.");
@@ -204,6 +204,8 @@ export default function WorkoutScreen() {
       <ProblemPicture
         boulderPhotoUri={boulderImg}
         pickPhotoAsync={pickImageAsync}
+        setBoulderId={setBoulderId}
+        setBoulderImg={setBoulderImg}
       />
 
       <View className="translate-x-20">
@@ -241,6 +243,8 @@ export default function WorkoutScreen() {
           setGrade={setGrade}
           selectedStyle={selectedStyle}
           setSelectedStyle={setSelectedStyle}
+          setBoulderId={setBoulderId}
+          setBoulderImg={setBoulderImg}
         />
       )}
     </View>

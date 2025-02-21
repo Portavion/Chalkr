@@ -24,3 +24,12 @@ type ClimbingWorkout = {
   rest_time: number;
   warmup_time: number;
 };
+type Problem = {
+  id: number;
+  name: string | null;
+  grade: number | null;
+  area: string | null;
+  description: string | null;
+  photo_url: string | null;
+  style: string | null;
+};

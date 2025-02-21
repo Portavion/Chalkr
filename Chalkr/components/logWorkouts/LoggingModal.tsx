@@ -14,15 +14,19 @@ export default function LoggingModal({
   setGrade,
   selectedStyle,
   setSelectedStyle,
+  setBoulderId,
+  setBoulderImg,
 }: {
   handleAscentLog: (isSuccess: boolean) => void;
   showModal: boolean;
-  boulderPhotoUri: string | undefined;
+  boulderPhotoUri: string | null;
   pickPhotoAsync: () => void;
   grade: number;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
   selectedStyle: ClimbingStyle;
   setSelectedStyle: React.Dispatch<React.SetStateAction<ClimbingStyle>>;
+  setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
 }) {
   return (
     <>
@@ -32,6 +36,8 @@ export default function LoggingModal({
             <ProblemPicture
               boulderPhotoUri={boulderPhotoUri}
               pickPhotoAsync={pickPhotoAsync}
+              setBoulderId={setBoulderId}
+              setBoulderImg={setBoulderImg}
             />
 
             <GradeSelector grade={grade} setGrade={setGrade} />

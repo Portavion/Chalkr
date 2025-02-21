@@ -4,6 +4,7 @@ import {
   ActivityIndicator,
   TouchableOpacity,
   SafeAreaView,
+  ScrollView,
 } from "react-native";
 import { Avatar, Divider, Icon, ListItem } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
@@ -172,7 +173,7 @@ export default function Index() {
 
   return user ? (
     <SafeAreaView className="flex-1">
-      <View className="py-5">
+      <ScrollView className="py-5">
         {workoutList &&
           workoutList.map((workout) => (
             // cards
@@ -256,7 +257,7 @@ export default function Index() {
               </View>
             </View>
           ))}
-      </View>
+      </ScrollView>
     </SafeAreaView>
   ) : (
     <SignInScreen promptAsync={promptAsync} />
