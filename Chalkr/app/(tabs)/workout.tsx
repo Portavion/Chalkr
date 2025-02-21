@@ -42,6 +42,7 @@ export default function WorkoutScreen() {
   const [showModal, setShowModal] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [boulderImg, setBoulderImg] = useState<undefined | string>();
+  const [boulderId, setBoulderId] = useState<number | undefined>();
 
   const {
     workoutId,
@@ -74,7 +75,20 @@ export default function WorkoutScreen() {
   const handleAscentLog = async (isSuccess: boolean) => {
     setShowModal(false);
     setRefresh(false);
-    await logAscent(0, lastTimer, grade, isSuccess, selectedStyle);
+    const problem = await logAscent(
+      boulderId || 0,
+      lastTimer,
+      grade,
+      isSuccess,
+      selectedStyle,
+      boulderImg,
+    );
+    if (!problem) {
+      setBoulderId(0);
+    } else {
+      setBoulderId(problem.id);
+    }
+    // setBoulderId(problem.id ? problem.id : 0);
     setRefresh(true);
   };
 
@@ -163,6 +177,7 @@ export default function WorkoutScreen() {
 
   const pickImageAsync = async () => {
     let result;
+    setBoulderId(0);
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
     if (status !== "granted") {

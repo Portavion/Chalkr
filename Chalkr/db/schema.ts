@@ -26,9 +26,7 @@ export const ascentsTable = sqliteTable("ascents", {
   boulder_id: int().references(() => boulderProblemsTable.id),
   ascentTime: int(),
   restTime: int(),
-  grade: int(),
   isSuccess: int({ mode: "boolean" }),
-  style: text(),
 });
 
 export const boulderProblemsTable = sqliteTable("boulder_problems_table", {

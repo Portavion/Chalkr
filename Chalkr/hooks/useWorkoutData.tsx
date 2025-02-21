@@ -1,7 +1,12 @@
 import { useState } from "react";
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { ascentsTable, workoutAscentTable, workoutsTable } from "@/db/schema";
+import {
+  ascentsTable,
+  boulderProblemsTable,
+  workoutAscentTable,
+  workoutsTable,
+} from "@/db/schema";
 import { openDatabaseSync } from "expo-sqlite";
 import { eq, inArray, sum } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
@@ -29,25 +34,78 @@ const useWorkoutData = () => {
     }
   };
 
+  const logProblem = async (
+    id: number | undefined,
+    grade: number,
+    style: string,
+    name: string = "",
+    area: string = "",
+    description: string = "",
+    photoUri: string = "",
+    isNew: boolean = false,
+  ) => {
+    if (isNew || !id) {
+      try {
+        const newProblem = await db
+          .insert(boulderProblemsTable)
+          .values({
+            name: name,
+            grade: grade,
+            area: area,
+            description: description,
+            photo_url: photoUri,
+            style: style,
+          })
+          .returning();
+        return newProblem[0];
+      } catch (error) {
+        console.log("error logging new boulder: " + error);
+      }
+    } else {
+      try {
+        const updatedProblem = await db
+          .update(boulderProblemsTable)
+          .set({
+            name: name,
+            grade: grade,
+            area: area,
+            description: description,
+            photo_url: photoUri,
+            style: style,
+          })
+          .where(eq(boulderProblemsTable.id, id))
+          .returning();
+        return updatedProblem[0];
+      } catch (error) {
+        console.log("error updating problem: " + error);
+      }
+    }
+  };
+
   const logAscent = async (
     boulderId: number,
     timer: number,
     grade: number,
     isSuccess: boolean,
     style: string,
+    photoUri: string | undefined,
   ) => {
     //TODO: check if boulderId exists and if not create a new one
     //TODO: add a button to select an existing boulder
     //TODO: make a page or modal to list all boulder problems
+    // const existingProblem = await retrieveProblem(boulderId);
+    const problem = await logProblem(boulderId, grade, style, photoUri);
+    if (!problem) {
+      console.log("error processing problem");
+      return;
+    }
     try {
       const addedAscent = await db
         .insert(ascentsTable)
         .values({
-          boulder_id: boulderId,
+          boulder_id: problem.id,
           ascentTime: timer,
-          grade: grade,
           isSuccess: isSuccess,
-          style: style,
         })
         .returning();
 
@@ -56,9 +114,11 @@ const useWorkoutData = () => {
         ascent_id: addedAscent[0].id,
       });
       setLastAscentId(addedAscent[0].id);
+      return problem;
     } catch (error) {
       alert("Error logging ascent");
       console.log(error);
+      return undefined;
     }
   };
 
