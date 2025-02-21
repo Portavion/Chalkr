@@ -38,3 +38,6 @@ ios/
 *.tsbuildinfo
 
 app-example
+
+# aliases
+Alias/
