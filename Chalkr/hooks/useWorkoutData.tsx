@@ -90,9 +90,6 @@ const useWorkoutData = () => {
     style: string,
     photoUri: string | null = null,
   ) => {
-    //TODO: add a button to select an existing boulder
-    //TODO: make a page or modal to list all boulder problems
-    // const existingProblem = await retrieveProblem(boulderId);
     const problem = await logProblem(
       boulderId,
       grade,
@@ -168,7 +165,6 @@ const useWorkoutData = () => {
       .update(workoutsTable)
       .set({
         climb_time: Number(totalClimbTime),
-        //TODO: sum the total rest time and ascending time
         rest_time: Number(totalRestTime),
       })
       .where(eq(workoutsTable.id, workoutId));
