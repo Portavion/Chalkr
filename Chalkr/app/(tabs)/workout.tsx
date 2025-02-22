@@ -106,7 +106,7 @@ export default function WorkoutScreen() {
 
       setIsWorkoutStarted(false);
       setBoulderImg(null);
-      setSectionTimer(0);
+      setSectionTimer(undefined);
       setIsClimbing(false);
       setWorkoutTimer(0);
     }
