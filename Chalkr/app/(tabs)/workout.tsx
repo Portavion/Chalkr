@@ -1,14 +1,5 @@
-import {
-  Modal,
-  Text,
-  View,
-  TouchableOpacity,
-  AppState,
-  AppStateStatus,
-} from "react-native";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import { View, AppState, AppStateStatus } from "react-native";
 import { useState, useEffect, useRef } from "react";
-import { BlurView } from "expo-blur";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
 import { differenceInSeconds, formatISO9075 } from "date-fns";
 
@@ -39,8 +30,6 @@ export default function WorkoutScreen() {
   const [workoutTimer, setWorkoutTimer] = useState(0);
 
   const appState = useRef(AppState.currentState);
-
-  // let backgroundTime = 0;
 
   const [showModal, setShowModal] = useState(false);
   const [refresh, setRefresh] = useState(false);

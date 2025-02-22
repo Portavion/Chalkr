@@ -16,6 +16,7 @@ export default function ProblemPicture({
   setStyle,
   setGrade,
   grade,
+  canCreate = true,
 }: {
   boulderPhotoUri: string | null;
   pickPhotoAsync: () => void;
@@ -24,6 +25,7 @@ export default function ProblemPicture({
   setStyle: React.Dispatch<React.SetStateAction<string>>;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
   grade: number;
+  canCreate?: boolean;
 }) {
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const [gradeColour, setGradeColour] = useState("red");
@@ -38,24 +40,37 @@ export default function ProblemPicture({
         <Image
           source={boulderPhotoUri || PlaceholderImage}
           style={{ borderRadius: 16, borderWidth: 5, borderColor: gradeColour }}
-          className="w-[200px] h-[300px] rounded-xl"
+          className="w-[250px] h-[400px] rounded-xl"
           contentFit="cover"
         />
         <View className="flex flex-row items-center gap-5">
-          <TouchableOpacity
-            onPress={() => {
-              setShowSelectionModal(true);
-            }}
-            className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
-          >
-            <Text className="">Select problem</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={pickPhotoAsync}
-            className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
-          >
-            <Text className="">New problem</Text>
-          </TouchableOpacity>
+          {canCreate && (
+            <>
+              <TouchableOpacity
+                onPress={() => {
+                  setShowSelectionModal(true);
+                }}
+                className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
+              >
+                <Text className="">Select problem</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                onPress={pickPhotoAsync}
+                className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
+              >
+                <Text className="">New problem</Text>
+              </TouchableOpacity>
+            </>
+          )}
+          {!canCreate && (
+            <TouchableOpacity
+              onPress={pickPhotoAsync}
+              className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
+            >
+              <Text className="">New photo</Text>
+            </TouchableOpacity>
+          )}
         </View>
         {showSelectionModal && (
           <BoulderSelectionModal

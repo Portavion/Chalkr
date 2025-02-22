@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, ScrollView } from "react-native";
+import { Text, View, TouchableOpacity, ScrollView, Modal } from "react-native";
 import { useState, useEffect } from "react";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
 import useWorkoutData from "@/hooks/useWorkoutData";
@@ -10,6 +10,8 @@ import React from "react";
 import { GradeColour } from "@/constants/Colors";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
+import LoggingModal from "@/components/logWorkouts/LoggingModal";
+import { BlurView } from "expo-blur";
 cssInterop(Image, { className: "style" });
 
 export default function problems() {
@@ -20,12 +22,15 @@ export default function problems() {
   const [boulderImg, setBoulderImg] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [problems, setProblems] = useState<Problem[]>();
-  const { fetchProblems } = useWorkoutData();
+  const [showModal, setShowModal] = useState(false);
   const [height, setHeight] = useState<number>(750);
+  const [refresh, setRefresh] = useState(0);
+
+  const { fetchProblems, logProblem } = useWorkoutData();
 
   const pickImageAsync = async () => {
     let result;
-    setBoulderId(0);
+    // setBoulderId(0);
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
     if (status !== "granted") {
@@ -61,7 +66,7 @@ export default function problems() {
       }
     };
     loadProblems();
-  }, []);
+  }, [refresh]);
 
   const problemPicture = problems?.map((problem) => {
     return (
@@ -72,7 +77,7 @@ export default function problems() {
             setBoulderImg(problem.photo_url);
             setGrade(problem.grade || 0);
             setStyle(problem.style || "other");
-            setShowSelectionModal(false);
+            setShowModal(true);
           }}
         >
           <Image
@@ -98,28 +103,80 @@ export default function problems() {
 
   return (
     <View className="flex flex-auto pt-2 items-center bg-stone-300">
-      {/**/}
-      {/* <ProblemPicture */}
-      {/*   boulderPhotoUri={boulderImg} */}
-      {/*   pickPhotoAsync={pickImageAsync} */}
-      {/*   setBoulderId={setBoulderId} */}
-      {/*   setBoulderImg={setBoulderImg} */}
-      {/*   setGrade={setGrade} */}
-      {/*   setStyle={setStyle} */}
-      {/*   grade={grade} */}
-      {/* /> */}
-      {/**/}
-      {/* <GradeSelector grade={grade} setGrade={setGrade} /> */}
-      {/**/}
-      {/* <ClimbingStyleSelector */}
-      {/*   selectedStyle={style} */}
-      {/*   setSelectedStyle={setStyle} */}
-      {/* /> */}
       <ScrollView className="flex-1">
         <View className="flex flex-row flex-wrap mb-4 gap-4 mx-4 justify-center ">
           {problems && problemPicture}
         </View>
       </ScrollView>
+      {showModal && (
+        <>
+          <Modal animationType="slide" transparent={true} visible={showModal}>
+            <BlurView
+              intensity={20}
+              className="flex-1 justify-center items-center"
+            >
+              <View className="bg-stone-200 border border-stone-500 p-2 rounded-xl">
+                <ProblemPicture
+                  boulderPhotoUri={boulderImg}
+                  pickPhotoAsync={pickImageAsync}
+                  setBoulderId={setBoulderId}
+                  setBoulderImg={setBoulderImg}
+                  setGrade={setGrade}
+                  setStyle={setStyle}
+                  grade={grade}
+                  canCreate={false}
+                />
+
+                <GradeSelector grade={grade} setGrade={setGrade} />
+
+                <ClimbingStyleSelector
+                  selectedStyle={style}
+                  setSelectedStyle={setStyle}
+                />
+
+                <View className="flex flex-col items-center ">
+                  <View className="flex flex-row gap-4 pb-4">
+                    <TouchableOpacity
+                      onPress={() => {
+                        setShowModal(false);
+                        logProblem(
+                          boulderId,
+                          grade,
+                          style,
+                          "",
+                          "",
+                          "",
+                          boulderImg,
+                        );
+                        setRefresh((r) => r + 1);
+                        setProblems((prevProblemsState) =>
+                          prevProblemsState?.map(
+                            (problem) =>
+                              problem.id === boulderId // Check if this is the problem to update
+                                ? {
+                                    ...problem, // Keep existing properties
+                                    grade: grade, // Update the grade
+                                    style: style,
+                                    boulderImg: boulderImg,
+                                  }
+                                : problem, // Otherwise, keep the problem unchanged
+                          ),
+                        );
+                      }}
+                      className="mt-2 justify-around rounded-md border bg-slate-50 w-16  py-2 text-lg shadow-sm "
+                    >
+                      <Text className="text-center">Update</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity className="mt-2 justify-around rounded-md border bg-slate-50 w-16  py-2 text-lg shadow-sm ">
+                      <Text className="text-center">Delete</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
+            </BlurView>
+          </Modal>
+        </>
+      )}
     </View>
   );
 }

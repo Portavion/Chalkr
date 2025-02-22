@@ -195,6 +195,7 @@ const useWorkoutData = () => {
     updateWorkoutTimer,
     resetDb,
     fetchProblems,
+    logProblem,
   };
 };
 export default useWorkoutData;
