@@ -184,7 +184,7 @@ export default function Index() {
                   content={
                     <>
                       <Text className="text-lg">
-                        {" "}
+                        {/* splits the date timestamp */}
                         {String(workout.timestamp).split(" ", 1)},{" "}
                         {String(workout.timestamp).split(" ", 2)[1]}
                       </Text>
@@ -194,18 +194,23 @@ export default function Index() {
                   icon={
                     <Icon name={"chevron-down"} type="material-community" />
                   }
-                  // noIcon={true}
                   onPress={() => {
                     handlePress(workout.id);
                   }}
                 >
-                  {/* rest */}
-                  {/* header */}
-                  <View className=""></View>
-                  {/* content */}
                   <View>
                     <Text className="text-lg ">
-                      {Number(workout.climb_time) + Number(workout.rest_time)}
+                      {Math.floor(
+                        Number(workout.climb_time + workout.rest_time) / 60,
+                      )
+                        .toString()
+                        .padStart(2, "0")}
+                      :
+                      {Math.floor(
+                        Number(workout.climb_time + workout.rest_time) % 60,
+                      )
+                        .toString()
+                        .padStart(2, "0")}
                     </Text>
                     <Text className="text-sm font-extralight">Total time </Text>
                     <View className="flex flex-row my-4 content-between ">
