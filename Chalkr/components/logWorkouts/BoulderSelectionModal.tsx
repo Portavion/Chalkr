@@ -33,7 +33,6 @@ export default function BoulderSelectionModal({
           setProblems(problems);
           if (problems && problems.length) {
             setHeight((Math.floor(problems?.length / 3) + 1) * 200);
-            console.log((Math.floor(problems?.length / 3) + 1) * 200);
           }
           setIsLoading(false);
         } catch (error) {

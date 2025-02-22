@@ -10,7 +10,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useState, useEffect, useRef } from "react";
 import { BlurView } from "expo-blur";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
-import { differenceInSeconds } from "date-fns";
+import { differenceInSeconds, formatISO9075 } from "date-fns";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AscentStats from "@/components/workoutStats/AscentStats";
@@ -25,19 +25,22 @@ import WorkoutTimer from "@/components/logWorkouts/WorkoutTimer";
 import WorkoutSectionTimer from "@/components/logWorkouts/WorkoutSectionTimer";
 import RecordButton from "@/components/logWorkouts/RecordButton";
 import LoggingModal from "@/components/logWorkouts/LoggingModal";
+import React from "react";
 
 export default function WorkoutScreen() {
   const [grade, setGrade] = useState(0);
   const [selectedStyle, setSelectedStyle] = useState<ClimbingStyle>("other");
   const [isClimbing, setIsClimbing] = useState(false);
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
+  const isWorkoutStartedRef = useRef(isWorkoutStarted);
 
-  const [sectionTimer, setSectionTimer] = useState(0);
+  const [sectionTimer, setSectionTimer] = useState<number>();
   const [lastTimer, setLastTimer] = useState(0);
   const [workoutTimer, setWorkoutTimer] = useState(0);
 
   const appState = useRef(AppState.currentState);
-  const [elapsed, setElapsed] = useState(0);
+
+  // let backgroundTime = 0;
 
   const [showModal, setShowModal] = useState(false);
   const [refresh, setRefresh] = useState(false);
@@ -56,6 +59,7 @@ export default function WorkoutScreen() {
     // starting the workout and initialising the new workout in the db
     if (!isWorkoutStarted) {
       setIsWorkoutStarted(true);
+      setSectionTimer(0);
       recordStartTime();
       await createNewWorkout();
     }
@@ -64,11 +68,11 @@ export default function WorkoutScreen() {
       setShowModal(true);
     } else {
       //we are not climbing so we can update the rest time of previous boulder
-      updateAscentRestTime(sectionTimer);
+      updateAscentRestTime(sectionTimer || 0);
     }
     // switch to rest / climbing mode and resets the rest or climbing timer
     setIsClimbing(!isClimbing);
-    setLastTimer(sectionTimer);
+    setLastTimer(sectionTimer || 0);
     setSectionTimer(0);
   };
 
@@ -96,7 +100,7 @@ export default function WorkoutScreen() {
     if (isClimbing) {
       alert("finish logging the current climb first");
     } else {
-      await updateAscentRestTime(sectionTimer);
+      await updateAscentRestTime(sectionTimer || 0);
 
       await updateWorkoutTimer();
 
@@ -136,12 +140,7 @@ export default function WorkoutScreen() {
   useEffect(() => {
     if (isWorkoutStarted) {
       const id = setInterval(() => {
-        if (elapsed !== 0) {
-          setSectionTimer((c) => c + elapsed);
-          setWorkoutTimer((c) => c + elapsed);
-          setElapsed(0);
-        }
-        setSectionTimer((c) => c + 1);
+        setSectionTimer((c) => (c || 0) + 1);
         setWorkoutTimer((c) => c + 1);
       }, 1000);
       return () => {
@@ -150,30 +149,44 @@ export default function WorkoutScreen() {
         }
       };
     }
-  }, [isWorkoutStarted]);
+  }, [sectionTimer]);
 
   useEffect(() => {
-    const subscription = AppState.addEventListener(
-      "change",
-      handleAppStateChange,
-    );
-    return () => subscription.remove();
-  }, []);
+    isWorkoutStartedRef.current = isWorkoutStarted;
+  }, [isWorkoutStarted]);
 
   const handleAppStateChange = async (nextAppState: AppStateStatus) => {
+    if (
+      appState.current === "active" &&
+      nextAppState.match(/inactive|background/)
+    ) {
+      recordStartTime();
+    }
     if (
       appState.current.match(/inactive|background/) &&
       nextAppState === "active"
     ) {
       // We just became active again: recalculate elapsed time based
       // on what we stored in AsyncStorage when we started.
+      //
       const elapsed = await getElapsedTime(); // Update the elapsed seconds state
-      if (elapsed) {
-        setElapsed(elapsed);
+      if (elapsed && isWorkoutStartedRef.current) {
+        setSectionTimer((c) => (c || 0) + elapsed);
+        setWorkoutTimer((c) => c + elapsed);
       }
     }
     appState.current = nextAppState;
   };
+
+  useEffect(() => {
+    const subscription = AppState.addEventListener(
+      "change",
+      handleAppStateChange,
+    );
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   const pickImageAsync = async () => {
     let result;
@@ -226,7 +239,7 @@ export default function WorkoutScreen() {
 
       <WorkoutSectionTimer
         isClimbing={isClimbing}
-        sectionTimer={sectionTimer}
+        sectionTimer={sectionTimer || 0}
       />
 
       <RecordButton handleRecord={handleRecord} isClimbing={isClimbing} />
