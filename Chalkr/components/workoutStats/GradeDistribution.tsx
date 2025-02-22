@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { ascentsTable, workoutAscentTable } from "../../db/schema";
+import {
+  ascentsTable,
+  boulderProblemsTable,
+  workoutAscentTable,
+} from "../../db/schema";
 import { openDatabaseSync } from "expo-sqlite";
 import { count, eq, sql } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
@@ -24,7 +28,7 @@ export default function GradeDistribution({ id }: { id: number }) {
     const fetchAscentsStats = async () => {
       const gradeDistributionData = await db
         .select({
-          grade: ascentsTable.grade,
+          grade: boulderProblemsTable.grade,
           ascentCount: count(), // Count the number of ascents per grade
           successfulAttempts: count(
             sql`CASE WHEN ${ascentsTable.isSuccess} = 1 THEN 1 END`,
@@ -35,8 +39,13 @@ export default function GradeDistribution({ id }: { id: number }) {
           workoutAscentTable,
           eq(ascentsTable.id, workoutAscentTable.ascent_id),
         )
+        .innerJoin(
+          // Add another inner join
+          boulderProblemsTable,
+          eq(ascentsTable.boulder_id, boulderProblemsTable.id), // Join based on the boulder_problem_id
+        )
         .where(eq(workoutAscentTable.workout_id, workoutId))
-        .groupBy(ascentsTable.grade);
+        .groupBy(boulderProblemsTable.grade);
 
       setGradeDistribution(gradeDistributionData);
     };
@@ -58,7 +67,7 @@ export default function GradeDistribution({ id }: { id: number }) {
                 {Math.floor(
                   100 * (grade.successfulAttempts / grade.ascentCount),
                 )}
-                % success
+                %
               </Text>
             </View>
           </View>

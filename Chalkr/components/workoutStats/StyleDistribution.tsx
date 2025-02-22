@@ -2,7 +2,11 @@ import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { ascentsTable, workoutAscentTable } from "../../db/schema";
+import {
+  ascentsTable,
+  boulderProblemsTable,
+  workoutAscentTable,
+} from "../../db/schema";
 import { openDatabaseSync } from "expo-sqlite";
 import { count, eq, sql } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
@@ -24,7 +28,7 @@ export default function StyleDistribution({ id }: { id: number }) {
     const fetchAscentsStats = async () => {
       const styleDistributionData = await db
         .select({
-          style: ascentsTable.style,
+          style: boulderProblemsTable.style,
           ascentCount: count(), // Count the number of ascents per grade
           successfulAttempts: count(
             sql`CASE WHEN ${ascentsTable.isSuccess} = 1 THEN 1 END`,
@@ -35,8 +39,12 @@ export default function StyleDistribution({ id }: { id: number }) {
           workoutAscentTable,
           eq(ascentsTable.id, workoutAscentTable.ascent_id),
         )
+        .innerJoin(
+          boulderProblemsTable,
+          eq(ascentsTable.boulder_id, boulderProblemsTable.id),
+        )
         .where(eq(workoutAscentTable.workout_id, workoutId))
-        .groupBy(ascentsTable.style);
+        .groupBy(boulderProblemsTable.style);
 
       setStyleDistribution(styleDistributionData);
     };
@@ -58,7 +66,7 @@ export default function StyleDistribution({ id }: { id: number }) {
                 {Math.floor(
                   100 * (style.successfulAttempts / style.ascentCount),
                 )}
-                % success
+                %
               </Text>
             </View>
           </View>
