@@ -20,7 +20,12 @@ export default function TabLayout() {
     );
   }
   return (
-    <Tabs>
+    <Tabs
+      screenOptions={{
+        tabBarActiveTintColor: "#e17100",
+        tabBarInactiveTintColor: "grey", // Inactive tab color
+      }}
+    >
       <Tabs.Screen name="index" options={{ title: "Home" }} />
       <Tabs.Screen name="workout" options={{ title: "Workout" }} />
       <Tabs.Screen name="settings" options={{ title: "Settings" }} />

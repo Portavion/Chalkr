@@ -8,17 +8,22 @@ import { Image } from "expo-image";
 cssInterop(Image, { className: "style" });
 
 import PlaceholderImage from "@/assets/images/boulder.png";
+import { GradeColour } from "@/constants/Colors";
 
 export default function BoulderSelectionModal({
   showSelectionModal,
   setShowSelectionModal,
   setBoulderId,
   setBoulderImg,
+  setGrade,
+  setStyle,
 }: {
   showSelectionModal: boolean;
   setShowSelectionModal: React.Dispatch<React.SetStateAction<boolean>>;
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
+  setStyle: React.Dispatch<React.SetStateAction<string>>;
+  setGrade: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [isLoading, setIsLoading] = useState(true);
   const [problems, setProblems] = useState<Problem[]>();
@@ -52,15 +57,27 @@ export default function BoulderSelectionModal({
           onPress={() => {
             setBoulderId(problem.id);
             setBoulderImg(problem.photo_url);
+            setGrade(problem.grade || 0);
+            setStyle(problem.style || "other");
             setShowSelectionModal(false);
           }}
         >
           <Image
             source={problem.photo_url || PlaceholderImage}
-            style={{ borderRadius: 16, borderWidth: 1 }}
+            style={{
+              borderRadius: 16,
+              borderWidth: 3,
+              borderColor: GradeColour[problem.grade || 0] || "black",
+            }}
             className="w-[100px] h-[150px] rounded-xl"
             contentFit="cover"
           />
+          <Text
+            className="absolute bottom-0 right-3 font-extrabold text-xl"
+            style={{ color: GradeColour[problem.grade || 0] || "black" }}
+          >
+            V{problem.grade}
+          </Text>
         </TouchableOpacity>
       </View>
     );
@@ -76,7 +93,7 @@ export default function BoulderSelectionModal({
       >
         <BlurView intensity={20} className="flex-1 justify-center items-center">
           <View
-            className={`bg-white border rounded-xl w-11/12 flex flex-col ]`}
+            className={`bg-stone-300 border border-stone-600 rounded-xl w-10/12 flex flex-col ]`}
             style={{ height: height > 600 ? 560 : height }}
           >
             <View className="flex justify-center content-center items-center my-2 ">

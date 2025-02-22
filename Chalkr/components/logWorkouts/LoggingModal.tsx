@@ -23,8 +23,8 @@ export default function LoggingModal({
   pickPhotoAsync: () => void;
   grade: number;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
-  selectedStyle: ClimbingStyle;
-  setSelectedStyle: React.Dispatch<React.SetStateAction<ClimbingStyle>>;
+  selectedStyle: string;
+  setSelectedStyle: React.Dispatch<React.SetStateAction<string>>;
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
 }) {
@@ -32,10 +32,13 @@ export default function LoggingModal({
     <>
       <Modal animationType="slide" transparent={true} visible={showModal}>
         <BlurView intensity={20} className="flex-1 justify-center items-center">
-          <View className="bg-white border rounded-xl">
+          <View className="bg-stone-200 border border-stone-500 pt-2 rounded-xl">
             <ProblemPicture
               boulderPhotoUri={boulderPhotoUri}
               pickPhotoAsync={pickPhotoAsync}
+              grade={grade}
+              setGrade={setGrade}
+              setStyle={setSelectedStyle}
               setBoulderId={setBoulderId}
               setBoulderImg={setBoulderImg}
             />

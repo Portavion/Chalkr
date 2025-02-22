@@ -12,14 +12,14 @@ export default function RecordButton({
     <View className="absolute bottom-20">
       <TouchableOpacity onPress={handleRecord}>
         {!isClimbing ? (
-          <Ionicons name="radio-button-on" size={64} color={"orange"} />
+          <Ionicons name="radio-button-on" size={64} color={"#ffba00"} />
         ) : (
           <View>
             <View>
-              <Ionicons name="radio-button-off" size={64} color={"orange"} />
+              <Ionicons name="radio-button-off" size={64} color={"#ffba00"} />
             </View>
             <View className="absolute left-1/4 top-1/4">
-              <Ionicons name="square" size={32} color={"orange"} />
+              <Ionicons name="square" size={32} color={"#ffba00"} />
             </View>
           </View>
         )}

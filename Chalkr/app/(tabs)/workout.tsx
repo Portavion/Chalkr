@@ -29,7 +29,7 @@ import React from "react";
 
 export default function WorkoutScreen() {
   const [grade, setGrade] = useState(0);
-  const [selectedStyle, setSelectedStyle] = useState<ClimbingStyle>("other");
+  const [selectedStyle, setSelectedStyle] = useState<string>("other");
   const [isClimbing, setIsClimbing] = useState(false);
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
   const isWorkoutStartedRef = useRef(isWorkoutStarted);
@@ -209,7 +209,7 @@ export default function WorkoutScreen() {
   };
 
   return (
-    <View className="flex flex-auto mt-2 items-center">
+    <View className="flex flex-auto pt-2 items-center bg-stone-300">
       {isWorkoutStarted && (
         <StopWorkoutButton handleStopWorkout={handleStopWorkout} />
       )}
@@ -219,6 +219,9 @@ export default function WorkoutScreen() {
         pickPhotoAsync={pickImageAsync}
         setBoulderId={setBoulderId}
         setBoulderImg={setBoulderImg}
+        setGrade={setGrade}
+        setStyle={setSelectedStyle}
+        grade={grade}
       />
 
       <View className="translate-x-20">

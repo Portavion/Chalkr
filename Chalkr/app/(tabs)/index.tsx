@@ -30,11 +30,9 @@ import { usersTable, workoutsTable } from "../../db/schema";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../..//drizzle/migrations";
 import { eq } from "drizzle-orm";
-import { Ionicons } from "@expo/vector-icons";
 const expo = SQLite.openDatabaseSync("db.db");
 const db = drizzle(expo);
 
-import { useDrizzleStudio } from "expo-drizzle-studio-plugin";
 import * as SQLite from "expo-sqlite";
 
 WebBrowser.maybeCompleteAuthSession();
@@ -173,7 +171,7 @@ export default function Index() {
 
   return user ? (
     <SafeAreaView className="flex-1">
-      <ScrollView className="py-5">
+      <ScrollView className="py-5 bg-stone-300">
         {workoutList &&
           workoutList.map((workout) => (
             // cards

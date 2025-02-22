@@ -14,8 +14,8 @@ export default function AboutScreen() {
     return <Text>Error, you need to be logged. </Text>;
   }
   return (
-    <View className="flex flex-1 bg-slate-800 justify-center items-center">
-      <Text className="text-white text-3xl">Settings screen</Text>
+    <View className="flex flex-1 justify-center items-center bg-stone-300">
+      <Text className="text-black text-3xl">Settings screen</Text>
       <Button
         title="Sign Out"
         onPress={async () => {

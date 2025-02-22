@@ -9,8 +9,8 @@ export default function ClimbingStyleSelector({
   selectedStyle,
   setSelectedStyle,
 }: {
-  selectedStyle: ClimbingStyle;
-  setSelectedStyle: React.Dispatch<React.SetStateAction<ClimbingStyle>>;
+  selectedStyle: string;
+  setSelectedStyle: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
     <View className="flex flex-row justify-center items-center mb-2">
@@ -26,7 +26,7 @@ export default function ClimbingStyleSelector({
   );
 }
 const showActionSheet = (
-  setSelectedStyle: React.Dispatch<React.SetStateAction<ClimbingStyle>>,
+  setSelectedStyle: React.Dispatch<React.SetStateAction<string>>,
 ) => {
   ActionSheetIOS.showActionSheetWithOptions(
     {

@@ -4,27 +4,40 @@ import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 cssInterop(Image, { className: "style" });
 import PlaceholderImage from "@/assets/images/boulder.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BoulderSelectionModal from "./BoulderSelectionModal";
+import { GradeColour } from "@/constants/Colors";
 
 export default function ProblemPicture({
   boulderPhotoUri,
   pickPhotoAsync,
   setBoulderId,
   setBoulderImg,
+  setStyle,
+  setGrade,
+  grade,
 }: {
   boulderPhotoUri: string | null;
   pickPhotoAsync: () => void;
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
+  setStyle: React.Dispatch<React.SetStateAction<string>>;
+  setGrade: React.Dispatch<React.SetStateAction<number>>;
+  grade: number;
 }) {
   const [showSelectionModal, setShowSelectionModal] = useState(false);
+  const [gradeColour, setGradeColour] = useState("red");
+
+  useEffect(() => {
+    setGradeColour(GradeColour[grade] || "black");
+  }, [grade]);
+
   return (
     <>
       <View className="flex items-center">
         <Image
           source={boulderPhotoUri || PlaceholderImage}
-          style={{ borderRadius: 16, borderWidth: 1 }}
+          style={{ borderRadius: 16, borderWidth: 5, borderColor: gradeColour }}
           className="w-[200px] h-[300px] rounded-xl"
           contentFit="cover"
         />
@@ -50,6 +63,8 @@ export default function ProblemPicture({
             setShowSelectionModal={setShowSelectionModal}
             setBoulderId={setBoulderId}
             setBoulderImg={setBoulderImg}
+            setGrade={setGrade}
+            setStyle={setStyle}
           />
         )}
       </View>
