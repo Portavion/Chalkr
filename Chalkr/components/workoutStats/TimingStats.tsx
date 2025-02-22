@@ -46,7 +46,7 @@ export default function TimingStats({ id }: { id: number }) {
           <View className="flex flex-row items-center  mb-0.5">
             <Text className="text-black pl-10 w-60 text-lg">Climb time</Text>
             <Text className="text-black w-24 text-lg">
-              {climbingTime >= 360 && (
+              {climbingTime >= 3600 && (
                 <>
                   {Math.floor(climbingTime / 360)
                     .toString()
@@ -54,7 +54,7 @@ export default function TimingStats({ id }: { id: number }) {
                   :
                 </>
               )}
-              {Math.floor((climbingTime % 360) / 60)
+              {Math.floor((climbingTime % 3600) / 60)
                 .toString()
                 .padStart(2, "0")}
               :{(climbingTime % 60).toString().padStart(2, "0")}
@@ -62,17 +62,17 @@ export default function TimingStats({ id }: { id: number }) {
           </View>
 
           <View className="flex flex-row items-center mb-0.5">
-            <Text className="text-black pl-10 w-60 text-lg">Total rest</Text>
+            <Text className="text-black pl-10 w-60 text-lg">Rest time</Text>
             <Text className="text-black w-24 text-lg">
-              {restingTime >= 360 && (
+              {restingTime >= 3600 && (
                 <>
-                  {Math.floor(restingTime / 360)
+                  {Math.floor(restingTime / 3600)
                     .toString()
                     .padStart(2, "0")}
                   :
                 </>
               )}
-              {Math.floor((restingTime % 360) / 60)
+              {Math.floor((restingTime % 3600) / 60)
                 .toString()
                 .padStart(2, "0")}
               :{(restingTime % 60).toString().padStart(2, "0")}
@@ -80,17 +80,19 @@ export default function TimingStats({ id }: { id: number }) {
           </View>
 
           <View className="flex flex-row mb-0.5 text-lg">
-            <Text className="text-black pl-10 w-60 text-lg">Total time</Text>
-            <Text className="text-black w-24 text-lg">
-              {duration >= 360 && (
+            <Text className="text-black font-semibold pl-10 w-60 text-lg">
+              Total time
+            </Text>
+            <Text className="text-black font-semibold w-24 text-lg">
+              {duration >= 3600 && (
                 <>
-                  {Math.floor(duration / 360)
+                  {Math.floor(duration / 3600)
                     .toString()
                     .padStart(2, "0")}
                   :
                 </>
               )}
-              {Math.floor((duration % 360) / 60)
+              {Math.floor((duration % 3600) / 60)
                 .toString()
                 .padStart(2, "0")}
               :{(duration % 60).toString().padStart(2, "0")}
