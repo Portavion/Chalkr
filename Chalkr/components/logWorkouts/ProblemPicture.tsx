@@ -42,6 +42,8 @@ export default function ProblemPicture({
           style={{ borderRadius: 16, borderWidth: 5, borderColor: gradeColour }}
           className="w-[250px] h-[400px] rounded-xl"
           contentFit="cover"
+          cachePolicy="memory-disk"
+          placeholder={PlaceholderImage}
         />
         <View className="flex flex-row items-center gap-5">
           {canCreate && (

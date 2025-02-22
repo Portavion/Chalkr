@@ -71,6 +71,8 @@ export default function BoulderSelectionModal({
             }}
             className="w-[100px] h-[150px] rounded-xl"
             contentFit="cover"
+            cachePolicy="memory-disk"
+            placeholder={PlaceholderImage}
           />
           <Text
             className="absolute bottom-0 right-3 font-extrabold text-xl"
