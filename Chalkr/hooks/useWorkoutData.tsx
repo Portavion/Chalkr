@@ -8,7 +8,7 @@ import {
   workoutsTable,
 } from "@/db/schema";
 import { openDatabaseSync } from "expo-sqlite";
-import { eq, inArray, sum } from "drizzle-orm";
+import { eq, inArray, sum, ne } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -177,9 +177,27 @@ const useWorkoutData = () => {
     await db.delete(workoutsTable);
   };
 
+  const deleteProblem = async (id: number) => {
+    try {
+      await db
+        .update(boulderProblemsTable)
+        .set({
+          name: "hidden",
+        })
+        .where(eq(boulderProblemsTable.id, id))
+        .returning();
+    } catch (error) {
+      alert("Error hidding ascent");
+      console.log(error);
+    }
+  };
+
   const fetchProblems = async () => {
     try {
-      const problem = await db.select().from(boulderProblemsTable);
+      const problem = await db
+        .select()
+        .from(boulderProblemsTable)
+        .where(ne(boulderProblemsTable.name, "hidden"));
       return problem;
     } catch (error) {
       console.log("error fetching problems: " + error);
@@ -194,6 +212,7 @@ const useWorkoutData = () => {
     updateAscentRestTime,
     updateWorkoutTimer,
     resetDb,
+    deleteProblem,
     fetchProblems,
     logProblem,
   };

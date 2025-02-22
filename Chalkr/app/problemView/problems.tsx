@@ -26,11 +26,10 @@ export default function problems() {
   const [height, setHeight] = useState<number>(750);
   const [refresh, setRefresh] = useState(0);
 
-  const { fetchProblems, logProblem } = useWorkoutData();
+  const { fetchProblems, logProblem, deleteProblem } = useWorkoutData();
 
   const pickImageAsync = async () => {
     let result;
-    // setBoulderId(0);
     const { status } = await ImagePicker.requestCameraPermissionsAsync();
 
     if (status !== "granted") {
@@ -66,7 +65,7 @@ export default function problems() {
       }
     };
     loadProblems();
-  }, [refresh]);
+  }, []);
 
   const problemPicture = problems?.map((problem) => {
     return (
@@ -148,7 +147,6 @@ export default function problems() {
                           "",
                           boulderImg,
                         );
-                        setRefresh((r) => r + 1);
                         setProblems((prevProblemsState) =>
                           prevProblemsState?.map(
                             (problem) =>
@@ -167,7 +165,20 @@ export default function problems() {
                     >
                       <Text className="text-center">Update</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity className="mt-2 justify-around rounded-md border bg-slate-50 w-16  py-2 text-lg shadow-sm ">
+                    <TouchableOpacity
+                      onPress={() => {
+                        setShowModal(false);
+                        if (boulderId) {
+                          deleteProblem(boulderId);
+                          setProblems((prevProblemsState) =>
+                            prevProblemsState?.filter(
+                              (problem) => problem.id !== boulderId,
+                            ),
+                          );
+                        }
+                      }}
+                      className="mt-2 justify-around rounded-md border bg-slate-50 w-16  py-2 text-lg shadow-sm "
+                    >
                       <Text className="text-center">Delete</Text>
                     </TouchableOpacity>
                   </View>
