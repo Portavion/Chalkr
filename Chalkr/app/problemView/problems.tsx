@@ -10,7 +10,6 @@ import React from "react";
 import { GradeColour } from "@/constants/Colors";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
-import LoggingModal from "@/components/logWorkouts/LoggingModal";
 import { BlurView } from "expo-blur";
 cssInterop(Image, { className: "style" });
 
@@ -18,13 +17,11 @@ export default function problems() {
   const [grade, setGrade] = useState(0);
   const [style, setStyle] = useState<string>("other");
   const [boulderId, setBoulderId] = useState<number | undefined>();
-  const [showSelectionModal, setShowSelectionModal] = useState(false);
   const [boulderImg, setBoulderImg] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [problems, setProblems] = useState<Problem[]>();
   const [showModal, setShowModal] = useState(false);
   const [height, setHeight] = useState<number>(750);
-  const [refresh, setRefresh] = useState(0);
 
   const { fetchProblems, logProblem, deleteProblem } = useWorkoutData();
 
