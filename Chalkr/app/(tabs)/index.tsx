@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import { Avatar, Divider, Icon, ListItem } from "@rneui/themed";
+import { Divider, Icon, ListItem } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";

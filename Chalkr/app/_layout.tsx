@@ -21,6 +21,10 @@ export default function RootLayout() {
           name="workoutDetails/[id]"
           options={{ title: "Workout Details" }}
         />
+        <Stack.Screen
+          name="problemView/problems"
+          options={{ title: "All Problems" }}
+        />
       </Stack>
     </UserProvider>
   );
