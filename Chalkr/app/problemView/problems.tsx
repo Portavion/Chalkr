@@ -37,11 +37,27 @@ export default function problems() {
       return;
     }
     try {
-      result = await ImagePicker.launchCameraAsync({});
+      result = await ImagePicker.launchCameraAsync({
+        quality: 0,
+        base64: false,
+      });
     } catch (error) {}
 
     if (!result?.canceled && result) {
       setBoulderImg(result?.assets[0].uri);
+      setProblems((prevProblemsState) =>
+        prevProblemsState?.map(
+          (problem) =>
+            problem.id === boulderId // Check if this is the problem to update
+              ? {
+                  ...problem, // Keep existing properties
+                  grade: grade, // Update the grade
+                  style: style,
+                  boulderImg: boulderImg,
+                }
+              : problem, // Otherwise, keep the problem unchanged
+        ),
+      );
     } else {
       alert("You did not select any image.");
     }

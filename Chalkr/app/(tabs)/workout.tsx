@@ -187,7 +187,10 @@ export default function WorkoutScreen() {
       return;
     }
     try {
-      result = await ImagePicker.launchCameraAsync({});
+      result = await ImagePicker.launchCameraAsync({
+        quality: 0,
+        base64: false,
+      });
     } catch (error) {}
 
     if (!result?.canceled && result) {
