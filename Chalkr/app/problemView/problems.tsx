@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity, ScrollView, Modal } from "react-native";
+import { Text, View, TouchableOpacity, FlatList, Modal } from "react-native";
 import { useState, useEffect } from "react";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
 import useWorkoutData from "@/hooks/useWorkoutData";
@@ -10,179 +10,171 @@ import { GradeColour } from "@/constants/Colors";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
-import usePhoto from "@/hooks/usePhoto";
+
 cssInterop(Image, { className: "style" });
 
-export default function problems() {
+export default function Problems() {
   const [grade, setGrade] = useState(0);
   const [style, setStyle] = useState<string>("other");
   const [boulderId, setBoulderId] = useState<number | undefined>();
   const [boulderImg, setBoulderImg] = useState<null | string>(null);
   const [boulderThumbnail, setBoulderThumbnail] = useState<null | string>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const [problems, setProblems] = useState<Problem[]>();
   const [showModal, setShowModal] = useState(false);
-  const [height, setHeight] = useState<number>(750);
 
   const { fetchProblems, logProblem, deleteProblem } = useWorkoutData();
-  const { makeThumbnail, makeFullImage, copyImageFromCache } = usePhoto();
 
   useEffect(() => {
     const loadProblems = async () => {
-      if (isLoading) {
-        try {
-          const problems = await fetchProblems();
-          setProblems(problems);
-          if (!problems) {
-            return;
-          }
-
-          if (problems && problems.length) {
-            setHeight((Math.floor(problems?.length / 3) + 1) * 200);
-          }
-          setIsLoading(false);
-        } catch (error) {
-          console.log("error loading problems: " + error);
-          setIsLoading(false);
-        }
-        return () => {};
-      }
-      if (!problems) {
-        console.log("error loading problems");
-        return;
+      try {
+        const problems = await fetchProblems();
+        setProblems(problems || []);
+      } catch (error) {
+        console.log("error loading problems: " + error);
       }
     };
+
     loadProblems();
   }, []);
 
-  const problemPicture = problems?.map((problem) => {
-    return (
-      <View key={problem.id}>
-        <TouchableOpacity
-          onPress={() => {
-            setBoulderId(problem.id);
-            setBoulderImg(problem.photo_url);
-            setBoulderThumbnail(problem.thumbnail_url);
-            setGrade(problem.grade || 0);
-            setStyle(problem.style || "other");
-            setShowModal(true);
+  const renderProblemItem = ({ item }: { item: Problem }) => (
+    <View key={item.id} className="m-2">
+      <TouchableOpacity
+        onPress={() => {
+          setBoulderId(item.id);
+          setBoulderImg(item.photo_url);
+          setBoulderThumbnail(item.thumbnail_url);
+          setGrade(item.grade || 0);
+          setStyle(item.style || "other");
+          setShowModal(true);
+        }}
+      >
+        <Image
+          source={item.thumbnail_url}
+          style={{
+            borderRadius: 16,
+            borderWidth: 3,
+            borderColor: GradeColour[item.grade || 0] || "black",
           }}
+          className="w-[125px] h-[225px] rounded-xl"
+          contentFit="cover"
+          cachePolicy="memory-disk"
+          placeholder={PlaceholderImage}
+          transition={200}
+          priority="high"
+        />
+        <Text
+          className="absolute bottom-0 right-3 font-extrabold text-xl"
+          style={{ color: GradeColour[item.grade || 0] || "black" }}
         >
-          <Image
-            source={problem.thumbnail_url || PlaceholderImage}
-            style={{
-              borderRadius: 16,
-              borderWidth: 3,
-              borderColor: GradeColour[problem.grade || 0] || "black",
-            }}
-            className="w-[100px] h-[150px] rounded-xl"
-            contentFit="cover"
-            cachePolicy="memory-disk"
-            placeholder={PlaceholderImage}
-          />
-          <Text
-            className="absolute bottom-0 right-3 font-extrabold text-xl"
-            style={{ color: GradeColour[problem.grade || 0] || "black" }}
-          >
-            V{problem.grade}
-          </Text>
-        </TouchableOpacity>
-      </View>
-    );
-  });
+          V{item.grade}
+        </Text>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View className="flex flex-auto pt-2 items-center bg-stone-300">
-      <ScrollView className="flex-1">
-        <View className="flex flex-row flex-wrap mb-4 gap-4 mx-4 justify-center ">
-          {problems && problemPicture}
-        </View>
-      </ScrollView>
+      <FlatList
+        data={problems}
+        renderItem={renderProblemItem}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={3}
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          paddingBottom: 20,
+        }}
+        className="flex-1 w-full"
+        initialNumToRender={6}
+        maxToRenderPerBatch={6}
+        windowSize={10}
+        removeClippedSubviews={true}
+      />
+
       {showModal && (
-        <>
-          <Modal animationType="slide" transparent={true} visible={showModal}>
-            <BlurView
-              intensity={20}
-              className="flex-1 justify-center items-center"
-            >
-              <View className="bg-stone-200 border border-stone-500 p-2 rounded-xl">
-                <ProblemPicture
-                  boulderImg={boulderImg}
-                  boulderThumbnail={boulderThumbnail}
-                  boulderId={boulderId}
-                  setBoulderId={setBoulderId}
-                  setBoulderImg={setBoulderImg}
-                  setProblems={setProblems}
-                  setBoulderThumbnail={setBoulderThumbnail}
-                  setGrade={setGrade}
-                  setStyle={setStyle}
-                  grade={grade}
-                  canCreate={false}
-                />
+        <Modal animationType="slide" transparent={true} visible={showModal}>
+          <BlurView
+            intensity={20}
+            className="flex-1 justify-center items-center"
+          >
+            <View className="bg-stone-200 border border-stone-500 p-2 rounded-xl">
+              <ProblemPicture
+                boulderImg={boulderImg}
+                boulderThumbnail={boulderThumbnail}
+                boulderId={boulderId}
+                setBoulderId={setBoulderId}
+                setBoulderImg={setBoulderImg}
+                setProblems={setProblems}
+                setBoulderThumbnail={setBoulderThumbnail}
+                setGrade={setGrade}
+                setStyle={setStyle}
+                grade={grade}
+                canCreate={false}
+              />
 
-                <GradeSelector grade={grade} setGrade={setGrade} />
+              <GradeSelector grade={grade} setGrade={setGrade} />
 
-                <ClimbingStyleSelector
-                  selectedStyle={style}
-                  setSelectedStyle={setStyle}
-                />
+              <ClimbingStyleSelector
+                selectedStyle={style}
+                setSelectedStyle={setStyle}
+              />
 
-                <View className="flex flex-col items-center ">
-                  <View className="flex flex-row gap-4 pb-4">
-                    <TouchableOpacity
-                      onPress={() => {
-                        setShowModal(false);
-                        logProblem(
-                          boulderId,
-                          grade,
-                          style,
-                          "",
-                          "",
-                          "",
-                          boulderImg,
-                          boulderThumbnail,
-                        );
+              <View className="flex flex-col items-center ">
+                <View className="flex flex-row gap-4 pb-4">
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowModal(false);
+                      logProblem(
+                        boulderId,
+                        grade,
+                        style,
+                        "",
+                        "",
+                        "",
+                        boulderImg,
+                        boulderThumbnail,
+                      );
+                      setProblems((prevProblemsState) =>
+                        prevProblemsState?.map((problem) =>
+                          problem.id === boulderId
+                            ? {
+                                ...problem,
+                                grade: grade,
+                                style: style,
+                                photo_url: boulderImg,
+                                thumbnail_url: boulderThumbnail,
+                              }
+                            : problem,
+                        ),
+                      );
+                    }}
+                    className="mt-2 justify-around rounded-md border bg-slate-50 w-16  py-2 text-lg shadow-sm "
+                  >
+                    <Text className="text-center">Update</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => {
+                      setShowModal(false);
+                      if (boulderId) {
+                        deleteProblem(boulderId);
                         setProblems((prevProblemsState) =>
-                          prevProblemsState?.map(
-                            (problem) =>
-                              problem.id === boulderId // Check if this is the problem to update
-                                ? {
-                                    ...problem, // Keep existing properties
-                                    grade: grade, // Update the grade
-                                    style: style,
-                                    boulderImg: boulderImg,
-                                    thumbnail_url: boulderThumbnail,
-                                  }
-                                : problem, // Otherwise, keep the problem unchanged
+                          prevProblemsState?.filter(
+                            (problem) => problem.id !== boulderId,
                           ),
                         );
-                      }}
-                      className="mt-2 justify-around rounded-md border bg-slate-50 w-16  py-2 text-lg shadow-sm "
-                    >
-                      <Text className="text-center">Update</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => {
-                        setShowModal(false);
-                        if (boulderId) {
-                          deleteProblem(boulderId);
-                          setProblems((prevProblemsState) =>
-                            prevProblemsState?.filter(
-                              (problem) => problem.id !== boulderId,
-                            ),
-                          );
-                        }
-                      }}
-                      className="mt-2 justify-around rounded-md border bg-slate-50 w-16  py-2 text-lg shadow-sm "
-                    >
-                      <Text className="text-center">Delete</Text>
-                    </TouchableOpacity>
-                  </View>
+                      }
+                    }}
+                    className="mt-2 justify-around rounded-md border bg-slate-50 w-16  py-2 text-lg shadow-sm "
+                  >
+                    <Text className="text-center">Delete</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
-            </BlurView>
-          </Modal>
-        </>
+            </View>
+          </BlurView>
+        </Modal>
       )}
     </View>
   );
