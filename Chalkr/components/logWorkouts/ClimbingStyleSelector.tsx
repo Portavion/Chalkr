@@ -30,22 +30,32 @@ const showActionSheet = (
 ) => {
   ActionSheetIOS.showActionSheetWithOptions(
     {
-      options: ["Slab", "Dyno", "Overhang", "Traverse", "Cave", "Other"],
-      userInterfaceStyle: "dark",
+      options: [
+        "Board",
+        "Cave",
+        "Dyno",
+        "Overhang",
+        "Slab",
+        "Traverse",
+        "Other",
+      ],
+      userInterfaceStyle: "light",
     },
     (buttonIndex) => {
       if (buttonIndex === 0) {
-        setSelectedStyle("slab");
+        setSelectedStyle("Board");
       } else if (buttonIndex === 1) {
-        setSelectedStyle("dyno");
+        setSelectedStyle("Cave");
       } else if (buttonIndex === 2) {
-        setSelectedStyle("overhang");
+        setSelectedStyle("Dyno");
       } else if (buttonIndex === 3) {
-        setSelectedStyle("traverse");
+        setSelectedStyle("Overhang");
       } else if (buttonIndex === 4) {
-        setSelectedStyle("cave");
+        setSelectedStyle("Slab");
+      } else if (buttonIndex === 5) {
+        setSelectedStyle("Traverse");
       } else {
-        setSelectedStyle("other");
+        setSelectedStyle("Other");
       }
     },
   );

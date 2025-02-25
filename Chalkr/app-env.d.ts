@@ -3,11 +3,12 @@
 declare module "*.png";
 
 type ClimbingStyle =
-  | "slab"
-  | "dyno"
-  | "traverse"
-  | "overhang"
+  | "board"
   | "cave"
+  | "dyno"
+  | "overhang"
+  | "slab"
+  | "traverse"
   | "other";
 type ClimbAttempt = {
   ascentTime: number;

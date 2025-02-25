@@ -1,13 +1,11 @@
 import { View, AppState, AppStateStatus } from "react-native";
 import { useState, useEffect, useRef } from "react";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
-import { differenceInSeconds, formatISO9075 } from "date-fns";
+import { differenceInSeconds } from "date-fns";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AscentStats from "@/components/workoutStats/AscentStats";
 import useWorkoutData from "@/hooks/useWorkoutData";
-
-import * as ImagePicker from "expo-image-picker";
 
 import StopWorkoutButton from "@/components/logWorkouts/StopWorkoutButton";
 import ProblemPicture from "@/components/logWorkouts/ProblemPicture";
@@ -20,7 +18,7 @@ import React from "react";
 
 export default function WorkoutScreen() {
   const [grade, setGrade] = useState(0);
-  const [selectedStyle, setSelectedStyle] = useState<string>("other");
+  const [selectedStyle, setSelectedStyle] = useState<string>("Other");
   const [isClimbing, setIsClimbing] = useState(false);
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
   const isWorkoutStartedRef = useRef(isWorkoutStarted);

@@ -4,15 +4,19 @@ import * as ImagePicker from "expo-image-picker";
 
 const usePhoto = () => {
   const copyImageFromCache = async (cacheImageUri: string) => {
-    console.log(FileSystem.getInfoAsync(cacheImageUri));
+    const destinationDir = FileSystem.documentDirectory + "boulder/";
+    const fileName = `boulder_${Date.now()}.jpg`;
+    const destinationUri = destinationDir + fileName;
 
-    const copyUri = FileSystem.documentDirectory + "boulder/";
-    await FileSystem.copyAsync({
+    await FileSystem.makeDirectoryAsync(destinationDir, {
+      intermediates: true,
+    });
+    await FileSystem.moveAsync({
       from: cacheImageUri,
-      to: copyUri,
+      to: destinationUri,
     });
 
-    return copyUri;
+    return destinationUri;
   };
   const makeThumbnail = async (fullImageUri: string) => {
     const manipThumbnail = await ImageManipulator.manipulate(fullImageUri)
@@ -55,24 +59,13 @@ const usePhoto = () => {
       format: SaveFormat.WEBP,
     });
 
-    const fullImageInfo = await FileSystem.getInfoAsync(fullImage.uri);
-    const fullImageFilename = fullImageInfo.uri.split("/").pop();
-    const imageFullPath =
-      FileSystem.documentDirectory + "boulder/" + fullImageFilename;
-
     try {
-      await FileSystem.makeDirectoryAsync(
-        FileSystem.documentDirectory + "boulder/",
-        { intermediates: true },
-      );
-      await FileSystem.copyAsync({
-        from: fullImageInfo.uri, // Source URI
-        to: imageFullPath, // Destination URI
-      });
-    } catch (error) {
-      console.log(error);
+      await FileSystem.deleteAsync(photoUri);
+    } catch (e) {
+      console.log(e);
     }
-    return imageFullPath;
+
+    return fullImage.uri;
   };
 
   const pickPhotoAsync = async () => {
@@ -85,16 +78,16 @@ const usePhoto = () => {
     }
     try {
       result = await ImagePicker.launchCameraAsync({
-        quality: 0.7,
+        quality: 0.75,
         base64: false,
       });
       if (!result?.assets) {
         alert("No pictures taken");
         return;
       }
-
-      const imageFullPath = await makeThumbnail(result.assets[0].uri);
-      const thumbnailFullPath = await makeThumbnail(result.assets[0].uri);
+      const imageUri = await copyImageFromCache(result.assets[0].uri);
+      const imageFullPath = await makeFullImage(imageUri);
+      const thumbnailFullPath = await makeThumbnail(imageFullPath);
 
       return {
         imageFullPath: imageFullPath,
