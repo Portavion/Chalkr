@@ -50,6 +50,27 @@
       "when": 1740480541085,
       "tag": "0006_aromatic_sway",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "6",
+      "when": 1740504249149,
+      "tag": "0007_silent_shaman",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "6",
+      "when": 1740508786755,
+      "tag": "0008_bitter_frightful_four",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "6",
+      "when": 1740509168839,
+      "tag": "0009_clear_prodigy",
+      "breakpoints": true
     }
   ]
 }

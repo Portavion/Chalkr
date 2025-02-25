@@ -5,6 +5,7 @@ import ProblemPicture from "./ProblemPicture";
 import ClimbingStyleSelector from "./ClimbingStyleSelector";
 import GradeSelector from "./GradeSelector/GradeSelector";
 import usePhoto from "@/hooks/usePhoto";
+import HoldTypeSelector from "./HoldTypeSelector";
 
 export default function LoggingModal({
   handleAscentLog,
@@ -20,6 +21,8 @@ export default function LoggingModal({
   setBoulderImg,
   setProblems,
   setBoulderThumbnail,
+  selectedHoldTypes,
+  setSelectedHoldTypes,
 }: {
   handleAscentLog: (isSuccess: boolean) => void;
   showModal: boolean;
@@ -33,7 +36,11 @@ export default function LoggingModal({
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
   setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
-  setProblems: React.Dispatch<React.SetStateAction<Problem[] | undefined>>;
+  setProblems: React.Dispatch<
+    React.SetStateAction<ProblemWithHoldTypes[] | undefined>
+  >;
+  selectedHoldTypes: HoldType[];
+  setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
 }) {
   return (
     <>
@@ -59,6 +66,12 @@ export default function LoggingModal({
               selectedStyle={selectedStyle}
               setSelectedStyle={setSelectedStyle}
             />
+
+            <HoldTypeSelector
+              selectedHoldTypes={selectedHoldTypes}
+              setSelectedHoldTypes={setSelectedHoldTypes}
+            />
+
             <View className="flex justify-center content-center items-center mb-5 mx-5 ">
               <Text className="mb-2 text-lg">Was your attempt successful?</Text>
               <View className="flex flex-row justify-around gap-10 items-center ">

@@ -11,7 +11,7 @@ export default function WorkoutSectionTimer({
 }) {
   return (
     <>
-      <View className="absolute flex-row bottom-14">
+      <View className="absolute flex-row bottom-32">
         <View className="" style={{ width: 120 }}>
           <Text className="text-lg">Total workout:</Text>
         </View>

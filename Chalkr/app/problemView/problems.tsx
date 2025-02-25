@@ -10,6 +10,7 @@ import { GradeColour } from "@/constants/Colors";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
+import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 
 cssInterop(Image, { className: "style" });
 
@@ -19,16 +20,21 @@ export default function Problems() {
   const [boulderId, setBoulderId] = useState<number | undefined>();
   const [boulderImg, setBoulderImg] = useState<null | string>(null);
   const [boulderThumbnail, setBoulderThumbnail] = useState<null | string>(null);
-  const [problems, setProblems] = useState<Problem[]>();
+  const [problems, setProblems] = useState<ProblemWithHoldTypes[]>();
   const [showModal, setShowModal] = useState(false);
+  const [selectHoldTypes, setSelectedHoldTypes] = useState<HoldType[]>([]);
 
   const { fetchProblems, logProblem, deleteProblem } = useWorkoutData();
 
   useEffect(() => {
     const loadProblems = async () => {
       try {
-        const problems = await fetchProblems();
-        setProblems(problems || []);
+        const problems = (await fetchProblems()) as ProblemWithHoldTypes[];
+        if (!problems) {
+          console.log("error loading probles");
+          return;
+        }
+        setProblems(problems);
       } catch (error) {
         console.log("error loading problems: " + error);
       }
@@ -37,13 +43,14 @@ export default function Problems() {
     loadProblems();
   }, []);
 
-  const renderProblemItem = ({ item }: { item: Problem }) => (
+  const renderProblemItem = ({ item }: { item: ProblemWithHoldTypes }) => (
     <View key={item.id} className="m-2">
       <TouchableOpacity
         onPress={() => {
           setBoulderId(item.id);
           setBoulderImg(item.photo_url);
           setBoulderThumbnail(item.thumbnail_url);
+          setSelectedHoldTypes(item.hold_types);
           setGrade(item.grade || 0);
           setStyle(item.style || "other");
           setShowModal(true);
@@ -121,6 +128,11 @@ export default function Problems() {
                 setSelectedStyle={setStyle}
               />
 
+              <HoldTypeSelector
+                selectedHoldTypes={selectHoldTypes}
+                setSelectedHoldTypes={setSelectedHoldTypes}
+              />
+
               <View className="flex flex-col items-center ">
                 <View className="flex flex-row gap-4 pb-4">
                   <TouchableOpacity
@@ -133,6 +145,7 @@ export default function Problems() {
                         "",
                         "",
                         "",
+                        selectHoldTypes,
                         boulderImg,
                         boulderThumbnail,
                       );

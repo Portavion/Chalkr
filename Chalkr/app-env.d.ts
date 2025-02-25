@@ -2,6 +2,15 @@
 /// <reference types="nativewind/types" />
 declare module "*.png";
 
+type HoldType =
+  | "Crimp"
+  | "Jug"
+  | "Slopper"
+  | "Pocket"
+  | "Pinch"
+  | "Sidepull"
+  | "Gaston"
+  | "Undercling";
 type ClimbingStyle =
   | "board"
   | "cave"
@@ -34,4 +43,15 @@ type Problem = {
   photo_url: string | null;
   thumbnail_url: string | null;
   style: string | null;
+};
+type ProblemWithHoldTypes = {
+  id: number;
+  name: string | null;
+  grade: number | null;
+  area: string | null;
+  description: string | null;
+  photo_url: string | null;
+  thumbnail_url: string | null;
+  style: string | null;
+  hold_types: HoldType[];
 };

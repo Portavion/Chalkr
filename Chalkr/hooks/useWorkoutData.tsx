@@ -6,6 +6,7 @@ import {
   boulderProblemsTable,
   workoutAscentTable,
   workoutsTable,
+  boulderProblemHoldTypesTable,
 } from "@/db/schema";
 import { openDatabaseSync } from "expo-sqlite";
 import { eq, inArray, sum, ne } from "drizzle-orm";
@@ -41,10 +42,27 @@ const useWorkoutData = () => {
     name: string = "",
     area: string = "",
     description: string = "",
+    holdTypes: HoldType[],
     fullImageUri: null | string = null,
     thumbnailUri: null | string = null,
     isNew: boolean = false,
   ) => {
+    try {
+      if (id) {
+        await db
+          .delete(boulderProblemHoldTypesTable)
+          .where(eq(boulderProblemHoldTypesTable.boulder_id, id));
+        for (let hold of holdTypes) {
+          await db
+            .insert(boulderProblemHoldTypesTable)
+            .values({ boulder_id: id, hold_type: hold })
+            .returning();
+        }
+      }
+    } catch (error) {
+      console.log("Error setting up hold types: " + error);
+    }
+
     if (isNew || !id) {
       try {
         const newProblem = await db
@@ -91,6 +109,7 @@ const useWorkoutData = () => {
     grade: number,
     isSuccess: boolean,
     style: string,
+    holdTypes: HoldType[],
     photoUri: string | null = null,
     thumbnailUri: string | null = null,
   ) => {
@@ -101,6 +120,7 @@ const useWorkoutData = () => {
       "",
       "",
       "",
+      holdTypes,
       photoUri,
       thumbnailUri,
     );
@@ -199,15 +219,33 @@ const useWorkoutData = () => {
 
   const fetchProblems = async () => {
     try {
-      const problem = await db
+      const problems = await db
         .select()
         .from(boulderProblemsTable)
         .where(ne(boulderProblemsTable.name, "hidden"));
-      return problem;
+
+      const problemsWithHoldtypes = await Promise.all(
+        problems.map(async (problem) => {
+          const holdTypes = await db
+            .select({ hold_type: boulderProblemHoldTypesTable.hold_type })
+            .from(boulderProblemHoldTypesTable)
+            .where(eq(boulderProblemHoldTypesTable.boulder_id, problem.id));
+
+          const holdTypeNames = holdTypes
+            .map((ht) => ht.hold_type)
+            .filter((ht) => ht !== null) as string[];
+          return {
+            ...problem,
+            hold_types: holdTypeNames,
+          };
+        }),
+      );
+
+      return problemsWithHoldtypes;
     } catch (error) {
       console.log("error fetching problems: " + error);
+      return;
     }
-    return;
   };
 
   return {

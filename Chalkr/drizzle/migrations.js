@@ -8,6 +8,9 @@ import m0003 from './0003_busy_sabretooth.sql';
 import m0004 from './0004_wide_power_pack.sql';
 import m0005 from './0005_elite_cable.sql';
 import m0006 from './0006_aromatic_sway.sql';
+import m0007 from './0007_silent_shaman.sql';
+import m0008 from './0008_bitter_frightful_four.sql';
+import m0009 from './0009_clear_prodigy.sql';
 
   export default {
     journal,
@@ -18,7 +21,10 @@ m0002,
 m0003,
 m0004,
 m0005,
-m0006
+m0006,
+m0007,
+m0008,
+m0009
     }
   }
   

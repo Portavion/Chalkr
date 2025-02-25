@@ -1,4 +1,4 @@
-import { int, sqliteTable, text } from "drizzle-orm/sqlite-core";
+import { int, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 import { sql } from "drizzle-orm";
 
 export const usersTable = sqliteTable("users_table", {
@@ -39,3 +39,17 @@ export const boulderProblemsTable = sqliteTable("boulder_problems_table", {
   thumbnail_url: text(),
   style: text(),
 });
+
+export const holdTypesTable = sqliteTable("hold_types_table", {
+  id: int().primaryKey({ autoIncrement: true }),
+  name: text().notNull().unique(),
+});
+
+export const boulderProblemHoldTypesTable = sqliteTable(
+  "problem_hold_types",
+  {
+    boulder_id: int().references(() => boulderProblemsTable.id),
+    hold_type: text(),
+  },
+  (t) => [primaryKey({ columns: [t.boulder_id, t.hold_type] })],
+);

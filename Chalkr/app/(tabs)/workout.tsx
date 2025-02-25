@@ -15,10 +15,13 @@ import WorkoutSectionTimer from "@/components/logWorkouts/WorkoutSectionTimer";
 import RecordButton from "@/components/logWorkouts/RecordButton";
 import LoggingModal from "@/components/logWorkouts/LoggingModal";
 import React from "react";
+import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 
 export default function WorkoutScreen() {
   const [grade, setGrade] = useState(0);
   const [selectedStyle, setSelectedStyle] = useState<string>("Other");
+  const [selectHoldTypes, setSelectedHoldTypes] = useState<HoldType[]>([]);
+
   const [isClimbing, setIsClimbing] = useState(false);
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
   const isWorkoutStartedRef = useRef(isWorkoutStarted);
@@ -26,7 +29,7 @@ export default function WorkoutScreen() {
   const [sectionTimer, setSectionTimer] = useState<number>();
   const [lastTimer, setLastTimer] = useState(0);
   const [workoutTimer, setWorkoutTimer] = useState(0);
-  const [problems, setProblems] = useState<Problem[]>();
+  const [problems, setProblems] = useState<ProblemWithHoldTypes[]>();
   const [boulderThumbnail, setBoulderThumbnail] = useState<null | string>(null);
 
   const appState = useRef(AppState.currentState);
@@ -74,6 +77,7 @@ export default function WorkoutScreen() {
       grade,
       isSuccess,
       selectedStyle,
+      selectHoldTypes,
       boulderImg,
       boulderThumbnail,
     );
@@ -189,6 +193,7 @@ export default function WorkoutScreen() {
         setBoulderImg={setBoulderImg}
         setGrade={setGrade}
         setStyle={setSelectedStyle}
+        setSelectedHoldTypes={setSelectedHoldTypes}
         grade={grade}
         boulderImg={boulderImg}
         boulderThumbnail={boulderThumbnail}
@@ -212,6 +217,11 @@ export default function WorkoutScreen() {
         setSelectedStyle={setSelectedStyle}
       />
 
+      <HoldTypeSelector
+        selectedHoldTypes={selectHoldTypes}
+        setSelectedHoldTypes={setSelectedHoldTypes}
+      />
+
       <WorkoutSectionTimer
         isClimbing={isClimbing}
         sectionTimer={sectionTimer || 0}
@@ -233,6 +243,8 @@ export default function WorkoutScreen() {
           selectedStyle={selectedStyle}
           setSelectedStyle={setSelectedStyle}
           setBoulderId={setBoulderId}
+          selectedHoldTypes={selectHoldTypes}
+          setSelectedHoldTypes={setSelectedHoldTypes}
           setBoulderImg={setBoulderImg}
           setProblems={setProblems}
           setBoulderThumbnail={setBoulderThumbnail}

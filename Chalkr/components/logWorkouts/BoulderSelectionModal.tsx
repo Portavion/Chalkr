@@ -18,6 +18,7 @@ export default function BoulderSelectionModal({
   setBoulderThumbnail,
   setGrade,
   setStyle,
+  setSelectedHoldTypes,
 }: {
   showSelectionModal: boolean;
   setShowSelectionModal: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,15 +26,16 @@ export default function BoulderSelectionModal({
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
   setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
   setStyle: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const [problems, setProblems] = useState<Problem[]>([]);
+  const [problems, setProblems] = useState<ProblemWithHoldTypes[]>();
   const { fetchProblems } = useWorkoutData();
 
   useEffect(() => {
     const loadProblems = async () => {
       try {
-        const problems = await fetchProblems();
+        const problems = (await fetchProblems()) as ProblemWithHoldTypes[];
         setProblems(problems || []);
       } catch (error) {
         console.log("error loading problems: " + error);
@@ -43,7 +45,7 @@ export default function BoulderSelectionModal({
     loadProblems();
   }, []);
 
-  const renderProblemItem = ({ item }: { item: Problem }) => (
+  const renderProblemItem = ({ item }: { item: ProblemWithHoldTypes }) => (
     <View key={item.id} className="m-2">
       <TouchableOpacity
         onPress={() => {
@@ -53,6 +55,7 @@ export default function BoulderSelectionModal({
           setGrade(item.grade || 0);
           setStyle(item.style || "other");
           setShowSelectionModal(false);
+          setSelectedHoldTypes(item.hold_types);
         }}
       >
         <Image

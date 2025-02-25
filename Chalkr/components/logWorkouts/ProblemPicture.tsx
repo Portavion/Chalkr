@@ -21,18 +21,22 @@ export default function ProblemPicture({
   setStyle,
   setGrade,
   grade,
+  setSelectedHoldTypes,
   canCreate = true,
 }: {
   boulderId: number | undefined;
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
   boulderImg: string | null;
-  setProblems: React.Dispatch<React.SetStateAction<Problem[] | undefined>>;
+  setProblems: React.Dispatch<
+    React.SetStateAction<ProblemWithHoldTypes[] | undefined>
+  >;
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
   boulderThumbnail: string | null;
   setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
   setStyle: React.Dispatch<React.SetStateAction<string>>;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
   grade: number;
+  setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
   canCreate?: boolean;
 }) {
   const [showSelectionModal, setShowSelectionModal] = useState(false);
@@ -122,6 +126,7 @@ export default function ProblemPicture({
             setBoulderId={setBoulderId}
             setBoulderImg={setBoulderImg}
             setBoulderThumbnail={setBoulderThumbnail}
+            setSelectedHoldTypes={setSelectedHoldTypes}
             setGrade={setGrade}
             setStyle={setStyle}
           />
