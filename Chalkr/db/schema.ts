@@ -36,5 +36,6 @@ export const boulderProblemsTable = sqliteTable("boulder_problems_table", {
   area: text(),
   description: text(),
   photo_url: text(),
+  thumbnail_url: text(),
   style: text(),
 });

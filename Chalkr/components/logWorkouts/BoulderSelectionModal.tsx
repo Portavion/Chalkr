@@ -15,6 +15,7 @@ export default function BoulderSelectionModal({
   setShowSelectionModal,
   setBoulderId,
   setBoulderImg,
+  setBoulderThumbnail,
   setGrade,
   setStyle,
 }: {
@@ -22,6 +23,7 @@ export default function BoulderSelectionModal({
   setShowSelectionModal: React.Dispatch<React.SetStateAction<boolean>>;
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
+  setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
   setStyle: React.Dispatch<React.SetStateAction<string>>;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
 }) {
@@ -57,13 +59,14 @@ export default function BoulderSelectionModal({
           onPress={() => {
             setBoulderId(problem.id);
             setBoulderImg(problem.photo_url);
+            setBoulderThumbnail(problem.thumbnail_url);
             setGrade(problem.grade || 0);
             setStyle(problem.style || "other");
             setShowSelectionModal(false);
           }}
         >
           <Image
-            source={problem.photo_url || PlaceholderImage}
+            source={problem.thumbnail_url}
             style={{
               borderRadius: 16,
               borderWidth: 3,
@@ -73,6 +76,7 @@ export default function BoulderSelectionModal({
             contentFit="cover"
             cachePolicy="memory-disk"
             placeholder={PlaceholderImage}
+            transition={400}
           />
           <Text
             className="absolute bottom-0 right-3 font-extrabold text-xl"

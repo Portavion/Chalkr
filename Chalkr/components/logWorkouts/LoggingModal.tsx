@@ -4,29 +4,36 @@ import { BlurView } from "expo-blur";
 import ProblemPicture from "./ProblemPicture";
 import ClimbingStyleSelector from "./ClimbingStyleSelector";
 import GradeSelector from "./GradeSelector/GradeSelector";
+import usePhoto from "@/hooks/usePhoto";
 
 export default function LoggingModal({
   handleAscentLog,
   showModal,
-  boulderPhotoUri,
-  pickPhotoAsync,
+  boulderImg,
+  boulderThumbnail,
   grade,
+  boulderId,
   setGrade,
   selectedStyle,
   setSelectedStyle,
   setBoulderId,
   setBoulderImg,
+  setProblems,
+  setBoulderThumbnail,
 }: {
   handleAscentLog: (isSuccess: boolean) => void;
   showModal: boolean;
-  boulderPhotoUri: string | null;
-  pickPhotoAsync: () => void;
+  boulderId: number | undefined;
+  boulderImg: string | null;
+  boulderThumbnail: string | null;
   grade: number;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
   selectedStyle: string;
   setSelectedStyle: React.Dispatch<React.SetStateAction<string>>;
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
+  setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
+  setProblems: React.Dispatch<React.SetStateAction<Problem[] | undefined>>;
 }) {
   return (
     <>
@@ -34,13 +41,16 @@ export default function LoggingModal({
         <BlurView intensity={20} className="flex-1 justify-center items-center">
           <View className="bg-stone-200 border border-stone-500 pt-2 rounded-xl">
             <ProblemPicture
-              boulderPhotoUri={boulderPhotoUri}
-              pickPhotoAsync={pickPhotoAsync}
-              grade={grade}
-              setGrade={setGrade}
-              setStyle={setSelectedStyle}
+              boulderId={boulderId}
               setBoulderId={setBoulderId}
               setBoulderImg={setBoulderImg}
+              setGrade={setGrade}
+              setStyle={setSelectedStyle}
+              grade={grade}
+              boulderImg={boulderImg}
+              boulderThumbnail={boulderThumbnail}
+              setBoulderThumbnail={setBoulderThumbnail}
+              setProblems={setProblems}
             />
 
             <GradeSelector grade={grade} setGrade={setGrade} />

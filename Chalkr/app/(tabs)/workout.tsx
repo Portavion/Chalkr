@@ -28,6 +28,8 @@ export default function WorkoutScreen() {
   const [sectionTimer, setSectionTimer] = useState<number>();
   const [lastTimer, setLastTimer] = useState(0);
   const [workoutTimer, setWorkoutTimer] = useState(0);
+  const [problems, setProblems] = useState<Problem[]>();
+  const [boulderThumbnail, setBoulderThumbnail] = useState<null | string>(null);
 
   const appState = useRef(AppState.currentState);
 
@@ -75,6 +77,7 @@ export default function WorkoutScreen() {
       isSuccess,
       selectedStyle,
       boulderImg,
+      boulderThumbnail,
     );
     if (!problem) {
       setBoulderId(0);
@@ -176,30 +179,6 @@ export default function WorkoutScreen() {
       subscription.remove();
     };
   }, []);
-
-  const pickImageAsync = async () => {
-    let result;
-    setBoulderId(0);
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (status !== "granted") {
-      alert("Permission to access the camera is required!");
-      return;
-    }
-    try {
-      result = await ImagePicker.launchCameraAsync({
-        quality: 0,
-        base64: false,
-      });
-    } catch (error) {}
-
-    if (!result?.canceled && result) {
-      setBoulderImg(result?.assets[0].uri);
-    } else {
-      alert("You did not select any image.");
-    }
-  };
-
   return (
     <View className="flex flex-auto pt-2 items-center bg-stone-300">
       {isWorkoutStarted && (
@@ -207,13 +186,16 @@ export default function WorkoutScreen() {
       )}
 
       <ProblemPicture
-        boulderPhotoUri={boulderImg}
-        pickPhotoAsync={pickImageAsync}
+        boulderId={boulderId}
         setBoulderId={setBoulderId}
         setBoulderImg={setBoulderImg}
         setGrade={setGrade}
         setStyle={setSelectedStyle}
         grade={grade}
+        boulderImg={boulderImg}
+        boulderThumbnail={boulderThumbnail}
+        setBoulderThumbnail={setBoulderThumbnail}
+        setProblems={setProblems}
       />
 
       <View className="translate-x-20">
@@ -243,16 +225,19 @@ export default function WorkoutScreen() {
 
       {showModal && (
         <LoggingModal
-          boulderPhotoUri={boulderImg}
-          pickPhotoAsync={pickImageAsync}
           handleAscentLog={handleAscentLog}
           showModal={showModal}
+          boulderImg={boulderImg}
+          boulderThumbnail={boulderThumbnail}
           grade={grade}
+          boulderId={boulderId}
           setGrade={setGrade}
           selectedStyle={selectedStyle}
           setSelectedStyle={setSelectedStyle}
           setBoulderId={setBoulderId}
           setBoulderImg={setBoulderImg}
+          setProblems={setProblems}
+          setBoulderThumbnail={setBoulderThumbnail}
         />
       )}
     </View>

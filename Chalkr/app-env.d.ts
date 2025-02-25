@@ -31,5 +31,6 @@ type Problem = {
   area: string | null;
   description: string | null;
   photo_url: string | null;
+  thumbnail_url: string | null;
   style: string | null;
 };

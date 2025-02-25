@@ -41,7 +41,8 @@ const useWorkoutData = () => {
     name: string = "",
     area: string = "",
     description: string = "",
-    photoUri: null | string = null,
+    fullImageUri: null | string = null,
+    thumbnailUri: null | string = null,
     isNew: boolean = false,
   ) => {
     if (isNew || !id) {
@@ -53,7 +54,8 @@ const useWorkoutData = () => {
             grade: grade,
             area: area,
             description: description,
-            photo_url: photoUri,
+            photo_url: fullImageUri,
+            thumbnail_url: thumbnailUri,
             style: style,
           })
           .returning();
@@ -70,7 +72,8 @@ const useWorkoutData = () => {
             grade: grade,
             area: area,
             description: description,
-            photo_url: photoUri,
+            photo_url: fullImageUri,
+            thumbnail_url: thumbnailUri,
             style: style,
           })
           .where(eq(boulderProblemsTable.id, id))
@@ -89,6 +92,7 @@ const useWorkoutData = () => {
     isSuccess: boolean,
     style: string,
     photoUri: string | null = null,
+    thumbnailUri: string | null = null,
   ) => {
     const problem = await logProblem(
       boulderId,
@@ -98,6 +102,7 @@ const useWorkoutData = () => {
       "",
       "",
       photoUri,
+      thumbnailUri,
     );
     if (!problem) {
       console.log("error processing problem");

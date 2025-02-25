@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
 import useWorkoutData from "@/hooks/useWorkoutData";
 import PlaceholderImage from "@/assets/images/boulder.png";
-import * as ImagePicker from "expo-image-picker";
 import ProblemPicture from "@/components/logWorkouts/ProblemPicture";
 import ClimbingStyleSelector from "@/components/logWorkouts/ClimbingStyleSelector";
 import React from "react";
@@ -11,6 +10,7 @@ import { GradeColour } from "@/constants/Colors";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
+import usePhoto from "@/hooks/usePhoto";
 cssInterop(Image, { className: "style" });
 
 export default function problems() {
@@ -18,47 +18,14 @@ export default function problems() {
   const [style, setStyle] = useState<string>("other");
   const [boulderId, setBoulderId] = useState<number | undefined>();
   const [boulderImg, setBoulderImg] = useState<null | string>(null);
+  const [boulderThumbnail, setBoulderThumbnail] = useState<null | string>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [problems, setProblems] = useState<Problem[]>();
   const [showModal, setShowModal] = useState(false);
   const [height, setHeight] = useState<number>(750);
 
   const { fetchProblems, logProblem, deleteProblem } = useWorkoutData();
-
-  const pickImageAsync = async () => {
-    let result;
-    const { status } = await ImagePicker.requestCameraPermissionsAsync();
-
-    if (status !== "granted") {
-      alert("Permission to access the camera is required!");
-      return;
-    }
-    try {
-      result = await ImagePicker.launchCameraAsync({
-        quality: 0,
-        base64: false,
-      });
-    } catch (error) {}
-
-    if (!result?.canceled && result) {
-      setBoulderImg(result?.assets[0].uri);
-      setProblems((prevProblemsState) =>
-        prevProblemsState?.map(
-          (problem) =>
-            problem.id === boulderId // Check if this is the problem to update
-              ? {
-                  ...problem, // Keep existing properties
-                  grade: grade, // Update the grade
-                  style: style,
-                  boulderImg: boulderImg,
-                }
-              : problem, // Otherwise, keep the problem unchanged
-        ),
-      );
-    } else {
-      alert("You did not select any image.");
-    }
-  };
+  const { makeThumbnail, makeFullImage, copyImageFromCache } = usePhoto();
 
   useEffect(() => {
     const loadProblems = async () => {
@@ -66,6 +33,10 @@ export default function problems() {
         try {
           const problems = await fetchProblems();
           setProblems(problems);
+          if (!problems) {
+            return;
+          }
+
           if (problems && problems.length) {
             setHeight((Math.floor(problems?.length / 3) + 1) * 200);
           }
@@ -75,6 +46,10 @@ export default function problems() {
           setIsLoading(false);
         }
         return () => {};
+      }
+      if (!problems) {
+        console.log("error loading problems");
+        return;
       }
     };
     loadProblems();
@@ -87,13 +62,14 @@ export default function problems() {
           onPress={() => {
             setBoulderId(problem.id);
             setBoulderImg(problem.photo_url);
+            setBoulderThumbnail(problem.thumbnail_url);
             setGrade(problem.grade || 0);
             setStyle(problem.style || "other");
             setShowModal(true);
           }}
         >
           <Image
-            source={problem.photo_url || PlaceholderImage}
+            source={problem.thumbnail_url || PlaceholderImage}
             style={{
               borderRadius: 16,
               borderWidth: 3,
@@ -131,10 +107,13 @@ export default function problems() {
             >
               <View className="bg-stone-200 border border-stone-500 p-2 rounded-xl">
                 <ProblemPicture
-                  boulderPhotoUri={boulderImg}
-                  pickPhotoAsync={pickImageAsync}
+                  boulderImg={boulderImg}
+                  boulderThumbnail={boulderThumbnail}
+                  boulderId={boulderId}
                   setBoulderId={setBoulderId}
                   setBoulderImg={setBoulderImg}
+                  setProblems={setProblems}
+                  setBoulderThumbnail={setBoulderThumbnail}
                   setGrade={setGrade}
                   setStyle={setStyle}
                   grade={grade}
@@ -161,6 +140,7 @@ export default function problems() {
                           "",
                           "",
                           boulderImg,
+                          boulderThumbnail,
                         );
                         setProblems((prevProblemsState) =>
                           prevProblemsState?.map(
@@ -171,6 +151,7 @@ export default function problems() {
                                     grade: grade, // Update the grade
                                     style: style,
                                     boulderImg: boulderImg,
+                                    thumbnail_url: boulderThumbnail,
                                   }
                                 : problem, // Otherwise, keep the problem unchanged
                           ),
