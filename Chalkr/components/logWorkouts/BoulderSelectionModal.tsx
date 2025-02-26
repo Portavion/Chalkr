@@ -19,11 +19,15 @@ export default function BoulderSelectionModal({
   setGrade,
   setStyle,
   setSelectedHoldTypes,
+  boulderColour,
+  setBoulderColour,
 }: {
   showSelectionModal: boolean;
   setShowSelectionModal: React.Dispatch<React.SetStateAction<boolean>>;
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
+  boulderColour: BoulderColour | "";
+  setBoulderColour: React.Dispatch<React.SetStateAction<BoulderColour | "">>;
   setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
   setStyle: React.Dispatch<React.SetStateAction<string>>;
   setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
@@ -56,24 +60,50 @@ export default function BoulderSelectionModal({
           setStyle(item.style || "other");
           setShowSelectionModal(false);
           setSelectedHoldTypes(item.hold_types);
+          setBoulderColour(item.color ? item.color : "");
         }}
       >
-        <Image
-          source={item.thumbnail_url}
-          style={{
-            borderRadius: 16,
-            borderWidth: 3,
-            borderColor: GradeColour[item.grade || 0] || "black",
-          }}
-          className="w-[100px] h-[150px] rounded-xl"
-          contentFit="cover"
-          cachePolicy="memory-disk"
-          placeholder={PlaceholderImage}
-          transition={200}
-          priority={"high"}
-        />
+        {!(item.color === "VB") && (
+          <View
+            style={{
+              borderRadius: 16,
+              borderWidth: 5,
+              borderColor:
+                item.color === ""
+                  ? GradeColour[item.grade || 0] || "black"
+                  : item.color,
+            }}
+          >
+            <Image
+              source={item.thumbnail_url || PlaceholderImage}
+              className="w-[100px] h-[150px] rounded-xl"
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              placeholder={PlaceholderImage}
+            />
+          </View>
+        )}
+        {item.color === "VB" && (
+          <View
+            style={{
+              backgroundColor: "black",
+              borderRadius: 16,
+              borderWidth: 5,
+              borderColor: "yellow",
+              borderStyle: "dashed",
+            }}
+          >
+            <Image
+              source={item.thumbnail_url || PlaceholderImage}
+              className="w-[100px] h-[150px] rounded-xl"
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              placeholder={PlaceholderImage}
+            />
+          </View>
+        )}
         <Text
-          className="absolute bottom-0 right-3 font-extrabold text-xl"
+          className="absolute bottom-1 right-3 font-extrabold text-xl"
           style={{ color: GradeColour[item.grade || 0] || "black" }}
         >
           V{item.grade}

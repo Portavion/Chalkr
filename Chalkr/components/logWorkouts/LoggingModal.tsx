@@ -6,6 +6,7 @@ import ClimbingStyleSelector from "./ClimbingStyleSelector";
 import GradeSelector from "./GradeSelector/GradeSelector";
 import usePhoto from "@/hooks/usePhoto";
 import HoldTypeSelector from "./HoldTypeSelector";
+import ColourSelector from "./ColourSelector";
 
 export default function LoggingModal({
   handleAscentLog,
@@ -23,6 +24,8 @@ export default function LoggingModal({
   setBoulderThumbnail,
   selectedHoldTypes,
   setSelectedHoldTypes,
+  setBoulderColour,
+  boulderColour,
 }: {
   handleAscentLog: (isSuccess: boolean) => void;
   showModal: boolean;
@@ -36,6 +39,8 @@ export default function LoggingModal({
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
   setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
+  setBoulderColour: React.Dispatch<React.SetStateAction<BoulderColour | "">>;
+  boulderColour: BoulderColour | "";
   setProblems: React.Dispatch<
     React.SetStateAction<ProblemWithHoldTypes[] | undefined>
   >;
@@ -58,9 +63,18 @@ export default function LoggingModal({
               boulderThumbnail={boulderThumbnail}
               setBoulderThumbnail={setBoulderThumbnail}
               setProblems={setProblems}
+              boulderColour={boulderColour}
+              setSelectedHoldTypes={setSelectedHoldTypes}
+              setBoulderColour={setBoulderColour}
             />
 
-            <GradeSelector grade={grade} setGrade={setGrade} />
+            <View className="flex flex-row gap-4 justify-center items-center">
+              <GradeSelector grade={grade} setGrade={setGrade} />
+              <ColourSelector
+                boulderColour={boulderColour}
+                setBoulderColour={setBoulderColour}
+              />
+            </View>
 
             <ClimbingStyleSelector
               selectedStyle={selectedStyle}

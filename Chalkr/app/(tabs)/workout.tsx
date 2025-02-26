@@ -16,6 +16,7 @@ import RecordButton from "@/components/logWorkouts/RecordButton";
 import LoggingModal from "@/components/logWorkouts/LoggingModal";
 import React from "react";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
+import ColourSelector from "@/components/logWorkouts/ColourSelector";
 
 export default function WorkoutScreen() {
   const [grade, setGrade] = useState(0);
@@ -31,6 +32,7 @@ export default function WorkoutScreen() {
   const [workoutTimer, setWorkoutTimer] = useState(0);
   const [problems, setProblems] = useState<ProblemWithHoldTypes[]>();
   const [boulderThumbnail, setBoulderThumbnail] = useState<null | string>(null);
+  const [boulderColour, setBoulderColour] = useState<BoulderColour | "">("");
 
   const appState = useRef(AppState.currentState);
 
@@ -78,6 +80,7 @@ export default function WorkoutScreen() {
       isSuccess,
       selectedStyle,
       selectHoldTypes,
+      boulderColour,
       boulderImg,
       boulderThumbnail,
     );
@@ -103,6 +106,7 @@ export default function WorkoutScreen() {
       setSectionTimer(undefined);
       setIsClimbing(false);
       setWorkoutTimer(0);
+      setBoulderColour("");
     }
   };
 
@@ -197,6 +201,8 @@ export default function WorkoutScreen() {
         grade={grade}
         boulderImg={boulderImg}
         boulderThumbnail={boulderThumbnail}
+        boulderColour={boulderColour}
+        setBoulderColour={setBoulderColour}
         setBoulderThumbnail={setBoulderThumbnail}
         setProblems={setProblems}
       />
@@ -210,7 +216,13 @@ export default function WorkoutScreen() {
         />
       </View>
 
-      <GradeSelector grade={grade} setGrade={setGrade} />
+      <View className="flex flex-row gap-4 justify-center items-center">
+        <GradeSelector grade={grade} setGrade={setGrade} />
+        <ColourSelector
+          boulderColour={boulderColour}
+          setBoulderColour={setBoulderColour}
+        />
+      </View>
 
       <ClimbingStyleSelector
         selectedStyle={selectedStyle}
@@ -248,6 +260,8 @@ export default function WorkoutScreen() {
           setBoulderImg={setBoulderImg}
           setProblems={setProblems}
           setBoulderThumbnail={setBoulderThumbnail}
+          boulderColour={boulderColour}
+          setBoulderColour={setBoulderColour}
         />
       )}
     </View>

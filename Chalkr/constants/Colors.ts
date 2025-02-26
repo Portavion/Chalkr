@@ -35,3 +35,18 @@ export const Colors = {
     tabIconSelected: tintColorDark,
   },
 };
+
+export const BoulderColors: Record<BoulderColour, string> = {
+  VB: "#FCEC45", // Example: Yellow-ish
+  pink: "#FF69B4", // Pink
+  blue: "#0084d1", // Blue
+  green: "#008000", // Green
+  purple: "#c800de", // Purple
+  white: "ghostwhite", // White
+  teal: "#6eb9bf", // Teal
+  black: "#000000", // Black
+  red: "tomato", // Red
+  yellow: "#FFFF00", // Yellow
+  orange: "#FFA500", // Orange
+  "": "",
+};

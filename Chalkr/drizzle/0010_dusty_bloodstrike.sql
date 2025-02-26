@@ -1,0 +1,1 @@
+ALTER TABLE `boulder_problems_table` ADD `color` text;

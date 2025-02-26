@@ -45,6 +45,7 @@ const useWorkoutData = () => {
     holdTypes: HoldType[],
     fullImageUri: null | string = null,
     thumbnailUri: null | string = null,
+    color: string = "",
     isNew: boolean = false,
   ) => {
     try {
@@ -75,6 +76,7 @@ const useWorkoutData = () => {
             photo_url: fullImageUri,
             thumbnail_url: thumbnailUri,
             style: style,
+            color: color,
           })
           .returning();
         return newProblem[0];
@@ -93,6 +95,7 @@ const useWorkoutData = () => {
             photo_url: fullImageUri,
             thumbnail_url: thumbnailUri,
             style: style,
+            color: color,
           })
           .where(eq(boulderProblemsTable.id, id))
           .returning();
@@ -110,6 +113,7 @@ const useWorkoutData = () => {
     isSuccess: boolean,
     style: string,
     holdTypes: HoldType[],
+    color: string = "",
     photoUri: string | null = null,
     thumbnailUri: string | null = null,
   ) => {
@@ -123,6 +127,7 @@ const useWorkoutData = () => {
       holdTypes,
       photoUri,
       thumbnailUri,
+      color,
     );
     if (!problem) {
       console.log("error processing problem");

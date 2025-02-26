@@ -38,6 +38,7 @@ export const boulderProblemsTable = sqliteTable("boulder_problems_table", {
   photo_url: text(),
   thumbnail_url: text(),
   style: text(),
+  color: text(),
 });
 
 export const holdTypesTable = sqliteTable("hold_types_table", {

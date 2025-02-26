@@ -6,7 +6,7 @@ cssInterop(Image, { className: "style" });
 import PlaceholderImage from "@/assets/images/boulder.png";
 import { useEffect, useState } from "react";
 import BoulderSelectionModal from "./BoulderSelectionModal";
-import { GradeColour } from "@/constants/Colors";
+import { GradeColour, BoulderColors } from "@/constants/Colors";
 
 import usePhoto from "@/hooks/usePhoto";
 
@@ -23,6 +23,8 @@ export default function ProblemPicture({
   grade,
   setSelectedHoldTypes,
   canCreate = true,
+  boulderColour,
+  setBoulderColour,
 }: {
   boulderId: number | undefined;
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
@@ -37,6 +39,8 @@ export default function ProblemPicture({
   setGrade: React.Dispatch<React.SetStateAction<number>>;
   grade: number;
   setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
+  boulderColour: BoulderColour | "";
+  setBoulderColour: React.Dispatch<React.SetStateAction<BoulderColour | "">>;
   canCreate?: boolean;
 }) {
   const [showSelectionModal, setShowSelectionModal] = useState(false);
@@ -45,8 +49,12 @@ export default function ProblemPicture({
   const { pickPhotoAsync } = usePhoto();
 
   useEffect(() => {
-    setGradeColour(GradeColour[grade] || "black");
-  }, [grade]);
+    if (boulderColour !== "") {
+      setGradeColour(BoulderColors[boulderColour]);
+    } else {
+      setGradeColour(GradeColour[grade] || "black");
+    }
+  }, [grade, boulderColour]);
 
   const handleTakePhoto = async () => {
     const images = await pickPhotoAsync();
@@ -77,14 +85,42 @@ export default function ProblemPicture({
   return (
     <>
       <View className="flex items-center">
-        <Image
-          source={boulderImg || PlaceholderImage}
-          style={{ borderRadius: 16, borderWidth: 5, borderColor: gradeColour }}
-          className="w-[250px] h-[400px] rounded-xl"
-          contentFit="cover"
-          cachePolicy="memory-disk"
-          placeholder={PlaceholderImage}
-        />
+        {!(boulderColour === "VB") && (
+          <View
+            style={{
+              borderRadius: 16,
+              borderWidth: 5,
+              borderColor: gradeColour,
+            }}
+          >
+            <Image
+              source={boulderImg || PlaceholderImage}
+              className="w-[250px] h-[400px] rounded-xl"
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              placeholder={PlaceholderImage}
+            />
+          </View>
+        )}
+        {boulderColour === "VB" && (
+          <View
+            style={{
+              backgroundColor: "black",
+              borderRadius: 16,
+              borderWidth: 5,
+              borderColor: "yellow",
+              borderStyle: "dashed",
+            }}
+          >
+            <Image
+              source={boulderImg || PlaceholderImage}
+              className="w-[250px] h-[400px] rounded-xl"
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              placeholder={PlaceholderImage}
+            />
+          </View>
+        )}
         <View className="flex flex-row items-center gap-5">
           {canCreate && (
             <>
@@ -127,6 +163,8 @@ export default function ProblemPicture({
             setBoulderImg={setBoulderImg}
             setBoulderThumbnail={setBoulderThumbnail}
             setSelectedHoldTypes={setSelectedHoldTypes}
+            boulderColour={boulderColour}
+            setBoulderColour={setBoulderColour}
             setGrade={setGrade}
             setStyle={setStyle}
           />

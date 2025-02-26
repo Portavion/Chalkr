@@ -11,6 +11,7 @@ import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
+import ColourSelector from "@/components/logWorkouts/ColourSelector";
 
 cssInterop(Image, { className: "style" });
 
@@ -23,6 +24,7 @@ export default function Problems() {
   const [problems, setProblems] = useState<ProblemWithHoldTypes[]>();
   const [showModal, setShowModal] = useState(false);
   const [selectHoldTypes, setSelectedHoldTypes] = useState<HoldType[]>([]);
+  const [boulderColour, setBoulderColour] = useState<BoulderColour | "">("");
 
   const { fetchProblems, logProblem, deleteProblem } = useWorkoutData();
 
@@ -56,20 +58,49 @@ export default function Problems() {
           setShowModal(true);
         }}
       >
-        <Image
-          source={item.thumbnail_url}
-          style={{
-            borderRadius: 16,
-            borderWidth: 3,
-            borderColor: GradeColour[item.grade || 0] || "black",
-          }}
-          className="w-[125px] h-[225px] rounded-xl"
-          contentFit="cover"
-          cachePolicy="memory-disk"
-          placeholder={PlaceholderImage}
-          transition={200}
-          priority="high"
-        />
+        {!(item.color === "VB") && (
+          <View
+            style={{
+              borderRadius: 16,
+              borderWidth: 5,
+              borderColor:
+                item.color === ""
+                  ? GradeColour[item.grade || 0] || "black"
+                  : item.color,
+            }}
+          >
+            <Image
+              source={item.thumbnail_url}
+              className="w-[125px] h-[225px] rounded-xl"
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              placeholder={PlaceholderImage}
+              transition={200}
+              priority="high"
+            />
+          </View>
+        )}
+        {item.color === "VB" && (
+          <View
+            style={{
+              backgroundColor: "black",
+              borderRadius: 16,
+              borderWidth: 5,
+              borderColor: "yellow",
+              borderStyle: "dashed",
+            }}
+          >
+            <Image
+              source={item.thumbnail_url}
+              className="w-[125px] h-[225px] rounded-xl"
+              contentFit="cover"
+              cachePolicy="memory-disk"
+              placeholder={PlaceholderImage}
+              transition={200}
+              priority="high"
+            />
+          </View>
+        )}
         <Text
           className="absolute bottom-0 right-3 font-extrabold text-xl"
           style={{ color: GradeColour[item.grade || 0] || "black" }}
@@ -117,11 +148,20 @@ export default function Problems() {
                 setBoulderThumbnail={setBoulderThumbnail}
                 setGrade={setGrade}
                 setStyle={setStyle}
+                setSelectedHoldTypes={setSelectedHoldTypes}
                 grade={grade}
+                boulderColour={boulderColour}
+                setBoulderColour={setBoulderColour}
                 canCreate={false}
               />
 
-              <GradeSelector grade={grade} setGrade={setGrade} />
+              <View className="flex flex-row gap-4 justify-center items-center">
+                <GradeSelector grade={grade} setGrade={setGrade} />
+                <ColourSelector
+                  boulderColour={boulderColour}
+                  setBoulderColour={setBoulderColour}
+                />
+              </View>
 
               <ClimbingStyleSelector
                 selectedStyle={style}
@@ -136,9 +176,9 @@ export default function Problems() {
               <View className="flex flex-col items-center ">
                 <View className="flex flex-row gap-4 pb-4">
                   <TouchableOpacity
-                    onPress={() => {
+                    onPress={async () => {
                       setShowModal(false);
-                      logProblem(
+                      await logProblem(
                         boulderId,
                         grade,
                         style,
@@ -148,6 +188,7 @@ export default function Problems() {
                         selectHoldTypes,
                         boulderImg,
                         boulderThumbnail,
+                        boulderColour,
                       );
                       setProblems((prevProblemsState) =>
                         prevProblemsState?.map((problem) =>
@@ -158,6 +199,7 @@ export default function Problems() {
                                 style: style,
                                 photo_url: boulderImg,
                                 thumbnail_url: boulderThumbnail,
+                                color: boulderColour,
                               }
                             : problem,
                         ),

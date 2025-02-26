@@ -53,5 +53,19 @@ type ProblemWithHoldTypes = {
   photo_url: string | null;
   thumbnail_url: string | null;
   style: string | null;
+  color: BoulderColour;
   hold_types: HoldType[];
 };
+type BoulderColour =
+  | "VB"
+  | "pink"
+  | "blue"
+  | "green"
+  | "purple"
+  | "white"
+  | "teal"
+  | "black"
+  | "red"
+  | "yellow"
+  | "orange"
+  | "";
