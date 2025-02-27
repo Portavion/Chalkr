@@ -49,10 +49,12 @@ export default function Problems() {
     <View key={item.id} className="m-2">
       <TouchableOpacity
         onPress={() => {
+          console.log(item);
           setBoulderId(item.id);
           setBoulderImg(item.photo_url);
           setBoulderThumbnail(item.thumbnail_url);
           setSelectedHoldTypes(item.hold_types);
+          setBoulderColour(item.color ? item.color : "");
           setGrade(item.grade || 0);
           setStyle(item.style || "other");
           setShowModal(true);
