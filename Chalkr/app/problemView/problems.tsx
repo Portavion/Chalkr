@@ -71,7 +71,7 @@ export default function Problems() {
           >
             <Image
               source={item.thumbnail_url}
-              className="w-[125px] h-[225px] rounded-xl"
+              className="w-[115px] h-[205px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
               placeholder={PlaceholderImage}
@@ -92,7 +92,7 @@ export default function Problems() {
           >
             <Image
               source={item.thumbnail_url}
-              className="w-[125px] h-[225px] rounded-xl"
+              className="w-[115px] h-[205px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
               placeholder={PlaceholderImage}
@@ -102,7 +102,7 @@ export default function Problems() {
           </View>
         )}
         <Text
-          className="absolute bottom-0 right-3 font-extrabold text-xl"
+          className="absolute bottom-1 right-3 font-extrabold text-xl"
           style={{ color: GradeColour[item.grade || 0] || "black" }}
         >
           V{item.grade}
@@ -124,7 +124,7 @@ export default function Problems() {
           alignItems: "center",
           paddingBottom: 20,
         }}
-        className="flex-1 w-full"
+        className="flex-1 mx-2"
         initialNumToRender={6}
         maxToRenderPerBatch={6}
         windowSize={10}

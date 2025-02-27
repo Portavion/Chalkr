@@ -76,7 +76,7 @@ export default function BoulderSelectionModal({
           >
             <Image
               source={item.thumbnail_url || PlaceholderImage}
-              className="w-[100px] h-[150px] rounded-xl"
+              className="w-[125px] h-[222px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
               placeholder={PlaceholderImage}
@@ -95,7 +95,7 @@ export default function BoulderSelectionModal({
           >
             <Image
               source={item.thumbnail_url || PlaceholderImage}
-              className="w-[100px] h-[150px] rounded-xl"
+              className="w-[125px] h-[222px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
               placeholder={PlaceholderImage}
@@ -128,7 +128,7 @@ export default function BoulderSelectionModal({
             data={problems}
             renderItem={renderProblemItem}
             keyExtractor={(item) => item.id.toString()}
-            numColumns={3}
+            numColumns={2}
             contentContainerStyle={{
               flexGrow: 1,
               justifyContent: "center",
