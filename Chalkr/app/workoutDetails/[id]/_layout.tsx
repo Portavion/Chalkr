@@ -1,25 +1,11 @@
+// app/workoutDetails/[id]/_layout.tsx
+import { FontAwesome, FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { Tabs } from "expo-router";
-import { useUser } from "../context/UserContext";
-import { Ionicons } from "@expo/vector-icons";
+import { useLocalSearchParams } from "expo-router";
 
-export default function TabLayout() {
-  const { user, loading } = useUser();
+export default function WorkoutDetailsTabs() {
+  const { id } = useLocalSearchParams();
 
-  if (!user) {
-    return (
-      <Tabs>
-        <Tabs.Screen name="index" options={{ title: "Home" }} />
-        <Tabs.Screen
-          name="workout"
-          options={{ title: "Workout", href: null }}
-        />
-        <Tabs.Screen
-          name="settings"
-          options={{ title: "Settings", href: null }}
-        />
-      </Tabs>
-    );
-  }
   return (
     <Tabs
       screenOptions={{
@@ -31,10 +17,11 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "Home",
+          title: "Details",
+          href: `/workoutDetails/${id}`,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "home-sharp" : "home-outline"}
+              name={focused ? "list-sharp" : "list-outline"}
               color={color}
               size={24}
             />
@@ -42,12 +29,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="workout"
+        name="graphs"
         options={{
-          title: "Workout",
+          title: "Graphs",
+          href: `/workoutDetails/${id}/graphs`,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "barbell-sharp" : "barbell-outline"}
+              name={focused ? "bar-chart-sharp" : "bar-chart-outline"}
               color={color}
               size={24}
             />
@@ -55,12 +43,13 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="settings"
+        name="lists"
         options={{
-          title: "Settings",
+          title: "Problems",
+          href: `/workoutDetails/${id}/lists`,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons
-              name={focused ? "settings-sharp" : "settings-outline"}
+              name={focused ? "images" : "image-outline"}
               color={color}
               size={24}
             />
