@@ -41,9 +41,7 @@ export default function LoggingModal({
   setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
   setBoulderColour: React.Dispatch<React.SetStateAction<BoulderColour | "">>;
   boulderColour: BoulderColour | "";
-  setProblems: React.Dispatch<
-    React.SetStateAction<ProblemWithHoldTypes[] | undefined>
-  >;
+  setProblems: React.Dispatch<React.SetStateAction<Problem[] | undefined>>;
   selectedHoldTypes: HoldType[];
   setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
 }) {

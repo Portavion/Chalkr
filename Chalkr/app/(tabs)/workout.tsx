@@ -30,7 +30,7 @@ export default function WorkoutScreen() {
   const [sectionTimer, setSectionTimer] = useState<number>();
   const [lastTimer, setLastTimer] = useState(0);
   const [workoutTimer, setWorkoutTimer] = useState(0);
-  const [problems, setProblems] = useState<ProblemWithHoldTypes[]>();
+  const [problems, setProblems] = useState<Problem[]>();
   const [boulderThumbnail, setBoulderThumbnail] = useState<null | string>(null);
   const [boulderColour, setBoulderColour] = useState<BoulderColour | "">("");
 

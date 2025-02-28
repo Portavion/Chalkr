@@ -33,13 +33,13 @@ export default function BoulderSelectionModal({
   setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const [problems, setProblems] = useState<ProblemWithHoldTypes[]>();
+  const [problems, setProblems] = useState<Problem[]>();
   const { fetchProblems } = useWorkoutData();
 
   useEffect(() => {
     const loadProblems = async () => {
       try {
-        const problems = (await fetchProblems()) as ProblemWithHoldTypes[];
+        const problems = (await fetchProblems()) as Problem[];
         setProblems(problems || []);
       } catch (error) {
         console.log("error loading problems: " + error);
@@ -49,7 +49,7 @@ export default function BoulderSelectionModal({
     loadProblems();
   }, []);
 
-  const renderProblemItem = ({ item }: { item: ProblemWithHoldTypes }) => (
+  const renderProblemItem = ({ item }: { item: Problem }) => (
     <View key={item.id} className="m-2">
       <TouchableOpacity
         onPress={() => {

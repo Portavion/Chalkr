@@ -29,9 +29,7 @@ export default function ProblemPicture({
   boulderId: number | undefined;
   setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
   boulderImg: string | null;
-  setProblems: React.Dispatch<
-    React.SetStateAction<ProblemWithHoldTypes[] | undefined>
-  >;
+  setProblems: React.Dispatch<React.SetStateAction<Problem[] | undefined>>;
   setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
   boulderThumbnail: string | null;
   setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;

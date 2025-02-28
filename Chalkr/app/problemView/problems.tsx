@@ -21,7 +21,7 @@ export default function Problems() {
   const [boulderId, setBoulderId] = useState<number | undefined>();
   const [boulderImg, setBoulderImg] = useState<null | string>(null);
   const [boulderThumbnail, setBoulderThumbnail] = useState<null | string>(null);
-  const [problems, setProblems] = useState<ProblemWithHoldTypes[]>();
+  const [problems, setProblems] = useState<Problem[]>();
   const [showModal, setShowModal] = useState(false);
   const [selectHoldTypes, setSelectedHoldTypes] = useState<HoldType[]>([]);
   const [boulderColour, setBoulderColour] = useState<BoulderColour | "">("");
@@ -31,7 +31,7 @@ export default function Problems() {
   useEffect(() => {
     const loadProblems = async () => {
       try {
-        const problems = (await fetchProblems()) as ProblemWithHoldTypes[];
+        const problems = (await fetchProblems()) as Problem[];
         if (!problems) {
           console.log("error loading probles");
           return;
@@ -45,7 +45,7 @@ export default function Problems() {
     loadProblems();
   }, []);
 
-  const renderProblemItem = ({ item }: { item: ProblemWithHoldTypes }) => (
+  const renderProblemItem = ({ item }: { item: Problem }) => (
     <View key={item.id} className="m-2">
       <TouchableOpacity
         onPress={() => {

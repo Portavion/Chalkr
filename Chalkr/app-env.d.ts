@@ -43,17 +43,7 @@ type Problem = {
   photo_url: string | null;
   thumbnail_url: string | null;
   style: string | null;
-};
-type ProblemWithHoldTypes = {
-  id: number;
-  name: string | null;
-  grade: number | null;
-  area: string | null;
-  description: string | null;
-  photo_url: string | null;
-  thumbnail_url: string | null;
-  style: string | null;
-  color: BoulderColour;
+  color: Boud;
   hold_types: HoldType[];
 };
 type BoulderColour =
