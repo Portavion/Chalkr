@@ -1,7 +1,7 @@
 import { Modal, Text, View, TouchableOpacity } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import { BlurView } from "expo-blur";
-import ProblemPicture from "./ProblemPicture";
+import RoutePicture from "./RoutePicture";
 import ClimbingStyleSelector from "./ClimbingStyleSelector";
 import GradeSelector from "./GradeSelector/GradeSelector";
 import usePhoto from "@/hooks/usePhoto";
@@ -11,37 +11,37 @@ import ColourSelector from "./ColourSelector";
 export default function LoggingModal({
   handleAscentLog,
   showModal,
-  boulderImg,
-  boulderThumbnail,
+  routeImg,
+  routeThumbnail,
   grade,
-  boulderId,
+  routeId,
   setGrade,
   selectedStyle,
   setSelectedStyle,
-  setBoulderId,
-  setBoulderImg,
-  setProblems,
-  setBoulderThumbnail,
+  setRouteId,
+  setRouteImg,
+  setRoutes,
+  setRouteThumbnail,
   selectedHoldTypes,
   setSelectedHoldTypes,
-  setBoulderColour,
-  boulderColour,
+  setRouteColour,
+  routeColour,
 }: {
   handleAscentLog: (isSuccess: boolean) => void;
   showModal: boolean;
-  boulderId: number | undefined;
-  boulderImg: string | null;
-  boulderThumbnail: string | null;
+  routeId: number | undefined;
+  routeImg: string | null;
+  routeThumbnail: string | null;
   grade: number;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
   selectedStyle: string;
   setSelectedStyle: React.Dispatch<React.SetStateAction<string>>;
-  setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
-  setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
-  setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
-  setBoulderColour: React.Dispatch<React.SetStateAction<BoulderColour | "">>;
-  boulderColour: BoulderColour | "";
-  setProblems: React.Dispatch<React.SetStateAction<Problem[] | undefined>>;
+  setRouteId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setRouteImg: React.Dispatch<React.SetStateAction<string | null>>;
+  setRouteThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
+  setRouteColour: React.Dispatch<React.SetStateAction<RouteColour | "">>;
+  routeColour: RouteColour | "";
+  setRoutes: React.Dispatch<React.SetStateAction<Route[] | undefined>>;
   selectedHoldTypes: HoldType[];
   setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
 }) {
@@ -50,27 +50,27 @@ export default function LoggingModal({
       <Modal animationType="slide" transparent={true} visible={showModal}>
         <BlurView intensity={20} className="flex-1 justify-center items-center">
           <View className="bg-stone-200 border border-stone-500 pt-2 rounded-xl">
-            <ProblemPicture
-              boulderId={boulderId}
-              setBoulderId={setBoulderId}
-              setBoulderImg={setBoulderImg}
+            <RoutePicture
+              routeId={routeId}
+              setRouteId={setRouteId}
+              setRouteImg={setRouteImg}
               setGrade={setGrade}
               setStyle={setSelectedStyle}
               grade={grade}
-              boulderImg={boulderImg}
-              boulderThumbnail={boulderThumbnail}
-              setBoulderThumbnail={setBoulderThumbnail}
-              setProblems={setProblems}
-              boulderColour={boulderColour}
+              routeImg={routeImg}
+              routeThumbnail={routeThumbnail}
+              setRouteThumbnail={setRouteThumbnail}
+              setRoutes={setRoutes}
+              routeColour={routeColour}
               setSelectedHoldTypes={setSelectedHoldTypes}
-              setBoulderColour={setBoulderColour}
+              setRouteColour={setRouteColour}
             />
 
             <View className="flex flex-row gap-4 justify-center items-center">
               <GradeSelector grade={grade} setGrade={setGrade} />
               <ColourSelector
-                boulderColour={boulderColour}
-                setBoulderColour={setBoulderColour}
+                routeColour={routeColour}
+                setRouteColour={setRouteColour}
               />
             </View>
 

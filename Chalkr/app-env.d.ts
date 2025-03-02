@@ -34,7 +34,7 @@ type ClimbingWorkout = {
   rest_time: number;
   warmup_time: number;
 };
-type Problem = {
+type Route = {
   id: number;
   name: string | null;
   grade: number | null;
@@ -46,7 +46,7 @@ type Problem = {
   color: Boud;
   hold_types: HoldType[];
 };
-type BoulderColour =
+type RouteColour =
   | "VB"
   | "pink"
   | "blue"

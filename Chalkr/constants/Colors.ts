@@ -36,7 +36,7 @@ export const Colors = {
   },
 };
 
-export const BoulderColors: Record<BoulderColour, string> = {
+export const BoulderColors: Record<RouteColour, string> = {
   VB: "#FCEC45", // Example: Yellow-ish
   pink: "#FF69B4", // Pink
   blue: "#0084d1", // Blue

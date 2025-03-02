@@ -7,60 +7,60 @@ import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 cssInterop(Image, { className: "style" });
 
-import PlaceholderImage from "@/assets/images/boulder.png";
+import PlaceholderImage from "@/assets/images/route.png";
 import { GradeColour } from "@/constants/Colors";
 
-export default function BoulderSelectionModal({
+export default function RouteSelectionModal({
   showSelectionModal,
   setShowSelectionModal,
-  setBoulderId,
-  setBoulderImg,
-  setBoulderThumbnail,
+  setRouteId,
+  setRouteImg,
+  setRouteThumbnail,
   setGrade,
   setStyle,
   setSelectedHoldTypes,
-  boulderColour,
-  setBoulderColour,
+  routeColour,
+  setRouteColour,
 }: {
   showSelectionModal: boolean;
   setShowSelectionModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
-  setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
-  boulderColour: BoulderColour | "";
-  setBoulderColour: React.Dispatch<React.SetStateAction<BoulderColour | "">>;
-  setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
+  setRouteId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  setRouteImg: React.Dispatch<React.SetStateAction<string | null>>;
+  routeColour: RouteColour | "";
+  setRouteColour: React.Dispatch<React.SetStateAction<RouteColour | "">>;
+  setRouteThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
   setStyle: React.Dispatch<React.SetStateAction<string>>;
   setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
 }) {
-  const [problems, setProblems] = useState<Problem[]>();
-  const { fetchProblems } = useWorkoutData();
+  const [routes, setRoutes] = useState<Route[]>();
+  const { fetchRoutes } = useWorkoutData();
 
   useEffect(() => {
-    const loadProblems = async () => {
+    const loadRoutes = async () => {
       try {
-        const problems = (await fetchProblems()) as Problem[];
-        setProblems(problems || []);
+        const routes = (await fetchRoutes()) as Route[];
+        setRoutes(routes || []);
       } catch (error) {
-        console.log("error loading problems: " + error);
+        console.log("error loading routes: " + error);
       }
     };
 
-    loadProblems();
+    loadRoutes();
   }, []);
 
-  const renderProblemItem = ({ item }: { item: Problem }) => (
+  const renderRouteItem = ({ item }: { item: Route }) => (
     <View key={item.id} className="m-2">
       <TouchableOpacity
         onPress={() => {
-          setBoulderId(item.id);
-          setBoulderImg(item.photo_url);
-          setBoulderThumbnail(item.thumbnail_url);
+          setRouteId(item.id);
+          setRouteImg(item.photo_url);
+          setRouteThumbnail(item.thumbnail_url);
           setGrade(item.grade || 0);
           setStyle(item.style || "other");
           setShowSelectionModal(false);
           setSelectedHoldTypes(item.hold_types);
-          setBoulderColour(item.color ? item.color : "");
+          setRouteColour(item.color ? item.color : "");
         }}
       >
         {!(item.color === "VB") && (
@@ -122,11 +122,11 @@ export default function BoulderSelectionModal({
       <BlurView intensity={20} className="flex-1 justify-center items-center">
         <View className="bg-stone-300 border border-stone-600 rounded-xl w-10/12 max-h-[80%]">
           <View className="flex justify-center content-center items-center my-2">
-            <Text className="text-lg">Select an existing problem</Text>
+            <Text className="text-lg">Select an existing route</Text>
           </View>
           <FlatList
-            data={problems}
-            renderItem={renderProblemItem}
+            data={routes}
+            renderItem={renderRouteItem}
             keyExtractor={(item) => item.id.toString()}
             numColumns={2}
             contentContainerStyle={{

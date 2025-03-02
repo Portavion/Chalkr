@@ -3,10 +3,10 @@ import { useState } from "react";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import {
   ascentsTable,
-  boulderProblemsTable,
+  routesTable,
   workoutAscentTable,
   workoutsTable,
-  boulderProblemHoldTypesTable,
+  routesHoldTypesTable,
 } from "@/db/schema";
 import { openDatabaseSync } from "expo-sqlite";
 import { eq, inArray, sum, ne } from "drizzle-orm";
@@ -35,7 +35,7 @@ const useWorkoutData = () => {
     }
   };
 
-  const logProblem = async (
+  const logRoute = async (
     id: number | undefined,
     grade: number,
     style: string,
@@ -51,12 +51,12 @@ const useWorkoutData = () => {
     try {
       if (id) {
         await db
-          .delete(boulderProblemHoldTypesTable)
-          .where(eq(boulderProblemHoldTypesTable.boulder_id, id));
+          .delete(routesHoldTypesTable)
+          .where(eq(routesHoldTypesTable.route_id, id));
         for (let hold of holdTypes) {
           await db
-            .insert(boulderProblemHoldTypesTable)
-            .values({ boulder_id: id, hold_type: hold })
+            .insert(routesHoldTypesTable)
+            .values({ route_id: id, hold_type: hold })
             .returning();
         }
       }
@@ -66,8 +66,8 @@ const useWorkoutData = () => {
 
     if (isNew || !id) {
       try {
-        const newProblem = await db
-          .insert(boulderProblemsTable)
+        const newRoute = await db
+          .insert(routesTable)
           .values({
             name: name,
             grade: grade,
@@ -79,14 +79,14 @@ const useWorkoutData = () => {
             color: color,
           })
           .returning();
-        return newProblem[0];
+        return newRoute[0];
       } catch (error) {
-        console.log("error logging new boulder: " + error);
+        console.log("error logging new route: " + error);
       }
     } else {
       try {
-        const updatedProblem = await db
-          .update(boulderProblemsTable)
+        const updatedRoute = await db
+          .update(routesTable)
           .set({
             name: name,
             grade: grade,
@@ -97,17 +97,17 @@ const useWorkoutData = () => {
             style: style,
             color: color,
           })
-          .where(eq(boulderProblemsTable.id, id))
+          .where(eq(routesTable.id, id))
           .returning();
-        return updatedProblem[0];
+        return updatedRoute[0];
       } catch (error) {
-        console.log("error updating problem: " + error);
+        console.log("error updating route: " + error);
       }
     }
   };
 
   const logAscent = async (
-    boulderId: number,
+    routeId: number,
     timer: number,
     grade: number,
     isSuccess: boolean,
@@ -117,8 +117,8 @@ const useWorkoutData = () => {
     photoUri: string | null = null,
     thumbnailUri: string | null = null,
   ) => {
-    const problem = await logProblem(
-      boulderId,
+    const route = await logRoute(
+      routeId,
       grade,
       style,
       "",
@@ -129,15 +129,15 @@ const useWorkoutData = () => {
       thumbnailUri,
       color,
     );
-    if (!problem) {
-      console.log("error processing problem");
+    if (!route) {
+      console.log("error processing route");
       return;
     }
     try {
       const addedAscent = await db
         .insert(ascentsTable)
         .values({
-          boulder_id: problem.id,
+          route_id: route.id,
           ascentTime: timer,
           isSuccess: isSuccess,
         })
@@ -148,7 +148,7 @@ const useWorkoutData = () => {
         ascent_id: addedAscent[0].id,
       });
       setLastAscentId(addedAscent[0].id);
-      return problem;
+      return route;
     } catch (error) {
       alert("Error logging ascent");
       console.log(error);
@@ -203,18 +203,18 @@ const useWorkoutData = () => {
   const resetDb = async () => {
     await db.delete(workoutAscentTable);
     await db.delete(ascentsTable);
-    await db.delete(boulderProblemsTable);
+    await db.delete(routesTable);
     await db.delete(workoutsTable);
   };
 
-  const deleteProblem = async (id: number) => {
+  const deleteRoute = async (id: number) => {
     try {
       await db
-        .update(boulderProblemsTable)
+        .update(routesTable)
         .set({
           name: "hidden",
         })
-        .where(eq(boulderProblemsTable.id, id))
+        .where(eq(routesTable.id, id))
         .returning();
     } catch (error) {
       alert("Error hidding ascent");
@@ -222,33 +222,33 @@ const useWorkoutData = () => {
     }
   };
 
-  const fetchProblems = async () => {
+  const fetchRoutes = async () => {
     try {
-      const problems = await db
+      const routes = await db
         .select()
-        .from(boulderProblemsTable)
-        .where(ne(boulderProblemsTable.name, "hidden"));
+        .from(routesTable)
+        .where(ne(routesTable.name, "hidden"));
 
-      const problemsWithHoldtypes = await Promise.all(
-        problems.map(async (problem) => {
+      const routesWithHoldtypes = await Promise.all(
+        routes.map(async (route) => {
           const holdTypes = await db
-            .select({ hold_type: boulderProblemHoldTypesTable.hold_type })
-            .from(boulderProblemHoldTypesTable)
-            .where(eq(boulderProblemHoldTypesTable.boulder_id, problem.id));
+            .select({ hold_type: routesHoldTypesTable.hold_type })
+            .from(routesHoldTypesTable)
+            .where(eq(routesHoldTypesTable.route_id, route.id));
 
           const holdTypeNames = holdTypes
             .map((ht) => ht.hold_type)
             .filter((ht) => ht !== null) as string[];
           return {
-            ...problem,
+            ...route,
             hold_types: holdTypeNames,
           };
         }),
       );
 
-      return problemsWithHoldtypes;
+      return routesWithHoldtypes;
     } catch (error) {
-      console.log("error fetching problems: " + error);
+      console.log("error fetching routes: " + error);
       return;
     }
   };
@@ -260,9 +260,9 @@ const useWorkoutData = () => {
     updateAscentRestTime,
     updateWorkoutTimer,
     resetDb,
-    deleteProblem,
-    fetchProblems,
-    logProblem,
+    deleteRoute,
+    fetchRoutes,
+    logRoute,
   };
 };
 export default useWorkoutData;

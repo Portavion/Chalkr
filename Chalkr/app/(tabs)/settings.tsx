@@ -26,9 +26,9 @@ export default function AboutScreen() {
       />
       <Button title="Reset DB" onPress={resetDb} />
       <View className="flex pt-28 items-center content-center">
-        <Link href={`/problemView/problems`} asChild>
+        <Link href={`/routeView/routes`} asChild>
           <TouchableOpacity className="flex items-center rounded-md border border-amber-400 bg-amber-200 px-2 py-1 text-xs ">
-            <Text className="text-black text-xl">View all problems</Text>
+            <Text className="text-black text-xl">View all routes</Text>
           </TouchableOpacity>
         </Link>
       </View>

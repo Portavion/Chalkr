@@ -4,8 +4,8 @@ import * as ImagePicker from "expo-image-picker";
 
 const usePhoto = () => {
   const copyImageFromCache = async (cacheImageUri: string) => {
-    const destinationDir = FileSystem.documentDirectory + "boulder/";
-    const fileName = `boulder_${Date.now()}.jpg`;
+    const destinationDir = FileSystem.documentDirectory + "route/";
+    const fileName = `route_${Date.now()}.jpg`;
     const destinationUri = destinationDir + fileName;
 
     await FileSystem.makeDirectoryAsync(destinationDir, {
@@ -31,12 +31,12 @@ const usePhoto = () => {
     const thumbnailImageFilename = thumbnailImage.uri.split("/").pop();
     const thumbnailFullPath =
       FileSystem.documentDirectory +
-      "boulder/" +
+      "route/" +
       "thumb_" +
       thumbnailImageFilename;
     try {
       await FileSystem.makeDirectoryAsync(
-        FileSystem.documentDirectory + "boulder/",
+        FileSystem.documentDirectory + "route/",
         { intermediates: true },
       );
       await FileSystem.copyAsync({

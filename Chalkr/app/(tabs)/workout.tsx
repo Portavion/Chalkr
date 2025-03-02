@@ -8,7 +8,7 @@ import AscentStats from "@/components/workoutStats/AscentStats";
 import useWorkoutData from "@/hooks/useWorkoutData";
 
 import StopWorkoutButton from "@/components/logWorkouts/StopWorkoutButton";
-import ProblemPicture from "@/components/logWorkouts/ProblemPicture";
+import RoutePicture from "@/components/logWorkouts/RoutePicture";
 import ClimbingStyleSelector from "@/components/logWorkouts/ClimbingStyleSelector";
 import WorkoutTimer from "@/components/logWorkouts/WorkoutTimer";
 import WorkoutSectionTimer from "@/components/logWorkouts/WorkoutSectionTimer";
@@ -30,16 +30,16 @@ export default function WorkoutScreen() {
   const [sectionTimer, setSectionTimer] = useState<number>();
   const [lastTimer, setLastTimer] = useState(0);
   const [workoutTimer, setWorkoutTimer] = useState(0);
-  const [problems, setProblems] = useState<Problem[]>();
-  const [boulderThumbnail, setBoulderThumbnail] = useState<null | string>(null);
-  const [boulderColour, setBoulderColour] = useState<BoulderColour | "">("");
+  const [routes, setRoutes] = useState<Route[]>();
+  const [routeThumbnail, setRouteThumbnail] = useState<null | string>(null);
+  const [routeColour, setRouteColour] = useState<RouteColour | "">("");
 
   const appState = useRef(AppState.currentState);
 
   const [showModal, setShowModal] = useState(false);
   const [refresh, setRefresh] = useState(false);
-  const [boulderImg, setBoulderImg] = useState<null | string>(null);
-  const [boulderId, setBoulderId] = useState<number | undefined>();
+  const [routeImg, setRouteImg] = useState<null | string>(null);
+  const [routeId, setRouteId] = useState<number | undefined>();
 
   const {
     workoutId,
@@ -61,7 +61,7 @@ export default function WorkoutScreen() {
     if (isClimbing) {
       setShowModal(true);
     } else {
-      //we are not climbing so we can update the rest time of previous boulder
+      //we are not climbing so we can update the rest time of previous route
       updateAscentRestTime(sectionTimer || 0);
     }
     // switch to rest / climbing mode and resets the rest or climbing timer
@@ -73,23 +73,23 @@ export default function WorkoutScreen() {
   const handleAscentLog = async (isSuccess: boolean) => {
     setShowModal(false);
     setRefresh(false);
-    const problem = await logAscent(
-      boulderId || 0,
+    const route = await logAscent(
+      routeId || 0,
       lastTimer,
       grade,
       isSuccess,
       selectedStyle,
       selectHoldTypes,
-      boulderColour,
-      boulderImg,
-      boulderThumbnail,
+      routeColour,
+      routeImg,
+      routeThumbnail,
     );
-    if (!problem) {
-      setBoulderId(0);
+    if (!route) {
+      setRouteId(0);
     } else {
-      setBoulderId(problem.id);
+      setRouteId(route.id);
     }
-    // setBoulderId(problem.id ? problem.id : 0);
+    // setRouteId(route.id ? route.id : 0);
     setRefresh(true);
   };
 
@@ -102,11 +102,11 @@ export default function WorkoutScreen() {
       await updateWorkoutTimer();
 
       setIsWorkoutStarted(false);
-      setBoulderImg(null);
+      setRouteImg(null);
       setSectionTimer(undefined);
       setIsClimbing(false);
       setWorkoutTimer(0);
-      setBoulderColour("");
+      setRouteColour("");
     }
   };
 
@@ -191,20 +191,20 @@ export default function WorkoutScreen() {
         <StopWorkoutButton handleStopWorkout={handleStopWorkout} />
       )}
 
-      <ProblemPicture
-        boulderId={boulderId}
-        setBoulderId={setBoulderId}
-        setBoulderImg={setBoulderImg}
+      <RoutePicture
+        routeId={routeId}
+        setRouteId={setRouteId}
+        setRouteImg={setRouteImg}
         setGrade={setGrade}
         setStyle={setSelectedStyle}
         setSelectedHoldTypes={setSelectedHoldTypes}
         grade={grade}
-        boulderImg={boulderImg}
-        boulderThumbnail={boulderThumbnail}
-        boulderColour={boulderColour}
-        setBoulderColour={setBoulderColour}
-        setBoulderThumbnail={setBoulderThumbnail}
-        setProblems={setProblems}
+        routeImg={routeImg}
+        routeThumbnail={routeThumbnail}
+        routeColour={routeColour}
+        setRouteColour={setRouteColour}
+        setRouteThumbnail={setRouteThumbnail}
+        setRoutes={setRoutes}
       />
 
       <View className="translate-x-20">
@@ -219,8 +219,8 @@ export default function WorkoutScreen() {
       <View className="flex flex-row gap-4 justify-center items-center">
         <GradeSelector grade={grade} setGrade={setGrade} />
         <ColourSelector
-          boulderColour={boulderColour}
-          setBoulderColour={setBoulderColour}
+          routeColour={routeColour}
+          setRouteColour={setRouteColour}
         />
       </View>
 
@@ -247,21 +247,21 @@ export default function WorkoutScreen() {
         <LoggingModal
           handleAscentLog={handleAscentLog}
           showModal={showModal}
-          boulderImg={boulderImg}
-          boulderThumbnail={boulderThumbnail}
+          routeImg={routeImg}
+          routeThumbnail={routeThumbnail}
           grade={grade}
-          boulderId={boulderId}
+          routeId={routeId}
           setGrade={setGrade}
           selectedStyle={selectedStyle}
           setSelectedStyle={setSelectedStyle}
-          setBoulderId={setBoulderId}
+          setRouteId={setRouteId}
           selectedHoldTypes={selectHoldTypes}
           setSelectedHoldTypes={setSelectedHoldTypes}
-          setBoulderImg={setBoulderImg}
-          setProblems={setProblems}
-          setBoulderThumbnail={setBoulderThumbnail}
-          boulderColour={boulderColour}
-          setBoulderColour={setBoulderColour}
+          setRouteImg={setRouteImg}
+          setRoutes={setRoutes}
+          setRouteThumbnail={setRouteThumbnail}
+          routeColour={routeColour}
+          setRouteColour={setRouteColour}
         />
       )}
     </View>

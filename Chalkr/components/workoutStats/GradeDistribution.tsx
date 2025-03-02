@@ -4,8 +4,9 @@ import { View, Text } from "react-native";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import {
   ascentsTable,
-  boulderProblemsTable,
+  routesTable,
   workoutAscentTable,
+  workoutsTable,
 } from "../../db/schema";
 import { openDatabaseSync } from "expo-sqlite";
 import { count, eq, sql } from "drizzle-orm";
@@ -28,7 +29,7 @@ export default function GradeDistribution({ id }: { id: number }) {
     const fetchAscentsStats = async () => {
       const gradeDistributionData = await db
         .select({
-          grade: boulderProblemsTable.grade,
+          grade: routesTable.grade,
           ascentCount: count(), // Count the number of ascents per grade
           successfulAttempts: count(
             sql`CASE WHEN ${ascentsTable.isSuccess} = 1 THEN 1 END`,
@@ -41,11 +42,13 @@ export default function GradeDistribution({ id }: { id: number }) {
         )
         .innerJoin(
           // Add another inner join
-          boulderProblemsTable,
-          eq(ascentsTable.boulder_id, boulderProblemsTable.id), // Join based on the boulder_problem_id
+          routesTable,
+          eq(ascentsTable.route_id, routesTable.id), // Join based on the route_route_id
         )
         .where(eq(workoutAscentTable.workout_id, workoutId))
-        .groupBy(boulderProblemsTable.grade);
+        .groupBy(routesTable.grade);
+
+      console.log(gradeDistributionData);
 
       setGradeDistribution(gradeDistributionData);
     };

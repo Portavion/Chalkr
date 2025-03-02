@@ -22,8 +22,8 @@ export default function RootLayout() {
           options={{ title: "Workout Details" }}
         />
         <Stack.Screen
-          name="problemView/problems"
-          options={{ title: "All Problems" }}
+          name="routeView/routes"
+          options={{ title: "All Routes" }}
         />
       </Stack>
     </UserProvider>

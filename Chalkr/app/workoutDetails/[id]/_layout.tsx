@@ -45,7 +45,7 @@ export default function WorkoutDetailsTabs() {
       <Tabs.Screen
         name="lists"
         options={{
-          title: "Problems",
+          title: "Routes",
           href: `/workoutDetails/${id}/lists`,
           tabBarIcon: ({ color, focused }) => (
             <Ionicons

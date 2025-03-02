@@ -3,42 +3,42 @@ import { Text, View, TouchableOpacity } from "react-native";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 cssInterop(Image, { className: "style" });
-import PlaceholderImage from "@/assets/images/boulder.png";
+import PlaceholderImage from "@/assets/images/route.png";
 import { useEffect, useState } from "react";
-import BoulderSelectionModal from "./BoulderSelectionModal";
-import { GradeColour, BoulderColors } from "@/constants/Colors";
+import RouteSelectionModal from "./RouteSelectionModal";
+import { GradeColour, RouteColors } from "@/constants/Colors";
 
 import usePhoto from "@/hooks/usePhoto";
 
-export default function ProblemPicture({
-  boulderId,
-  setBoulderId,
-  boulderImg,
-  setBoulderImg,
-  boulderThumbnail,
-  setBoulderThumbnail,
-  setProblems,
+export default function RoutePicture({
+  routeId,
+  setRouteId,
+  routeImg,
+  setRouteImg,
+  routeThumbnail,
+  setRouteThumbnail,
+  setRoutes,
   setStyle,
   setGrade,
   grade,
   setSelectedHoldTypes,
   canCreate = true,
-  boulderColour,
-  setBoulderColour,
+  routeColour,
+  setRouteColour,
 }: {
-  boulderId: number | undefined;
-  setBoulderId: React.Dispatch<React.SetStateAction<number | undefined>>;
-  boulderImg: string | null;
-  setProblems: React.Dispatch<React.SetStateAction<Problem[] | undefined>>;
-  setBoulderImg: React.Dispatch<React.SetStateAction<string | null>>;
-  boulderThumbnail: string | null;
-  setBoulderThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
+  routeId: number | undefined;
+  setRouteId: React.Dispatch<React.SetStateAction<number | undefined>>;
+  routeImg: string | null;
+  setRoutes: React.Dispatch<React.SetStateAction<Route[] | undefined>>;
+  setRouteImg: React.Dispatch<React.SetStateAction<string | null>>;
+  routeThumbnail: string | null;
+  setRouteThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
   setStyle: React.Dispatch<React.SetStateAction<string>>;
   setGrade: React.Dispatch<React.SetStateAction<number>>;
   grade: number;
   setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
-  boulderColour: BoulderColour | "";
-  setBoulderColour: React.Dispatch<React.SetStateAction<BoulderColour | "">>;
+  routeColour: RouteColour | "";
+  setRouteColour: React.Dispatch<React.SetStateAction<RouteColour | "">>;
   canCreate?: boolean;
 }) {
   const [showSelectionModal, setShowSelectionModal] = useState(false);
@@ -47,12 +47,12 @@ export default function ProblemPicture({
   const { pickPhotoAsync } = usePhoto();
 
   useEffect(() => {
-    if (boulderColour !== "") {
-      setGradeColour(BoulderColors[boulderColour]);
+    if (routeColour !== "") {
+      setGradeColour(RouteColors[routeColour]);
     } else {
       setGradeColour(GradeColour[grade] || "black");
     }
-  }, [grade, boulderColour]);
+  }, [grade, routeColour]);
 
   const handleTakePhoto = async () => {
     const images = await pickPhotoAsync();
@@ -61,21 +61,21 @@ export default function ProblemPicture({
       alert("Error loading photo");
       return;
     }
-    setBoulderImg(images.imageFullPath);
-    setBoulderThumbnail(images.thumbnailFullPath);
+    setRouteImg(images.imageFullPath);
+    setRouteThumbnail(images.thumbnailFullPath);
 
-    setProblems((prevProblemsState) =>
-      prevProblemsState?.map(
-        (problem) =>
-          problem.id === boulderId // Check if this is the problem to update
+    setRoutes((prevRoutesState) =>
+      prevRoutesState?.map(
+        (route) =>
+          route.id === routeId // Check if this is the route to update
             ? {
-                ...problem, // Keep existing properties
+                ...route, // Keep existing properties
                 // grade: grade, // Update the grade
                 // style: style,
-                boulderImg: boulderImg,
-                thumbnail_url: boulderThumbnail,
+                routeImg: routeImg,
+                thumbnail_url: routeThumbnail,
               }
-            : problem, // Otherwise, keep the problem unchanged
+            : route, // Otherwise, keep the route unchanged
       ),
     );
   };
@@ -83,7 +83,7 @@ export default function ProblemPicture({
   return (
     <>
       <View className="flex items-center">
-        {!(boulderColour === "VB") && (
+        {!(routeColour === "VB") && (
           <View
             style={{
               borderRadius: 16,
@@ -92,7 +92,7 @@ export default function ProblemPicture({
             }}
           >
             <Image
-              source={boulderImg || PlaceholderImage}
+              source={routeImg || PlaceholderImage}
               className="w-[250px] h-[400px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
@@ -100,7 +100,7 @@ export default function ProblemPicture({
             />
           </View>
         )}
-        {boulderColour === "VB" && (
+        {routeColour === "VB" && (
           <View
             style={{
               backgroundColor: "black",
@@ -111,7 +111,7 @@ export default function ProblemPicture({
             }}
           >
             <Image
-              source={boulderImg || PlaceholderImage}
+              source={routeImg || PlaceholderImage}
               className="w-[250px] h-[400px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
@@ -128,18 +128,18 @@ export default function ProblemPicture({
                 }}
                 className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
               >
-                <Text className="">Select problem</Text>
+                <Text className="">Select route</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
                 //TODO: update onPressFunctionn
                 onPress={() => {
-                  setBoulderId(0);
+                  setRouteId(0);
                   handleTakePhoto();
                 }}
                 className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
               >
-                <Text className="">New problem</Text>
+                <Text className="">New route</Text>
               </TouchableOpacity>
             </>
           )}
@@ -154,15 +154,15 @@ export default function ProblemPicture({
           )}
         </View>
         {showSelectionModal && (
-          <BoulderSelectionModal
+          <RouteSelectionModal
             showSelectionModal={true}
             setShowSelectionModal={setShowSelectionModal}
-            setBoulderId={setBoulderId}
-            setBoulderImg={setBoulderImg}
-            setBoulderThumbnail={setBoulderThumbnail}
+            setRouteId={setRouteId}
+            setRouteImg={setRouteImg}
+            setRouteThumbnail={setRouteThumbnail}
             setSelectedHoldTypes={setSelectedHoldTypes}
-            boulderColour={boulderColour}
-            setBoulderColour={setBoulderColour}
+            routeColour={routeColour}
+            setRouteColour={setRouteColour}
             setGrade={setGrade}
             setStyle={setStyle}
           />

@@ -2,8 +2,8 @@ import { Text, View, TouchableOpacity, FlatList, Modal } from "react-native";
 import { useState, useEffect } from "react";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
 import useWorkoutData from "@/hooks/useWorkoutData";
-import PlaceholderImage from "@/assets/images/boulder.png";
-import ProblemPicture from "@/components/logWorkouts/ProblemPicture";
+import PlaceholderImage from "@/assets/images/route.png";
+import RoutePicture from "@/components/logWorkouts/RoutePicture";
 import ClimbingStyleSelector from "@/components/logWorkouts/ClimbingStyleSelector";
 import React from "react";
 import { GradeColour } from "@/constants/Colors";
@@ -15,46 +15,45 @@ import ColourSelector from "@/components/logWorkouts/ColourSelector";
 
 cssInterop(Image, { className: "style" });
 
-export default function Problems() {
+export default function Routes() {
   const [grade, setGrade] = useState(0);
   const [style, setStyle] = useState<string>("other");
-  const [boulderId, setBoulderId] = useState<number | undefined>();
-  const [boulderImg, setBoulderImg] = useState<null | string>(null);
-  const [boulderThumbnail, setBoulderThumbnail] = useState<null | string>(null);
-  const [problems, setProblems] = useState<Problem[]>();
+  const [routeId, setRouteId] = useState<number | undefined>();
+  const [routeImg, setRouteImg] = useState<null | string>(null);
+  const [routeThumbnail, setRouteThumbnail] = useState<null | string>(null);
+  const [routes, setRoutes] = useState<Route[]>();
   const [showModal, setShowModal] = useState(false);
   const [selectHoldTypes, setSelectedHoldTypes] = useState<HoldType[]>([]);
-  const [boulderColour, setBoulderColour] = useState<BoulderColour | "">("");
+  const [routeColour, setRouteColour] = useState<RouteColour | "">("");
 
-  const { fetchProblems, logProblem, deleteProblem } = useWorkoutData();
+  const { fetchRoutes, logRoute, deleteRoute } = useWorkoutData();
 
   useEffect(() => {
-    const loadProblems = async () => {
+    const loadRoutes = async () => {
       try {
-        const problems = (await fetchProblems()) as Problem[];
-        if (!problems) {
+        const routes = (await fetchRoutes()) as Route[];
+        if (!routes) {
           console.log("error loading probles");
           return;
         }
-        setProblems(problems);
+        setRoutes(routes);
       } catch (error) {
-        console.log("error loading problems: " + error);
+        console.log("error loading routes: " + error);
       }
     };
 
-    loadProblems();
+    loadRoutes();
   }, []);
 
-  const renderProblemItem = ({ item }: { item: Problem }) => (
+  const renderRouteItem = ({ item }: { item: Route }) => (
     <View key={item.id} className="m-2">
       <TouchableOpacity
         onPress={() => {
-          console.log(item);
-          setBoulderId(item.id);
-          setBoulderImg(item.photo_url);
-          setBoulderThumbnail(item.thumbnail_url);
+          setRouteId(item.id);
+          setRouteImg(item.photo_url);
+          setRouteThumbnail(item.thumbnail_url);
           setSelectedHoldTypes(item.hold_types);
-          setBoulderColour(item.color ? item.color : "");
+          setRouteColour(item.color ? item.color : "");
           setGrade(item.grade || 0);
           setStyle(item.style || "other");
           setShowModal(true);
@@ -116,8 +115,8 @@ export default function Problems() {
   return (
     <View className="flex flex-auto pt-2 items-center bg-stone-300">
       <FlatList
-        data={problems}
-        renderItem={renderProblemItem}
+        data={routes}
+        renderItem={renderRouteItem}
         keyExtractor={(item) => item.id.toString()}
         numColumns={3}
         contentContainerStyle={{
@@ -140,28 +139,28 @@ export default function Problems() {
             className="flex-1 justify-center items-center"
           >
             <View className="bg-stone-200 border border-stone-500 p-2 rounded-xl">
-              <ProblemPicture
-                boulderImg={boulderImg}
-                boulderThumbnail={boulderThumbnail}
-                boulderId={boulderId}
-                setBoulderId={setBoulderId}
-                setBoulderImg={setBoulderImg}
-                setProblems={setProblems}
-                setBoulderThumbnail={setBoulderThumbnail}
+              <RoutePicture
+                routeImg={routeImg}
+                routeThumbnail={routeThumbnail}
+                routeId={routeId}
+                setRouteId={setRouteId}
+                setRouteImg={setRouteImg}
+                setRoutes={setRoutes}
+                setRouteThumbnail={setRouteThumbnail}
                 setGrade={setGrade}
                 setStyle={setStyle}
                 setSelectedHoldTypes={setSelectedHoldTypes}
                 grade={grade}
-                boulderColour={boulderColour}
-                setBoulderColour={setBoulderColour}
+                routeColour={routeColour}
+                setRouteColour={setRouteColour}
                 canCreate={false}
               />
 
               <View className="flex flex-row gap-4 justify-center items-center">
                 <GradeSelector grade={grade} setGrade={setGrade} />
                 <ColourSelector
-                  boulderColour={boulderColour}
-                  setBoulderColour={setBoulderColour}
+                  routeColour={routeColour}
+                  setRouteColour={setRouteColour}
                 />
               </View>
 
@@ -180,30 +179,30 @@ export default function Problems() {
                   <TouchableOpacity
                     onPress={async () => {
                       setShowModal(false);
-                      await logProblem(
-                        boulderId,
+                      await logRoute(
+                        routeId,
                         grade,
                         style,
                         "",
                         "",
                         "",
                         selectHoldTypes,
-                        boulderImg,
-                        boulderThumbnail,
-                        boulderColour,
+                        routeImg,
+                        routeThumbnail,
+                        routeColour,
                       );
-                      setProblems((prevProblemsState) =>
-                        prevProblemsState?.map((problem) =>
-                          problem.id === boulderId
+                      setRoutes((prevRoutesState) =>
+                        prevRoutesState?.map((route) =>
+                          route.id === routeId
                             ? {
-                                ...problem,
+                                ...route,
                                 grade: grade,
                                 style: style,
-                                photo_url: boulderImg,
-                                thumbnail_url: boulderThumbnail,
-                                color: boulderColour,
+                                photo_url: routeImg,
+                                thumbnail_url: routeThumbnail,
+                                color: routeColour,
                               }
-                            : problem,
+                            : route,
                         ),
                       );
                     }}
@@ -214,11 +213,11 @@ export default function Problems() {
                   <TouchableOpacity
                     onPress={() => {
                       setShowModal(false);
-                      if (boulderId) {
-                        deleteProblem(boulderId);
-                        setProblems((prevProblemsState) =>
-                          prevProblemsState?.filter(
-                            (problem) => problem.id !== boulderId,
+                      if (routeId) {
+                        deleteRoute(routeId);
+                        setRoutes((prevRoutesState) =>
+                          prevRoutesState?.filter(
+                            (route) => route.id !== routeId,
                           ),
                         );
                       }
