@@ -2,6 +2,7 @@ import { View, AppState, AppStateStatus } from "react-native";
 import { useState, useEffect, useRef } from "react";
 import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
 import { differenceInSeconds } from "date-fns";
+import * as Haptics from "expo-haptics";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AscentStats from "@/components/workoutStats/AscentStats";
@@ -51,6 +52,7 @@ export default function WorkoutScreen() {
 
   const handleRecord = async () => {
     // starting the workout and initialising the new workout in the db
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     if (!isWorkoutStarted) {
       setIsWorkoutStarted(true);
       setSectionTimer(0);
@@ -94,6 +96,7 @@ export default function WorkoutScreen() {
   };
 
   const handleStopWorkout = async () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
     if (isClimbing) {
       alert("finish logging the current climb first");
     } else {

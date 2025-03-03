@@ -5,6 +5,7 @@ import RoutePicture from "./RoutePicture";
 import ClimbingStyleSelector from "./ClimbingStyleSelector";
 import GradeSelector from "./GradeSelector/GradeSelector";
 import usePhoto from "@/hooks/usePhoto";
+import * as Haptics from "expo-haptics";
 import HoldTypeSelector from "./HoldTypeSelector";
 import ColourSelector from "./ColourSelector";
 
@@ -89,6 +90,9 @@ export default function LoggingModal({
               <View className="flex flex-row justify-around gap-10 items-center ">
                 <TouchableOpacity
                   onPress={() => {
+                    Haptics.notificationAsync(
+                      Haptics.NotificationFeedbackType.Success,
+                    );
                     handleAscentLog(true);
                   }}
                 >
@@ -100,6 +104,9 @@ export default function LoggingModal({
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={() => {
+                    Haptics.notificationAsync(
+                      Haptics.NotificationFeedbackType.Success,
+                    );
                     handleAscentLog(false);
                   }}
                 >

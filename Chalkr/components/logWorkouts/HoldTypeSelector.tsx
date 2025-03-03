@@ -1,7 +1,7 @@
 import { Text, View, TouchableOpacity, Modal } from "react-native";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import Checkbox from "expo-checkbox";
-
+import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
@@ -31,7 +31,10 @@ export default function HoldTypeSelector({
     <View className="flex flex-row justify-center items-center mb-2">
       <Text className="mr-2 text-lg">Holds : </Text>
       <TouchableOpacity
-        onPress={() => setShowHoldModal(true)}
+        onPress={() => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          setShowHoldModal(true);
+        }}
         className="flex h-10 w-48 flex-row items-center justify-between whitespace-nowrap rounded-md border border-input bg-slate-50 px-3 py-2 text-lg shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
       >
         <Text className="text-lg text-center">
@@ -70,7 +73,8 @@ export default function HoldTypeSelector({
                                 ? true
                                 : false
                             }
-                            onValueChange={() =>
+                            onValueChange={() => {
+                              Haptics.selectionAsync();
                               selectedHoldTypes.includes(holdType)
                                 ? setSelectedHoldTypes(
                                     selectedHoldTypes.filter(
@@ -80,8 +84,8 @@ export default function HoldTypeSelector({
                                 : setSelectedHoldTypes([
                                     ...selectedHoldTypes,
                                     holdType,
-                                  ])
-                            }
+                                  ]);
+                            }}
                           />
                           <Text className="text-lg">{holdType}</Text>
                         </View>
@@ -90,6 +94,9 @@ export default function HoldTypeSelector({
                   </View>
                   <TouchableOpacity
                     onPress={() => {
+                      Haptics.notificationAsync(
+                        Haptics.NotificationFeedbackType.Success,
+                      );
                       setShowHoldModal(false);
                     }}
                   >

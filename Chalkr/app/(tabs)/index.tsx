@@ -10,6 +10,7 @@ import { Divider, Icon, ListItem } from "@rneui/themed";
 import React, { useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
+import * as Haptics from "expo-haptics";
 
 import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
@@ -195,6 +196,10 @@ export default function Index() {
                     <Icon name={"chevron-down"} type="material-community" />
                   }
                   onPress={() => {
+                    Haptics.notificationAsync(
+                      Haptics.NotificationFeedbackType.Success,
+                    );
+
                     handlePress(workout.id);
                   }}
                 >
@@ -251,6 +256,7 @@ export default function Index() {
                       <TouchableOpacity
                         id={`${workout.id}`}
                         className="flex items-center rounded-md border border-amber-400 bg-amber-200 px-2 py-1 text-xs "
+                        onPress={Haptics.selectionAsync}
                       >
                         <Text className="text-black text-xs">details</Text>
                       </TouchableOpacity>

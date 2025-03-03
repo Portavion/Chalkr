@@ -12,6 +12,7 @@ import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 import ColourSelector from "@/components/logWorkouts/ColourSelector";
+import * as Haptics from "expo-haptics";
 
 cssInterop(Image, { className: "style" });
 
@@ -49,6 +50,7 @@ export default function Routes() {
     <View key={item.id} className="m-2">
       <TouchableOpacity
         onPress={() => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           setRouteId(item.id);
           setRouteImg(item.photo_url);
           setRouteThumbnail(item.thumbnail_url);
@@ -179,6 +181,9 @@ export default function Routes() {
                   <TouchableOpacity
                     onPress={async () => {
                       setShowModal(false);
+                      Haptics.notificationAsync(
+                        Haptics.NotificationFeedbackType.Success,
+                      );
                       await logRoute(
                         routeId,
                         grade,
@@ -212,6 +217,9 @@ export default function Routes() {
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => {
+                      Haptics.notificationAsync(
+                        Haptics.NotificationFeedbackType.Success,
+                      );
                       setShowModal(false);
                       if (routeId) {
                         deleteRoute(routeId);

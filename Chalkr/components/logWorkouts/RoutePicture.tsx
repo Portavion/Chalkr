@@ -1,5 +1,5 @@
 import { Text, View, TouchableOpacity } from "react-native";
-
+import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 cssInterop(Image, { className: "style" });
@@ -124,6 +124,9 @@ export default function RoutePicture({
             <>
               <TouchableOpacity
                 onPress={() => {
+                  Haptics.notificationAsync(
+                    Haptics.NotificationFeedbackType.Success,
+                  );
                   setShowSelectionModal(true);
                 }}
                 className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
@@ -134,6 +137,9 @@ export default function RoutePicture({
               <TouchableOpacity
                 //TODO: update onPressFunctionn
                 onPress={() => {
+                  Haptics.notificationAsync(
+                    Haptics.NotificationFeedbackType.Success,
+                  );
                   setRouteId(0);
                   handleTakePhoto();
                 }}
@@ -146,7 +152,12 @@ export default function RoutePicture({
           {!canCreate && (
             <TouchableOpacity
               //TODO: update onPressFunctionn
-              onPress={handleTakePhoto}
+              onPress={() => {
+                Haptics.notificationAsync(
+                  Haptics.NotificationFeedbackType.Success,
+                );
+                handleTakePhoto();
+              }}
               className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
             >
               <Text className="">New photo</Text>

@@ -2,7 +2,7 @@ import { Modal, Text, View, TouchableOpacity, FlatList } from "react-native";
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
 import useWorkoutData from "@/hooks/useWorkoutData";
-
+import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 cssInterop(Image, { className: "style" });
@@ -53,6 +53,7 @@ export default function RouteSelectionModal({
     <View key={item.id} className="m-2">
       <TouchableOpacity
         onPress={() => {
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           setRouteId(item.id);
           setRouteImg(item.photo_url);
           setRouteThumbnail(item.thumbnail_url);
@@ -143,7 +144,10 @@ export default function RouteSelectionModal({
           />
           <View className="flex flex-row justify-center">
             <TouchableOpacity
-              onPress={() => setShowSelectionModal(false)}
+              onPress={() => {
+                Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+                setShowSelectionModal(false);
+              }}
               className="my-2 w-1/4 justify-around rounded-md border bg-slate-50 px-1 py-1 text-lg shadow-sm"
             >
               <Text className="text-center">Cancel</Text>

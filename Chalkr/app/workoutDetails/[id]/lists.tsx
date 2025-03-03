@@ -1,7 +1,6 @@
 // app/workoutDetails/[id]/lists.tsx
-import { View, Text } from "react-native";
+import { View, Text, Button } from "react-native";
 import { useLocalSearchParams } from "expo-router";
-
 export default function ListsScreen() {
   const { id } = useLocalSearchParams();
 
