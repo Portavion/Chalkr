@@ -46,6 +46,7 @@ export default function Routes() {
     loadRoutes();
   }, []);
 
+  //TODO: refactor with lists.tsx to avoid duplicate code
   const renderRouteItem = ({ item }: { item: Route }) => (
     <View key={item.id} className="m-2">
       <TouchableOpacity
