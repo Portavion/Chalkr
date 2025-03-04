@@ -27,12 +27,12 @@ export default function ListsScreen() {
   const [selectHoldTypes, setSelectedHoldTypes] = useState<HoldType[]>([]);
   const [routeColour, setRouteColour] = useState<RouteColour | "">("");
 
-  const { fetchWorkoutRoutes, logRoute, deleteRoute } = useWorkoutData();
+  const { fetchUniqueWorkoutRoutes, logRoute, deleteRoute } = useWorkoutData();
 
   useEffect(() => {
     const loadRoutes = async () => {
       try {
-        const routes = (await fetchWorkoutRoutes(workoutId)) as Route[];
+        const routes = (await fetchUniqueWorkoutRoutes(workoutId)) as Route[];
         if (!routes) {
           console.log("error loading probles");
           return;

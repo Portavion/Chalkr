@@ -252,8 +252,57 @@ const useWorkoutData = () => {
       return;
     }
   };
-
   const fetchWorkoutRoutes = async (workoutId: number) => {
+    try {
+      const routeIds = await db
+        .select({ route_id: routesTable.id })
+        .from(routesTable)
+        .innerJoin(ascentsTable, eq(routesTable.id, ascentsTable.route_id))
+        .innerJoin(
+          workoutAscentTable,
+          eq(ascentsTable.id, workoutAscentTable.ascent_id),
+        )
+        .innerJoin(
+          workoutsTable,
+          eq(workoutAscentTable.workout_id, workoutsTable.id),
+        )
+        .where(eq(workoutsTable.id, workoutId));
+
+      const routes = await Promise.all(
+        routeIds.map(async (routeId) => {
+          const route = await db
+            .select()
+            .from(routesTable)
+            .where(eq(routesTable.id, routeId.route_id))
+            .then((rows) => rows[0]);
+
+          if (!route) {
+            return null;
+          }
+
+          const holdTypes = await db
+            .select({ hold_type: routesHoldTypesTable.hold_type })
+            .from(routesHoldTypesTable)
+            .where(eq(routesHoldTypesTable.route_id, route.id));
+
+          const holdTypeNames = holdTypes
+            .map((ht) => ht.hold_type)
+            .filter((ht) => ht !== null) as string[];
+
+          return {
+            ...route,
+            hold_types: holdTypeNames,
+          };
+        }),
+      );
+
+      return routes.filter((route) => route !== null);
+    } catch (error) {
+      console.log("error fetching routes: " + error);
+      return;
+    }
+  };
+  const fetchUniqueWorkoutRoutes = async (workoutId: number) => {
     try {
       const routeIds = await db
         .selectDistinct({ route_id: routesTable.id })
@@ -302,60 +351,72 @@ const useWorkoutData = () => {
       console.log("error fetching routes: " + error);
       return;
     }
-    // try {
-    //   const routes = await db
-    //     .selectDistinct(routesTable.id)
-    //     .from(routesTable)
-    //     .innerJoin(ascentsTable, eq(routesTable.id, ascentsTable.route_id))
-    //     .innerJoin(
-    //       workoutAscentTable,
-    //       eq(ascentsTable.id, workoutAscentTable.ascent_id),
-    //     )
-    //     .innerJoin(
-    //       workoutsTable,
-    //       eq(workoutAscentTable.workout_id, workoutsTable.id),
-    //     )
-    //     .where(
-    //       and(eq(workoutsTable.id, workoutId), ne(routesTable.name, "hidden")),
-    //     )
-    //     .then((rows) => rows.map((row) => row.routes_table));
-    //
-    //   console.log(routes);
-    //
-    //   const routesWithHoldtypes = await Promise.all(
-    //     routes.map(async (route) => {
-    //       const holdTypes = await db
-    //         .select({ hold_type: routesHoldTypesTable.hold_type })
-    //         .from(routesHoldTypesTable)
-    //         .where(eq(routesHoldTypesTable.route_id, route.id));
-    //
-    //       const holdTypeNames = holdTypes
-    //         .map((ht) => ht.hold_type)
-    //         .filter((ht) => ht !== null) as string[];
-    //
-    //       return {
-    //         ...route,
-    //         hold_types: holdTypeNames,
-    //       };
-    //     }),
-    //   );
-    //
-    //   return routesWithHoldtypes;
-    // } catch (error) {
-    //   console.log("error fetching routes: " + error);
-    //   return;
-    // }
+  };
+
+  const fetchAscentsWithGrade = async (workoutId: number) => {
+    try {
+      const ascentsWithGrade = await db
+        .select({
+          ascentId: ascentsTable.id,
+          routeId: ascentsTable.route_id,
+          ascentTime: ascentsTable.ascentTime,
+          restTime: ascentsTable.restTime,
+          isSuccess: ascentsTable.isSuccess,
+          name: routesTable.name,
+          grade: routesTable.grade,
+          area: routesTable.area,
+          description: routesTable.description,
+          photo_url: routesTable.photo_url,
+          thumbnail_url: routesTable.thumbnail_url,
+          style: routesTable.style,
+          color: routesTable.color,
+        })
+        .from(ascentsTable)
+        .innerJoin(routesTable, eq(ascentsTable.route_id, routesTable.id))
+        .innerJoin(
+          workoutAscentTable,
+          eq(ascentsTable.id, workoutAscentTable.ascent_id),
+        )
+        .innerJoin(
+          workoutsTable,
+          eq(workoutAscentTable.workout_id, workoutsTable.id),
+        )
+        .where(eq(workoutsTable.id, workoutId));
+
+      const ascentsWithHoldTypes = await Promise.all(
+        ascentsWithGrade.map(async (ascent) => {
+          const holdTypes = await db
+            .select({ hold_type: routesHoldTypesTable.hold_type })
+            .from(routesHoldTypesTable)
+            .where(eq(routesHoldTypesTable.route_id, ascent.routeId));
+
+          const holdTypeNames = holdTypes.map((ht) => ht.hold_type);
+
+          return {
+            ...ascent,
+            hold_types: holdTypeNames,
+          } as Ascent; // Type assertion here
+        }),
+      );
+
+      return ascentsWithHoldTypes;
+    } catch (error) {
+      console.log("error fetching ascents: " + error);
+      return;
+    }
   };
 
   return {
     workoutId,
     createNewWorkout,
+    fetchAscentsWithGrade,
     logAscent,
     updateAscentRestTime,
     updateWorkoutTimer,
     resetDb,
     deleteRoute,
     fetchRoutes: fetchAllRoutes,
+    fetchUniqueWorkoutRoutes,
     fetchWorkoutRoutes,
     logRoute,
   };

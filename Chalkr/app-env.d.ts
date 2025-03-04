@@ -34,6 +34,22 @@ type ClimbingWorkout = {
   rest_time: number;
   warmup_time: number;
 };
+type Ascent = {
+  ascentId: number;
+  routeId: number;
+  ascentTime: number;
+  restTime: number;
+  isSuccess: boolean;
+  name: string | null;
+  grade: number | null;
+  area: string | null;
+  description: string | null;
+  photo_url: string | null;
+  thumbnail_url: string | null;
+  style: string | null;
+  color: Boud;
+  hold_types: HoldType[];
+};
 type Route = {
   id: number;
   name: string | null;
