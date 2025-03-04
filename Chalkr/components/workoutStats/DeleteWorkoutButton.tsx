@@ -39,7 +39,7 @@ export default function workoutStats({ id }: { id: number }) {
 
   return (
     <>
-      <View className="mt-32">
+      <View className="mt-32 absolute -top-28 -right-40">
         <TouchableOpacity
           id={String(workoutId)}
           onPress={() => {
@@ -48,7 +48,7 @@ export default function workoutStats({ id }: { id: number }) {
           }}
           className="flex items-center mx-44 rounded-md border border-input bg-red-800 px-3 py-2 text-sm shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
         >
-          <Text className="text-white">Delete workout</Text>
+          <Text className="text-white">Delete</Text>
         </TouchableOpacity>
       </View>
     </>
