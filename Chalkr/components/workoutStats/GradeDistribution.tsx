@@ -48,8 +48,6 @@ export default function GradeDistribution({ id }: { id: number }) {
         .where(eq(workoutAscentTable.workout_id, workoutId))
         .groupBy(routesTable.grade);
 
-      console.log(gradeDistributionData);
-
       setGradeDistribution(gradeDistributionData);
     };
 
