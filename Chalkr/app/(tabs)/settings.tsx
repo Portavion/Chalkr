@@ -1,6 +1,6 @@
 import { Text, View, Button, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useUser } from "../context/UserContext";
+import { useUser } from "@/context/UserContext";
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import useWorkoutData from "@/hooks/useWorkoutData";

@@ -8,7 +8,7 @@ import {
   signInWithCredential,
   signOut,
 } from "firebase/auth";
-import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { FIREBASE_AUTH } from "@/firebaseConfig";
 import { User as FirebaseUser } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
