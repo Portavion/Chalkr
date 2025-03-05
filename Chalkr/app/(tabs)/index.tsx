@@ -7,44 +7,27 @@ import {
   ScrollView,
 } from "react-native";
 import { Divider, Icon, ListItem } from "@rneui/themed";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { Link } from "expo-router";
 import * as Haptics from "expo-haptics";
 
-import * as Google from "expo-auth-session/providers/google";
 import * as WebBrowser from "expo-web-browser";
-import {
-  GoogleAuthProvider,
-  onAuthStateChanged,
-  signInWithCredential,
-  signOut,
-} from "firebase/auth";
-import { FIREBASE_AUTH } from "../../firebaseConfig";
-import { User as FirebaseUser } from "firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 import SignInScreen from "../screens/SignInScreen";
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { usersTable, workoutsTable } from "../../db/schema";
+import { workoutsTable } from "../../db/schema";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../..//drizzle/migrations";
-import { eq } from "drizzle-orm";
 const expo = SQLite.openDatabaseSync("db.db");
 const db = drizzle(expo);
-
+import { useAuth } from "@/context/AuthContext"; // Import useAuth
 import * as SQLite from "expo-sqlite";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
-  const [user, setUser] = useState<FirebaseUser | null>(null);
-  const [loading, setLoading] = useState<Boolean>(false);
-  //TODO: add to .env
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    iosClientId: process.env.EXPO_PUBLIC_IOS_CLIENT_ID,
-  });
+  const { user, loading, signInWithGoogle } = useAuth(); // Use Auth Context
   const [workoutList, setWorkoutList] = useState<
     ClimbingWorkout[] | undefined
   >();
@@ -60,74 +43,8 @@ export default function Index() {
     });
   };
 
-  const checkLocalUser = async () => {
-    try {
-      setLoading(true);
-      const userJSON = await AsyncStorage.getItem("@user");
-      const userData = userJSON ? JSON.parse(userJSON) : null;
-      setUser(userData);
-    } catch (error: unknown) {
-      alert(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (response?.type === "success") {
-      const { id_token } = response.params;
-      const credential = GoogleAuthProvider.credential(id_token);
-      signInWithCredential(FIREBASE_AUTH, credential);
-    }
-  }, [response]);
-
-  useEffect(() => {
-    checkLocalUser();
-    const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
-      if (user) {
-        setUser(user);
-        await AsyncStorage.setItem("@user", JSON.stringify(user));
-        const userDb = await db
-          .select()
-          .from(usersTable)
-          .where(eq(usersTable.email, String(user.email)));
-
-        if (!userDb) {
-          await db.insert(usersTable).values([
-            {
-              email: String(user.email),
-            },
-          ]);
-        }
-      } else {
-      }
-    });
-    return () => unsubscribe();
-  }, []);
-
-  useEffect(() => {
-    if (!success) return;
-    if (!user) return;
-
-    (async () => {
-      const userDb = await db
-        .select()
-        .from(usersTable)
-        .where(eq(usersTable.email, String(user.email)));
-
-      if (userDb.length === 0) {
-        await db.insert(usersTable).values([
-          {
-            email: String(user.email),
-          },
-        ]);
-      }
-    })();
-  }, [success]);
-
   useFocusEffect(
     React.useCallback(() => {
-      //do something when the screen is focused
       let isActive = true;
       //TODO: add fetchWorkout hook to useWorkoutData
       const fetchWorkout = async () => {
@@ -140,7 +57,6 @@ export default function Index() {
       };
       fetchWorkout();
       return () => {
-        //do something when the screen is unfocused
         isActive = false;
       };
     }, []),
@@ -269,6 +185,6 @@ export default function Index() {
       </ScrollView>
     </SafeAreaView>
   ) : (
-    <SignInScreen promptAsync={promptAsync} />
+    <SignInScreen promptAsync={signInWithGoogle} />
   );
 }
