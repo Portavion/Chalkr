@@ -2,15 +2,11 @@ import {
   Text,
   View,
   ActivityIndicator,
-  TouchableOpacity,
   SafeAreaView,
   ScrollView,
 } from "react-native";
-import { Divider, Icon, ListItem } from "@rneui/themed";
 import React, { useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
-import { Link } from "expo-router";
-import * as Haptics from "expo-haptics";
 
 import * as WebBrowser from "expo-web-browser";
 import SignInScreen from "../screens/SignInScreen";
@@ -21,14 +17,14 @@ import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../..//drizzle/migrations";
 const expo = SQLite.openDatabaseSync("db.db");
 const db = drizzle(expo);
-import { useAuth } from "@/context/AuthContext"; // Import useAuth
+import { useAuth } from "@/context/AuthContext";
 import * as SQLite from "expo-sqlite";
 import WorkoutCard from "@/components/WorkoutCard/WorkoutCard";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
-  const { user, loading, signInWithGoogle } = useAuth(); // Use Auth Context
+  const { user, loading, signInWithGoogle } = useAuth();
   const [workoutList, setWorkoutList] = useState<
     ClimbingWorkout[] | undefined
   >();

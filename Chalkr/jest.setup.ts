@@ -1,6 +1,5 @@
 // jest.setup.js
 
-import { View } from "react-native";
 jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),
   notificationAsync: jest.fn(),
