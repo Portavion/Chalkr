@@ -16,7 +16,7 @@ export default function WorkoutSectionTimer({
       <View className="absolute flex-row bottom-28 ">
         <View className="" style={{ width: 80 }}>
           <Text className="text-lg">
-            {!isClimbing ? "Resting" : "Climbing"} :{" "}
+            {!isClimbing ? "Resting" : "Climbing"}:{" "}
           </Text>
         </View>
         <View className="w-15 flex-row justify-center">

@@ -14,7 +14,7 @@ export default function ClimbingStyleSelector({
 }) {
   return (
     <View className="flex flex-row justify-center items-center mb-2">
-      <Text className="mr-8 text-lg">Style : </Text>
+      <Text className="mr-8 text-lg">Style: </Text>
       <TouchableOpacity
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);

@@ -29,7 +29,7 @@ export default function HoldTypeSelector({
 
   return (
     <View className="flex flex-row justify-center items-center mb-2">
-      <Text className="mr-2 text-lg">Holds : </Text>
+      <Text className="mr-2 text-lg">Holds: </Text>
       <TouchableOpacity
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
