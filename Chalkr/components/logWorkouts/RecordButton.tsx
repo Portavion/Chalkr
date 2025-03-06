@@ -9,7 +9,7 @@ export default function RecordButton({
   isClimbing: boolean;
 }) {
   return (
-    <View className="absolute bottom-12">
+    <View className="absolute bottom-20">
       <TouchableOpacity onPress={handleRecord}>
         {!isClimbing ? (
           <Ionicons name="radio-button-on" size={64} color={"#ffba00"} />

@@ -28,7 +28,7 @@ export default function HoldTypeSelector({
   ];
 
   return (
-    <View className="flex flex-row justify-center items-center mb-2">
+    <View className="flex flex-row justify-center items-center ">
       <Text className="mr-2 text-lg">Holds: </Text>
       <TouchableOpacity
         onPress={() => {

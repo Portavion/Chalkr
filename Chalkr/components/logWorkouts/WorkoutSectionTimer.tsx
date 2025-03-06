@@ -13,7 +13,7 @@ export default function WorkoutSectionTimer({
 }) {
   return (
     <>
-      <View className="absolute flex-row bottom-28 ">
+      <View className="absolute flex-row bottom-40">
         <View className="" style={{ width: 80 }}>
           <Text className="text-lg">
             {!isClimbing ? "Resting" : "Climbing"}:{" "}

@@ -11,17 +11,17 @@ export default function WorkoutSectionTimer({
 }) {
   return (
     <>
-      <View className="absolute flex-row bottom-32">
+      <View className="absolute flex-row bottom-14">
         <View className="" style={{ width: 120 }}>
           <Text className="text-lg">Total workout:</Text>
         </View>
         <View className="w-15 flex-row justify-center">
           <Text className="text-lg">
-            {Math.floor(workoutTimer / (60 * 60))
+            {Math.floor(workoutTimer / 3600)
               .toString()
               .padStart(2, "0") +
               ":" +
-              Math.floor(workoutTimer / 60)
+              Math.floor((workoutTimer % 3600) / 60)
                 .toString()
                 .padStart(2, "0") +
               ":" +

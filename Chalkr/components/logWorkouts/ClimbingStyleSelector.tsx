@@ -13,8 +13,8 @@ export default function ClimbingStyleSelector({
   setSelectedStyle: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
-    <View className="flex flex-row justify-center items-center mb-2">
-      <Text className="mr-8 text-lg">Style: </Text>
+    <View className="flex flex-row justify-center items-center my-2">
+      <Text className="mr-2 text-lg">Style: </Text>
       <TouchableOpacity
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);

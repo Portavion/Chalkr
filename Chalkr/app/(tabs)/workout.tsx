@@ -227,15 +227,17 @@ export default function WorkoutScreen() {
         />
       </View>
 
-      <ClimbingStyleSelector
-        selectedStyle={selectedStyle}
-        setSelectedStyle={setSelectedStyle}
-      />
+      <View className="flex flex-row gap-4 justify-center items-center">
+        <ClimbingStyleSelector
+          selectedStyle={selectedStyle}
+          setSelectedStyle={setSelectedStyle}
+        />
 
-      <HoldTypeSelector
-        selectedHoldTypes={selectHoldTypes}
-        setSelectedHoldTypes={setSelectedHoldTypes}
-      />
+        <HoldTypeSelector
+          selectedHoldTypes={selectHoldTypes}
+          setSelectedHoldTypes={setSelectedHoldTypes}
+        />
+      </View>
 
       <WorkoutSectionTimer
         isClimbing={isClimbing}
