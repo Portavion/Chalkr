@@ -17,6 +17,7 @@ export default function WorkoutDetailsTabs() {
           tabBarActiveTintColor: "#ffa000",
           tabBarInactiveTintColor: "grey", // Inactive tab color
           tabBarInactiveBackgroundColor: "#ffecb3",
+          headerShown: false,
         }}
       >
         <Tabs.Screen
