@@ -67,7 +67,7 @@ export default function GraphsScreen() {
                 textAnchor="middle"
                 fontSize="10"
               >
-                {ascent.grade !== null ? ascent.grade.toString() : "N/A"}
+                V{ascent.grade !== null ? ascent.grade.toString() : "N/A"}
               </SVGText>
             </React.Fragment>
           );
