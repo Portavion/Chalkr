@@ -14,6 +14,7 @@ export default function TabLayout() {
             name="workout"
             options={{ title: "Workout", href: null }}
           />
+          <Tabs.Screen name="stats" options={{ title: "Stats", href: null }} />
           <Tabs.Screen
             name="settings"
             options={{ title: "Settings", href: null }}
@@ -51,6 +52,19 @@ export default function TabLayout() {
             tabBarIcon: ({ color, focused }) => (
               <Ionicons
                 name={focused ? "barbell-sharp" : "barbell-outline"}
+                color={color}
+                size={24}
+              />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="stats"
+          options={{
+            title: "Stats",
+            tabBarIcon: ({ color, focused }) => (
+              <Ionicons
+                name={focused ? "stats-chart-sharp" : "stats-chart-outline"}
                 color={color}
                 size={24}
               />
