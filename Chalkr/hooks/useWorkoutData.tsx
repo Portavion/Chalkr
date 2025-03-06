@@ -406,10 +406,23 @@ const useWorkoutData = () => {
     }
   };
 
+  const fetchWorkout = async (workoutId: number) => {
+    try {
+      const workout = await db
+        .select()
+        .from(workoutsTable)
+        .where(eq(workoutsTable.id, workoutId));
+      return workout;
+    } catch (error) {
+      console.log("Error fetching workout: " + error);
+    }
+  };
+
   return {
     workoutId,
     createNewWorkout,
     fetchAscentsWithGrade,
+    fetchWorkout,
     logAscent,
     updateAscentRestTime,
     updateWorkoutTimer,
