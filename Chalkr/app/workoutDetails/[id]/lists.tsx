@@ -5,7 +5,7 @@ import { View, Text, FlatList, Modal, TouchableOpacity } from "react-native";
 import { WorkoutContext } from "./_layout";
 import ClimbingStyleSelector from "@/components/logWorkouts/ClimbingStyleSelector";
 import ColourSelector from "@/components/logWorkouts/ColourSelector";
-import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
+import GradeSelector from "@/components/logWorkouts/GradeSelector";
 import { Image } from "expo-image";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 import RoutePicture from "@/components/logWorkouts/RoutePicture";

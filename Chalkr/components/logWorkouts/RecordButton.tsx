@@ -10,16 +10,31 @@ export default function RecordButton({
 }) {
   return (
     <View className="absolute bottom-20">
-      <TouchableOpacity onPress={handleRecord}>
+      <TouchableOpacity testID="record-button" onPress={handleRecord}>
         {!isClimbing ? (
-          <Ionicons name="radio-button-on" size={64} color={"#ffba00"} />
+          <Ionicons
+            testID="radio-button-on"
+            name="radio-button-on"
+            size={64}
+            color={"#ffba00"}
+          />
         ) : (
           <View>
             <View>
-              <Ionicons name="radio-button-off" size={64} color={"#ffba00"} />
+              <Ionicons
+                testID="radio-button-off"
+                name="radio-button-off"
+                size={64}
+                color={"#ffba00"}
+              />
             </View>
             <View className="absolute left-1/4 top-1/4">
-              <Ionicons name="square" size={32} color={"#ffba00"} />
+              <Ionicons
+                testID="square-icon"
+                name="square"
+                size={32}
+                color={"#ffba00"}
+              />
             </View>
           </View>
         )}

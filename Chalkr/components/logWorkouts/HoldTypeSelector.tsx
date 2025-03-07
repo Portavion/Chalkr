@@ -31,6 +31,7 @@ export default function HoldTypeSelector({
     <View className="flex flex-row justify-center items-center ">
       <Text className="mr-2 text-lg">Holds: </Text>
       <TouchableOpacity
+        testID="hold-button"
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           setShowHoldModal(true);
@@ -73,6 +74,7 @@ export default function HoldTypeSelector({
                                 ? true
                                 : false
                             }
+                            testID={`checkbox-${holdType}`}
                             onValueChange={() => {
                               Haptics.selectionAsync();
                               selectedHoldTypes.includes(holdType)

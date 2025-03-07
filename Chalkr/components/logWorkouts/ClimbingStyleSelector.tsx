@@ -16,6 +16,7 @@ export default function ClimbingStyleSelector({
     <View className="flex flex-row justify-center items-center my-2">
       <Text className="mr-2 text-lg">Style: </Text>
       <TouchableOpacity
+        testID="climbing-style-button"
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           showActionSheet(setSelectedStyle);

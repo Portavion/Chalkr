@@ -17,6 +17,7 @@ export default function ColourSelector({
     <View className="flex flex-row justify-center items-center mb-0">
       <Text className="mr-1 text-lg">Colour:</Text>
       <TouchableOpacity
+        testID="colour-button"
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
 

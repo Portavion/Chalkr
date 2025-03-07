@@ -3,11 +3,10 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { BlurView } from "expo-blur";
 import RoutePicture from "./RoutePicture";
 import ClimbingStyleSelector from "./ClimbingStyleSelector";
-import GradeSelector from "./GradeSelector/GradeSelector";
-import usePhoto from "@/hooks/usePhoto";
+import GradeSelector from "@/components/logWorkouts/GradeSelector";
 import * as Haptics from "expo-haptics";
-import HoldTypeSelector from "./HoldTypeSelector";
-import ColourSelector from "./ColourSelector";
+import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
+import ColourSelector from "@/components/logWorkouts/ColourSelector";
 
 export default function LoggingModal({
   handleAscentLog,
@@ -89,6 +88,7 @@ export default function LoggingModal({
               <Text className="mb-2 text-lg">Was your attempt successful?</Text>
               <View className="flex flex-row justify-around gap-10 items-center ">
                 <TouchableOpacity
+                  testID="successful-button"
                   onPress={() => {
                     Haptics.notificationAsync(
                       Haptics.NotificationFeedbackType.Success,
@@ -103,6 +103,7 @@ export default function LoggingModal({
                   />
                 </TouchableOpacity>
                 <TouchableOpacity
+                  testID="unsuccessful-button"
                   onPress={() => {
                     Haptics.notificationAsync(
                       Haptics.NotificationFeedbackType.Success,

@@ -1,6 +1,6 @@
 import { Text, View, TouchableOpacity, FlatList, Modal } from "react-native";
 import { useState, useEffect } from "react";
-import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
+import GradeSelector from "@/components/logWorkouts/GradeSelector";
 import useWorkoutData from "@/hooks/useWorkoutData";
 import PlaceholderImage from "@/assets/images/route.png";
 import RoutePicture from "@/components/logWorkouts/RoutePicture";

@@ -4,8 +4,20 @@ jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),
   notificationAsync: jest.fn(),
   selectionAsync: jest.fn(),
-  // Add other functions as needed
+  NotificationFeedbackType: {
+    Success: "success", // Or any value that represents Success
+    Warning: "warning", // Add other enum values if needed
+    Error: "error",
+  },
 }));
+
+jest.mock(
+  "react-native/Libraries/ActionSheetIOS/NativeActionSheetManager",
+  () => ({
+    showActionSheetWithOptions: jest.fn(),
+  }),
+);
+
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );

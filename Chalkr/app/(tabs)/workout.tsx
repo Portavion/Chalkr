@@ -1,6 +1,6 @@
 import { View, AppState, AppStateStatus } from "react-native";
 import { useState, useEffect, useRef } from "react";
-import GradeSelector from "@/components/logWorkouts/GradeSelector/GradeSelector";
+import GradeSelector from "@/components/logWorkouts/GradeSelector";
 import { differenceInSeconds } from "date-fns";
 import * as Haptics from "expo-haptics";
 

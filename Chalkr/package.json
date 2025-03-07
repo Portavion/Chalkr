@@ -9,6 +9,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web",
     "test": "jest --watchAll",
+    "test-no-warnings": "NODE_NO_WARNINGS=1 jest --watchAll",
     "lint": "expo lint"
   },
   "jest": {
