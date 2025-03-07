@@ -1,14 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import { ascentsTable, workoutAscentTable } from "../../db/schema";
-import { openDatabaseSync } from "expo-sqlite";
-import { and, count, eq, inArray } from "drizzle-orm";
-const expo = openDatabaseSync("db.db");
-const db = drizzle(expo);
+import useWorkoutData from "@/hooks/useWorkoutData";
 
-//TODO: change to useWorkoutData hook
 export default function AscentStats({
   id,
   refresh = false,
@@ -24,53 +18,23 @@ export default function AscentStats({
   const [ascentFailCount, setAscentFailCount] = useState(0);
   const [ascentSuccessCount, setAscentSuccessCount] = useState(0);
 
+  const { fetchAscentsStats } = useWorkoutData();
+
   const workoutId = id;
 
   useEffect(() => {
-    const fetchAscentsStats = async () => {
-      const ascents = await db
-        .selectDistinct({ id: workoutAscentTable.ascent_id })
-        .from(workoutAscentTable)
-        .where(eq(workoutAscentTable.workout_id, workoutId));
-      const ascentsIds = ascents
-        .map((ascent) => ascent?.id)
-        .filter((id) => id !== null);
-
-      const countAscents = await db
-        .select({ total: count(ascentsTable.id) })
-        .from(ascentsTable)
-        .where(inArray(ascentsTable.id, ascentsIds));
-      setAscentCount(countAscents[0]?.total);
-
-      const countSuccessfulAscents = await db
-        .select({ total: count(ascentsTable.id) })
-        .from(ascentsTable)
-        .where(
-          and(
-            inArray(ascentsTable.id, ascentsIds),
-            eq(ascentsTable.isSuccess, true),
-          ),
-        );
-      setAscentSuccessCount(countSuccessfulAscents[0]?.total);
-
-      const countFailedAscent = await db
-        .select({ total: count(ascentsTable.id) })
-        .from(ascentsTable)
-        .where(
-          and(
-            inArray(ascentsTable.id, ascentsIds),
-            eq(ascentsTable.isSuccess, false),
-          ),
-        );
-      setAscentFailCount(countFailedAscent[0]?.total);
+    const loadStats = async () => {
+      const ascentStats = await fetchAscentsStats(workoutId);
+      setAscentCount(ascentStats.ascentCount);
+      setAscentFailCount(ascentStats.ascentFailCount);
+      setAscentSuccessCount(ascentStats.ascentSuccessCount);
     };
-
     if (reset) {
       setAscentCount(0);
       setAscentFailCount(0);
       setAscentSuccessCount(0);
     } else {
-      fetchAscentsStats();
+      loadStats();
     }
   }, [refresh, reset]);
 

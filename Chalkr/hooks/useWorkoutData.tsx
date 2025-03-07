@@ -9,7 +9,7 @@ import {
   routesHoldTypesTable,
 } from "@/db/schema";
 import { openDatabaseSync } from "expo-sqlite";
-import { eq, inArray, sum, ne, and } from "drizzle-orm";
+import { eq, inArray, sum, ne, and, count } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -252,6 +252,7 @@ const useWorkoutData = () => {
       return;
     }
   };
+
   const fetchWorkoutRoutes = async (workoutId: number) => {
     try {
       const routeIds = await db
@@ -302,6 +303,7 @@ const useWorkoutData = () => {
       return;
     }
   };
+
   const fetchUniqueWorkoutRoutes = async (workoutId: number) => {
     try {
       const routeIds = await db
@@ -418,6 +420,49 @@ const useWorkoutData = () => {
     }
   };
 
+  const fetchAscentsStats = async (workoutId: number) => {
+    const ascents = await db
+      .selectDistinct({ id: workoutAscentTable.ascent_id })
+      .from(workoutAscentTable)
+      .where(eq(workoutAscentTable.workout_id, workoutId));
+    const ascentsIds = ascents
+      .map((ascent) => ascent?.id)
+      .filter((id) => id !== null);
+
+    const countAscents = await db
+      .select({ total: count(ascentsTable.id) })
+      .from(ascentsTable)
+      .where(inArray(ascentsTable.id, ascentsIds));
+    const ascentCount = countAscents[0]?.total;
+
+    const countSuccessfulAscents = await db
+      .select({ total: count(ascentsTable.id) })
+      .from(ascentsTable)
+      .where(
+        and(
+          inArray(ascentsTable.id, ascentsIds),
+          eq(ascentsTable.isSuccess, true),
+        ),
+      );
+    const ascentSuccessCount = countSuccessfulAscents[0]?.total;
+
+    const countFailedAscent = await db
+      .select({ total: count(ascentsTable.id) })
+      .from(ascentsTable)
+      .where(
+        and(
+          inArray(ascentsTable.id, ascentsIds),
+          eq(ascentsTable.isSuccess, false),
+        ),
+      );
+    const ascentFailCount = countFailedAscent[0]?.total;
+    return {
+      ascentCount: ascentCount,
+      ascentSuccessCount: ascentSuccessCount,
+      ascentFailCount: ascentFailCount,
+    };
+  };
+
   return {
     workoutId,
     createNewWorkout,
@@ -431,6 +476,7 @@ const useWorkoutData = () => {
     fetchRoutes: fetchAllRoutes,
     fetchUniqueWorkoutRoutes,
     fetchWorkoutRoutes,
+    fetchAscentsStats,
     logRoute,
   };
 };

@@ -24,8 +24,14 @@ jest.mock("@/hooks/useWorkoutData", () => ({
         color: "blue",
       },
     ]),
+    fetchAscentsStats: jest.fn().mockResolvedValue({
+      ascentCount: 3,
+      ascentSuccessCount: 1,
+      ascentFailCount: 2,
+    }),
   }),
 }));
+
 jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),
   notificationAsync: jest.fn(),
@@ -60,6 +66,19 @@ jest.mock("@react-native-async-storage/async-storage", () =>
 
 jest.mock("expo-sqlite", () => ({
   openDatabaseSync: jest.fn(),
+}));
+
+jest.mock("drizzle-orm/expo-sqlite", () => ({
+  drizzle: jest.fn(() => ({
+    selectDistinct: jest.fn().mockReturnThis(),
+    from: jest.fn().mockReturnThis(),
+    where: jest.fn().mockReturnThis(),
+    select: jest.fn().mockReturnThis(),
+    and: jest.fn().mockReturnThis(),
+    eq: jest.fn().mockReturnThis(),
+    inArray: jest.fn().mockReturnThis(),
+    count: jest.fn().mockReturnThis(),
+  })),
 }));
 
 jest.mock("firebase/auth", () => ({
