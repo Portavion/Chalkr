@@ -463,8 +463,29 @@ const useWorkoutData = () => {
     };
   };
 
+  const deleteWorkout = async (id: number) => {
+    const deletedWorkout = await db
+      .delete(workoutsTable)
+      .where(eq(workoutsTable.id, id))
+      .returning();
+
+    const deletedAscentsWorkoutMatch = await db
+      .delete(workoutAscentTable)
+      .where(eq(workoutAscentTable.workout_id, deletedWorkout[0].id))
+      .returning();
+
+    for (let ascent of deletedAscentsWorkoutMatch) {
+      if (ascent.ascent_id) {
+        await db
+          .delete(ascentsTable)
+          .where(eq(ascentsTable.id, ascent.ascent_id));
+      }
+    }
+  };
+
   return {
     workoutId,
+    deleteWorkout,
     createNewWorkout,
     fetchAscentsWithGrade,
     fetchWorkout,

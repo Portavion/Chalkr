@@ -2,38 +2,15 @@ import { router } from "expo-router";
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import * as Haptics from "expo-haptics";
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import {
-  ascentsTable,
-  workoutAscentTable,
-  workoutsTable,
-} from "../../db/schema";
-import { openDatabaseSync } from "expo-sqlite";
-import { eq } from "drizzle-orm";
+import useWorkoutData from "@/hooks/useWorkoutData";
 
-const expo = openDatabaseSync("db.db");
-const db = drizzle(expo);
 export default function workoutStats({ id }: { id: number }) {
   //TODO: change to useWorkoutData hook
   const workoutId = id;
+  const { deleteWorkout } = useWorkoutData();
+
   const handleDeleteWorkout = async (id: number) => {
-    const deletedWorkout = await db
-      .delete(workoutsTable)
-      .where(eq(workoutsTable.id, id))
-      .returning();
-
-    const deletedAscentsWorkoutMatch = await db
-      .delete(workoutAscentTable)
-      .where(eq(workoutAscentTable.workout_id, deletedWorkout[0].id))
-      .returning();
-
-    for (let ascent of deletedAscentsWorkoutMatch) {
-      if (ascent.ascent_id) {
-        await db
-          .delete(ascentsTable)
-          .where(eq(ascentsTable.id, ascent.ascent_id));
-      }
-    }
+    deleteWorkout(id);
     router.back();
   };
 
