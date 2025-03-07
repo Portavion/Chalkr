@@ -144,6 +144,7 @@ export default function RouteSelectionModal({
           />
           <View className="flex flex-row justify-center">
             <TouchableOpacity
+              testID="cancel-button"
               onPress={() => {
                 Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 setShowSelectionModal(false);
