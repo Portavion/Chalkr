@@ -18,6 +18,13 @@ jest.mock(
   }),
 );
 
+jest.mock("@/hooks/usePhoto", () => ({
+  __esModule: true, // Add this line
+  default: () => ({
+    pickPhotoAsync: jest.fn(),
+  }),
+}));
+
 jest.mock("@react-native-async-storage/async-storage", () =>
   require("@react-native-async-storage/async-storage/jest/async-storage-mock"),
 );

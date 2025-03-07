@@ -248,7 +248,7 @@ const useWorkoutData = () => {
 
       return routesWithHoldtypes;
     } catch (error) {
-      console.log("error fetching routes: " + error);
+      // console.log("error fetching routes: " + error);
       return;
     }
   };

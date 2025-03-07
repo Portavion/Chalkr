@@ -85,6 +85,7 @@ export default function RoutePicture({
       <View className="flex items-center">
         {!(routeColour === "VB") && (
           <View
+            testID="route-image-container"
             style={{
               borderRadius: 16,
               borderWidth: 5,
@@ -93,6 +94,7 @@ export default function RoutePicture({
           >
             <Image
               source={routeImg || PlaceholderImage}
+              testID="route-image"
               className="w-[250px] h-[400px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
@@ -123,6 +125,7 @@ export default function RoutePicture({
           {canCreate && (
             <>
               <TouchableOpacity
+                testID="select-route-button"
                 onPress={() => {
                   Haptics.notificationAsync(
                     Haptics.NotificationFeedbackType.Success,
@@ -136,6 +139,7 @@ export default function RoutePicture({
 
               <TouchableOpacity
                 //TODO: update onPressFunctionn
+                testID="new-route-button"
                 onPress={() => {
                   Haptics.notificationAsync(
                     Haptics.NotificationFeedbackType.Success,
@@ -151,6 +155,7 @@ export default function RoutePicture({
           )}
           {!canCreate && (
             <TouchableOpacity
+              testID="new-photo-button"
               //TODO: update onPressFunctionn
               onPress={() => {
                 Haptics.notificationAsync(
