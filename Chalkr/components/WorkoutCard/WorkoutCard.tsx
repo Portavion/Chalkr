@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { ListItem, Divider, Icon } from "@rneui/themed";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import * as Haptics from "expo-haptics";
 
 const WorkoutCard = ({
@@ -13,6 +13,10 @@ const WorkoutCard = ({
   isExpanded: boolean;
   handlePress: (workoutId: number) => void;
 }) => {
+  const handleDetailsPress = () => {
+    Haptics.selectionAsync();
+    router.push(`/workoutDetails/${workout.id}`);
+  };
   return (
     <View className="pb-6 flex flex-row justify-center items-center">
       <View className="bg-white rounded-xl p-5 shadow-sm w-2/3 h-auto justify-center items-center">
@@ -26,7 +30,13 @@ const WorkoutCard = ({
             </>
           }
           isExpanded={isExpanded}
-          icon={<Icon name={"chevron-down"} type="material-community" />}
+          icon={
+            <Icon
+              testID="accordion-icon"
+              name={"chevron-down"}
+              type="material-community"
+            />
+          }
           onPress={() => {
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             handlePress(workout.id);
@@ -75,15 +85,16 @@ const WorkoutCard = ({
             </View>
           </View>
           <View className="flex items-center content-center">
-            <Link href={`/workoutDetails/${workout.id}`} asChild>
-              <TouchableOpacity
-                id={`${workout.id}`}
-                className="flex items-center rounded-md border border-amber-400 bg-amber-200 px-2 py-1 text-xs "
-                onPress={Haptics.selectionAsync}
-              >
-                <Text className="text-black text-xs">details</Text>
-              </TouchableOpacity>
-            </Link>
+            <TouchableOpacity
+              id={`${workout.id}`}
+              className="flex items-center rounded-md border border-amber-400 bg-amber-200 px-2 py-1 text-xs "
+              onPress={() => {
+                Haptics.selectionAsync;
+                handleDetailsPress();
+              }}
+            >
+              <Text className="text-black text-xs">details</Text>
+            </TouchableOpacity>
           </View>
         </ListItem.Accordion>
       </View>
