@@ -1,9 +1,8 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
-jest.mock("expo-router"); // Only needed if not using moduleNameMapper
+jest.mock("expo-router");
 import WorkoutCard from "@/components/WorkoutCard/WorkoutCard";
 
-// Mock workout data
 const mockWorkout: ClimbingWorkout = {
   id: 1,
   date: "2023-10-01",
@@ -13,7 +12,6 @@ const mockWorkout: ClimbingWorkout = {
   warmup_time: 0,
 };
 
-// Mock onPress function
 const mockOnPress = jest.fn();
 
 describe("WorkoutCard Component", () => {
@@ -41,17 +39,13 @@ describe("WorkoutCard Component", () => {
       />,
     );
 
-    // Initially, the details should not be visible
     expect(queryByText("Total time")).toBeNull();
 
-    // Simulate a press on the accordion
     const accordion = getByTestId("accordion");
     fireEvent.press(accordion);
 
-    // Check if the onPress function was called
     expect(mockOnPress).toHaveBeenCalledWith(mockWorkout.id);
 
-    // Re-render with isExpanded set to true
     const { getByText } = render(
       <WorkoutCard
         workout={mockWorkout}
@@ -60,7 +54,6 @@ describe("WorkoutCard Component", () => {
       />,
     );
 
-    // Check if the details are now visible
     expect(getByText("Total time")).toBeTruthy();
     expect(getByText("05:00")).toBeTruthy(); // Climb time
     expect(getByText("02:00")).toBeTruthy(); // Rest time
@@ -75,7 +68,6 @@ describe("WorkoutCard Component", () => {
       />,
     );
 
-    // Check if the details button is rendered
     const detailsButton = getByText("details");
     expect(detailsButton).toBeTruthy();
   });
