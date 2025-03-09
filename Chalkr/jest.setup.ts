@@ -2,6 +2,7 @@
 jest.mock("@/hooks/useWorkoutData", () => ({
   __esModule: true,
   default: () => ({
+    deleteWorkout: jest.fn().mockResolvedValue(true),
     fetchRoutes: jest.fn().mockResolvedValue([
       {
         id: 1,
@@ -32,11 +33,18 @@ jest.mock("@/hooks/useWorkoutData", () => ({
   }),
 }));
 
+jest.mock("expo-router", () => ({
+  router: {
+    back: jest.fn(),
+  },
+}));
+
 jest.mock("expo-haptics", () => ({
   impactAsync: jest.fn(),
   notificationAsync: jest.fn(),
   ImpactFeedbackStyle: {
     Light: "Light",
+    Heavy: "Heavy",
   },
   selectionAsync: jest.fn(),
   NotificationFeedbackType: {
@@ -94,10 +102,6 @@ jest.mock("firebase/app", () => ({
 
 jest.mock("firebase/analytics", () => ({
   getAnalytics: jest.fn(),
-}));
-
-jest.mock("@rneui/themed", () => ({
-  Button: jest.fn(),
 }));
 
 jest.mock("expo-font", () => {

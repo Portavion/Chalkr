@@ -1,8 +1,7 @@
 import React from "react";
 import { render, fireEvent } from "@testing-library/react-native";
+jest.mock("expo-router"); // Only needed if not using moduleNameMapper
 import WorkoutCard from "@/components/WorkoutCard/WorkoutCard";
-import { ListItem } from "@rneui/themed";
-import { View } from "react-native";
 
 // Mock workout data
 const mockWorkout: ClimbingWorkout = {
@@ -13,10 +12,11 @@ const mockWorkout: ClimbingWorkout = {
   rest_time: 120,
   warmup_time: 0,
 };
+
 // Mock onPress function
 const mockOnPress = jest.fn();
 
-xdescribe("WorkoutCard Component", () => {
+describe("WorkoutCard Component", () => {
   it("renders correctly", () => {
     const { getByText, getByTestId } = render(
       <WorkoutCard
@@ -26,11 +26,8 @@ xdescribe("WorkoutCard Component", () => {
       />,
     );
 
-    // Check if the timestamp is rendered correctly
-    expect(getByText("2023-10-01,")).toBeTruthy();
-    expect(getByText("12:00:00Z")).toBeTruthy();
+    expect(getByText("2025-03-04, 17:22:31")).toBeTruthy();
 
-    // Check if the accordion icon is rendered
     const accordionIcon = getByTestId("accordion-icon");
     expect(accordionIcon).toBeTruthy();
   });

@@ -30,13 +30,7 @@ const WorkoutCard = ({
             </>
           }
           isExpanded={isExpanded}
-          icon={
-            <Icon
-              testID="accordion-icon"
-              name={"chevron-down"}
-              type="material-community"
-            />
-          }
+          icon={<Icon name={"chevron-down"} type="material-community" />}
           onPress={() => {
             Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
             handlePress(workout.id);
