@@ -3,17 +3,19 @@ import { View, Text, Dimensions, ScrollView } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { WorkoutContext } from "./_layout";
 import Svg, { Circle, Rect, Text as SVGText } from "react-native-svg";
-import useWorkoutData from "@/hooks/useWorkoutData";
+import useWorkout from "@/hooks/useWorkout";
+import useAscents from "@/hooks/useAscents";
 
 export default function GraphsScreen() {
   const id = useContext(WorkoutContext);
   const workoutId = Number(id);
   const [ascents, setAscents] = useState<Ascent[]>();
   const [workout, setWorkout] = useState<ClimbingWorkout | undefined>();
-  const { fetchAscentsWithGrade, fetchWorkout } = useWorkoutData();
+  const { fetchWorkout } = useWorkout();
+  const { fetchAscentsWithGrade } = useAscents();
 
   useEffect(() => {
-    const loadRoutes = async () => {
+    const loadAscents = async () => {
       try {
         const ascents = await fetchAscentsWithGrade(workoutId);
         if (!ascents) {
@@ -25,6 +27,7 @@ export default function GraphsScreen() {
         console.log("error loading routes: " + error);
       }
     };
+
     const loadWorkout = async () => {
       try {
         const workout = (await fetchWorkout(workoutId)) as ClimbingWorkout[];
@@ -38,7 +41,7 @@ export default function GraphsScreen() {
       }
     };
 
-    loadRoutes();
+    loadAscents();
     loadWorkout();
   }, []);
 

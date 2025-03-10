@@ -3,14 +3,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useUser } from "@/context/UserContext";
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
-import useWorkoutData from "@/hooks/useWorkoutData";
+import useWorkout from "@/hooks/useWorkout";
 import { Link } from "expo-router";
 import * as Haptics from "expo-haptics";
 
 export default function AboutScreen() {
   const { user, loading } = useUser();
 
-  const { resetDb } = useWorkoutData();
+  const { resetDb } = useWorkout();
 
   if (!user) {
     return <Text>Error, you need to be logged. </Text>;

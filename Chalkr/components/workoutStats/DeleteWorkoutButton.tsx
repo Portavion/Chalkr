@@ -2,11 +2,11 @@ import { router } from "expo-router";
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import * as Haptics from "expo-haptics";
-import useWorkoutData from "@/hooks/useWorkoutData";
+import useWorkout from "@/hooks/useWorkout";
 
 export default function DeleteWorkoutButton({ id }: { id: number }) {
   const workoutId = id;
-  const { deleteWorkout } = useWorkoutData();
+  const { deleteWorkout } = useWorkout();
 
   const handleDeleteWorkout = async () => {
     await deleteWorkout(workoutId);

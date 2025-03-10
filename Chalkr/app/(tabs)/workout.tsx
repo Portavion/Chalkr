@@ -4,7 +4,7 @@ import GradeSelector from "@/components/logWorkouts/GradeSelector";
 import * as Haptics from "expo-haptics";
 
 import AscentStats from "@/components/workoutStats/AscentStats";
-import useWorkoutData from "@/hooks/useWorkoutData";
+import useWorkout from "@/hooks/useWorkout";
 
 import StopWorkoutButton from "@/components/logWorkouts/StopWorkoutButton";
 import RoutePicture from "@/components/logWorkouts/RoutePicture";
@@ -17,6 +17,8 @@ import React from "react";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 import ColourSelector from "@/components/logWorkouts/ColourSelector";
 import useAppStateTimer from "@/hooks/useAppStateTimer";
+import useWorkoutTimer from "@/hooks/useWorkoutTimer";
+import useAscents from "@/hooks/useAscents";
 
 export default function WorkoutScreen() {
   const [grade, setGrade] = useState(0);
@@ -39,13 +41,9 @@ export default function WorkoutScreen() {
   const [routeImg, setRouteImg] = useState<null | string>(null);
   const [routeId, setRouteId] = useState<number | undefined>();
 
-  const {
-    workoutId,
-    createNewWorkout,
-    logAscent,
-    updateAscentRestTime,
-    updateWorkoutTimer,
-  } = useWorkoutData();
+  const { workoutId, createNewWorkout, updateWorkoutTimer } = useWorkout();
+
+  const { logAscent, updateAscentRestTime } = useAscents();
 
   const handleRecord = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -104,24 +102,16 @@ export default function WorkoutScreen() {
   };
 
   useEffect(() => {
-    if (isWorkoutStarted) {
-      const id = setInterval(() => {
-        setSectionTimer((c) => (c || 0) + 1);
-        setWorkoutTimer((c) => c + 1);
-      }, 1000);
-      return () => {
-        if (isWorkoutStarted) {
-          clearInterval(id);
-        }
-      };
-    }
-  }, [sectionTimer]);
-
-  useEffect(() => {
     isWorkoutStartedRef.current = isWorkoutStarted;
   }, [isWorkoutStarted]);
 
   useAppStateTimer(setSectionTimer, setWorkoutTimer, isWorkoutStartedRef);
+  useWorkoutTimer(
+    sectionTimer,
+    setSectionTimer,
+    setWorkoutTimer,
+    isWorkoutStartedRef,
+  );
 
   return (
     <View className="flex flex-auto pt-2 items-center bg-stone-300">

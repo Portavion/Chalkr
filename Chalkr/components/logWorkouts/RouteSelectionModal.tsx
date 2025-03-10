@@ -1,7 +1,6 @@
 import { Modal, Text, View, TouchableOpacity, FlatList } from "react-native";
 import { BlurView } from "expo-blur";
 import { useEffect, useState } from "react";
-import useWorkoutData from "@/hooks/useWorkoutData";
 import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
@@ -9,6 +8,7 @@ cssInterop(Image, { className: "style" });
 
 import PlaceholderImage from "@/assets/images/route.png";
 import { GradeColour } from "@/constants/Colors";
+import useRoutes from "@/hooks/useRoutes";
 
 export default function RouteSelectionModal({
   showSelectionModal,
@@ -34,12 +34,12 @@ export default function RouteSelectionModal({
   setGrade: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const [routes, setRoutes] = useState<Route[]>();
-  const { fetchRoutes } = useWorkoutData();
+  const { fetchAllRoutes } = useRoutes();
 
   useEffect(() => {
     const loadRoutes = async () => {
       try {
-        const routes = (await fetchRoutes()) as Route[];
+        const routes = (await fetchAllRoutes()) as Route[];
         setRoutes(routes || []);
       } catch (error) {
         console.log("error loading routes: " + error);

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { differenceInSeconds } from "date-fns";
 import { AppState, AppStateStatus } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -62,8 +62,6 @@ function useAppStateTimer(
       subscription.remove();
     };
   }, [setSectionTimer, setWorkoutTimer, isWorkoutStartedRef]);
-
-  // return null;
 }
 
 export default useAppStateTimer;

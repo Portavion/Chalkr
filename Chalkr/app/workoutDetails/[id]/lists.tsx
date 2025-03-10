@@ -10,9 +10,9 @@ import { Image } from "expo-image";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 import RoutePicture from "@/components/logWorkouts/RoutePicture";
 import { GradeColour } from "@/constants/Colors";
-import useWorkoutData from "@/hooks/useWorkoutData";
 import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
+import useRoutes from "@/hooks/useRoutes";
 
 export default function ListsScreen() {
   const id = useContext(WorkoutContext);
@@ -27,7 +27,7 @@ export default function ListsScreen() {
   const [selectHoldTypes, setSelectedHoldTypes] = useState<HoldType[]>([]);
   const [routeColour, setRouteColour] = useState<RouteColour | "">("");
 
-  const { fetchUniqueWorkoutRoutes, logRoute, deleteRoute } = useWorkoutData();
+  const { fetchUniqueWorkoutRoutes, logRoute, deleteRoute } = useRoutes();
 
   useEffect(() => {
     const loadRoutes = async () => {

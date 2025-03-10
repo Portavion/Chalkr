@@ -1,7 +1,6 @@
+import useAscents from "@/hooks/useAscents";
 import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
-
-import useWorkoutData from "@/hooks/useWorkoutData";
 
 export default function AscentStats({
   id,
@@ -18,7 +17,7 @@ export default function AscentStats({
   const [ascentFailCount, setAscentFailCount] = useState(0);
   const [ascentSuccessCount, setAscentSuccessCount] = useState(0);
 
-  const { fetchAscentsStats } = useWorkoutData();
+  const { fetchAscentsStats } = useAscents();
 
   const workoutId = id;
 

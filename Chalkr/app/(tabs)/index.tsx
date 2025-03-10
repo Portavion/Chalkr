@@ -19,7 +19,7 @@ const db = drizzle(expo);
 import { useAuth } from "@/context/AuthContext";
 import * as SQLite from "expo-sqlite";
 import WorkoutCard from "@/components/WorkoutCard/WorkoutCard";
-import useWorkoutData from "@/hooks/useWorkoutData";
+import useWorkout from "@/hooks/useWorkout";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -30,7 +30,7 @@ export default function Index() {
     [workoutId: number]: boolean;
   }>({});
 
-  const { fetchWorkoutsList } = useWorkoutData();
+  const { fetchWorkoutsList } = useWorkout();
   const workoutList = fetchWorkoutsList();
 
   const handlePress = (workoutId: number) => {

@@ -1,7 +1,6 @@
 import { Text, View, TouchableOpacity, FlatList, Modal } from "react-native";
 import { useState, useEffect } from "react";
 import GradeSelector from "@/components/logWorkouts/GradeSelector";
-import useWorkoutData from "@/hooks/useWorkoutData";
 import PlaceholderImage from "@/assets/images/route.png";
 import RoutePicture from "@/components/logWorkouts/RoutePicture";
 import ClimbingStyleSelector from "@/components/logWorkouts/ClimbingStyleSelector";
@@ -13,6 +12,7 @@ import { BlurView } from "expo-blur";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 import ColourSelector from "@/components/logWorkouts/ColourSelector";
 import * as Haptics from "expo-haptics";
+import useRoutes from "@/hooks/useRoutes";
 
 cssInterop(Image, { className: "style" });
 
@@ -27,12 +27,12 @@ export default function Routes() {
   const [selectHoldTypes, setSelectedHoldTypes] = useState<HoldType[]>([]);
   const [routeColour, setRouteColour] = useState<RouteColour | "">("");
 
-  const { fetchRoutes, logRoute, deleteRoute } = useWorkoutData();
+  const { fetchAllRoutes, logRoute, deleteRoute } = useRoutes();
 
   useEffect(() => {
     const loadRoutes = async () => {
       try {
-        const routes = (await fetchRoutes()) as Route[];
+        const routes = (await fetchAllRoutes()) as Route[];
         if (!routes) {
           console.log("error loading probles");
           return;

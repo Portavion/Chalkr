@@ -2,12 +2,7 @@ import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import {
-  ascentsTable,
-  routesTable,
-  workoutAscentTable,
-  workoutsTable,
-} from "../../db/schema";
+import { ascentsTable, routesTable, workoutAscentTable } from "../../db/schema";
 import { openDatabaseSync } from "expo-sqlite";
 import { count, eq, sql } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
@@ -24,7 +19,6 @@ export default function GradeDistribution({ id }: { id: number }) {
 
   const workoutId = id;
   //TODO: change to useWorkoutData hook
-
   useEffect(() => {
     const fetchAscentsStats = async () => {
       const gradeDistributionData = await db

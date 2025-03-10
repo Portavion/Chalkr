@@ -1,9 +1,8 @@
 // jest.setup.js
-jest.mock("@/hooks/useWorkoutData", () => ({
+jest.mock("@/hooks/useRoutes", () => ({
   __esModule: true,
   default: () => ({
-    deleteWorkout: jest.fn().mockResolvedValue(true),
-    fetchRoutes: jest.fn().mockResolvedValue([
+    fetchAllRoutes: jest.fn().mockResolvedValue([
       {
         id: 1,
         name: "Route 1",
@@ -25,11 +24,24 @@ jest.mock("@/hooks/useWorkoutData", () => ({
         color: "blue",
       },
     ]),
+  }),
+}));
+
+jest.mock("@/hooks/useAscents", () => ({
+  __esModule: true,
+  default: () => ({
     fetchAscentsStats: jest.fn().mockResolvedValue({
       ascentCount: 3,
       ascentSuccessCount: 1,
       ascentFailCount: 2,
     }),
+  }),
+}));
+
+jest.mock("@/hooks/useWorkout", () => ({
+  __esModule: true,
+  default: () => ({
+    deleteWorkout: jest.fn().mockResolvedValue(true),
   }),
 }));
 

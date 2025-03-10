@@ -14,7 +14,7 @@ describe("<DeleteWorkoutButton />", () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(require("@/hooks/useWorkoutData"), "default").mockReturnValue({
+    jest.spyOn(require("@/hooks/useWorkout"), "default").mockReturnValue({
       deleteWorkout: mockDeleteWorkout,
     });
   });
