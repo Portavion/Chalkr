@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import {
@@ -15,6 +15,8 @@ const db = drizzle(expo);
 
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
+import { useFocusEffect } from "expo-router";
+import React from "react";
 cssInterop(Image, { className: "style" });
 
 const useWorkoutData = () => {
@@ -420,6 +422,41 @@ const useWorkoutData = () => {
     }
   };
 
+  const fetchWorkoutsList = () => {
+    const [workoutList, setWorkoutList] = useState<
+      ClimbingWorkout[] | undefined
+    >();
+
+    // useFocusEffect necessary to re-render list once a new workout is logged / being logged
+    useFocusEffect(
+      useCallback(() => {
+        let isActive = true;
+
+        const fetchWorkout = async () => {
+          try {
+            const fetchedWorkouts = (await db
+              .select()
+              .from(workoutsTable)) as ClimbingWorkout[];
+
+            if (isActive) {
+              setWorkoutList(fetchedWorkouts);
+            }
+          } catch (error) {
+            console.error("Error fetching workouts:", error);
+          }
+        };
+
+        fetchWorkout();
+
+        return () => {
+          isActive = false;
+        };
+      }, []),
+    );
+
+    return workoutList;
+  };
+
   const fetchAscentsStats = async (workoutId: number) => {
     const ascents = await db
       .selectDistinct({ id: workoutAscentTable.ascent_id })
@@ -489,6 +526,7 @@ const useWorkoutData = () => {
     createNewWorkout,
     fetchAscentsWithGrade,
     fetchWorkout,
+    fetchWorkoutsList,
     logAscent,
     updateAscentRestTime,
     updateWorkoutTimer,

@@ -20,18 +20,19 @@ const db = drizzle(expo);
 import { useAuth } from "@/context/AuthContext";
 import * as SQLite from "expo-sqlite";
 import WorkoutCard from "@/components/WorkoutCard/WorkoutCard";
+import useWorkoutData from "@/hooks/useWorkoutData";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function Index() {
   const { user, loading, signInWithGoogle } = useAuth();
-  const [workoutList, setWorkoutList] = useState<
-    ClimbingWorkout[] | undefined
-  >();
   const { success, error } = useMigrations(db, migrations);
   const [expandedWorkouts, setExpandedWorkouts] = useState<{
     [workoutId: number]: boolean;
   }>({});
+
+  const { fetchWorkoutsList } = useWorkoutData();
+  const workoutList = fetchWorkoutsList();
 
   const handlePress = (workoutId: number) => {
     setExpandedWorkouts({
@@ -40,26 +41,7 @@ export default function Index() {
     });
   };
 
-  useFocusEffect(
-    React.useCallback(() => {
-      let isActive = true;
-      //TODO: add fetchWorkout hook to useWorkoutData
-      const fetchWorkout = async () => {
-        const fetchedWorkouts = (await db
-          .select()
-          .from(workoutsTable)) as ClimbingWorkout[];
-        if (isActive) {
-          setWorkoutList(fetchedWorkouts);
-        }
-      };
-      fetchWorkout();
-      return () => {
-        isActive = false;
-      };
-    }, []),
-  );
-
-  if (!success) {
+  if (!success || error) {
     return (
       <View>
         <Text>Migration is in progress...</Text>
@@ -75,7 +57,7 @@ export default function Index() {
     );
   }
 
-  if (user && workoutList?.length === 0) {
+  if (user && !workoutList) {
     return (
       <View className="flex-1 items-center justify-center">
         <Text>No workouts</Text>
