@@ -6,13 +6,12 @@ import {
   ScrollView,
 } from "react-native";
 import React, { useState } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 
 import * as WebBrowser from "expo-web-browser";
 import SignInScreen from "../screens/SignInScreen";
+//TODO: refactor migration and remaining db stuff out of index
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
-import { workoutsTable } from "../../db/schema";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../..//drizzle/migrations";
 const expo = SQLite.openDatabaseSync("db.db");
