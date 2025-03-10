@@ -8,7 +8,7 @@ import {
   workoutsTable,
 } from "@/db/schema";
 import { openDatabaseSync } from "expo-sqlite";
-import { eq, inArray, sum } from "drizzle-orm";
+import { count, eq, inArray, sql, sum } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -144,6 +144,47 @@ const useWorkout = () => {
     }
   };
 
+  const fetchWorkoutStyleDistribution = async (workoutId: number) => {
+    const styleDistributionData = await db
+      .select({
+        style: routesTable.style,
+        ascentCount: count(),
+        successfulAttempts: count(
+          sql`CASE WHEN ${ascentsTable.isSuccess} = 1 THEN 1 END`,
+        ),
+      })
+      .from(ascentsTable)
+      .innerJoin(
+        workoutAscentTable,
+        eq(ascentsTable.id, workoutAscentTable.ascent_id),
+      )
+      .innerJoin(routesTable, eq(ascentsTable.route_id, routesTable.id))
+      .where(eq(workoutAscentTable.workout_id, workoutId))
+      .groupBy(routesTable.style);
+
+    return styleDistributionData;
+  };
+
+  const fetchWorkoutGradeDistribution = async (workoutId: number) => {
+    const gradeDistributionData = await db
+      .select({
+        grade: routesTable.grade,
+        ascentCount: count(),
+        successfulAttempts: count(
+          sql`CASE WHEN ${ascentsTable.isSuccess} = 1 THEN 1 END`,
+        ),
+      })
+      .from(ascentsTable)
+      .innerJoin(
+        workoutAscentTable,
+        eq(ascentsTable.id, workoutAscentTable.ascent_id),
+      )
+      .innerJoin(routesTable, eq(ascentsTable.route_id, routesTable.id))
+      .where(eq(workoutAscentTable.workout_id, workoutId))
+      .groupBy(routesTable.grade);
+
+    return gradeDistributionData;
+  };
   return {
     workoutId,
     deleteWorkout,
@@ -152,6 +193,8 @@ const useWorkout = () => {
     fetchWorkoutsList,
     updateWorkoutTimer,
     resetDb,
+    fetchWorkoutStyleDistribution,
+    fetchWorkoutGradeDistribution,
   };
 };
 export default useWorkout;

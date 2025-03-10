@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import { ascentsTable, routesTable, workoutAscentTable } from "../../db/schema";
-import { openDatabaseSync } from "expo-sqlite";
-import { count, eq, sql } from "drizzle-orm";
-const expo = openDatabaseSync("db.db");
-const db = drizzle(expo);
+import useWorkout from "@/hooks/useWorkout";
 
 export default function StyleDistribution({ id }: { id: number }) {
   const [styleDistribution, setStyleDistribution] = useState<
@@ -17,28 +12,13 @@ export default function StyleDistribution({ id }: { id: number }) {
     }[]
   >();
 
+  const { fetchWorkoutStyleDistribution } = useWorkout();
   const workoutId = id;
 
-  //TODO: change to useWorkoutData hook
   useEffect(() => {
     const fetchAscentsStats = async () => {
-      const styleDistributionData = await db
-        .select({
-          style: routesTable.style,
-          ascentCount: count(), // Count the number of ascents per grade
-          successfulAttempts: count(
-            sql`CASE WHEN ${ascentsTable.isSuccess} = 1 THEN 1 END`,
-          ),
-        })
-        .from(ascentsTable)
-        .innerJoin(
-          workoutAscentTable,
-          eq(ascentsTable.id, workoutAscentTable.ascent_id),
-        )
-        .innerJoin(routesTable, eq(ascentsTable.route_id, routesTable.id))
-        .where(eq(workoutAscentTable.workout_id, workoutId))
-        .groupBy(routesTable.style);
-
+      const styleDistributionData =
+        await fetchWorkoutStyleDistribution(workoutId);
       setStyleDistribution(styleDistributionData);
     };
 
