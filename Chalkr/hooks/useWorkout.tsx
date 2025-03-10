@@ -77,13 +77,13 @@ const useWorkout = () => {
     await db.delete(workoutsTable);
   };
 
-  const fetchWorkout = async (workoutId: number) => {
+  const fetchUniqueWorkout = async (workoutId: number) => {
     try {
       const workout = await db
         .select()
         .from(workoutsTable)
         .where(eq(workoutsTable.id, workoutId));
-      return workout;
+      return workout as ClimbingWorkout[];
     } catch (error) {
       console.log("Error fetching workout: " + error);
     }
@@ -189,7 +189,7 @@ const useWorkout = () => {
     workoutId,
     deleteWorkout,
     createNewWorkout,
-    fetchWorkout,
+    fetchUniqueWorkout,
     fetchWorkoutsList,
     updateWorkoutTimer,
     resetDb,

@@ -138,7 +138,6 @@ export default function RoutePicture({
               </TouchableOpacity>
 
               <TouchableOpacity
-                //TODO: update onPressFunctionn
                 testID="new-route-button"
                 onPress={() => {
                   Haptics.notificationAsync(
@@ -156,7 +155,6 @@ export default function RoutePicture({
           {!canCreate && (
             <TouchableOpacity
               testID="new-photo-button"
-              //TODO: update onPressFunctionn
               onPress={() => {
                 Haptics.notificationAsync(
                   Haptics.NotificationFeedbackType.Success,

@@ -12,7 +12,7 @@ export default function GraphsScreen() {
   const workoutId = Number(id);
   const [ascents, setAscents] = useState<Ascent[]>();
   const [workout, setWorkout] = useState<ClimbingWorkout | undefined>();
-  const { fetchWorkout } = useWorkout();
+  const { fetchUniqueWorkout } = useWorkout();
   const { fetchAscentsWithGrade } = useAscents();
 
   useEffect(() => {
@@ -31,9 +31,11 @@ export default function GraphsScreen() {
 
     const loadWorkout = async () => {
       try {
-        const workout = (await fetchWorkout(workoutId)) as ClimbingWorkout[];
+        const workout = (await fetchUniqueWorkout(
+          workoutId,
+        )) as ClimbingWorkout[];
         if (!workout) {
-          console.log("error loading workout");
+          alert("error loading workout");
           return;
         }
         setWorkout(workout[0]);

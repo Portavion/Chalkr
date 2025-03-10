@@ -1,34 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { View, Text } from "react-native";
 
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import { workoutsTable } from "../../db/schema";
-import { openDatabaseSync } from "expo-sqlite";
-import { eq } from "drizzle-orm";
-const expo = openDatabaseSync("db.db");
-const db = drizzle(expo);
+import useWorkout from "@/hooks/useWorkout";
 
 export default function TimingStats({ id }: { id: number }) {
   const [workout, setWorkout] = useState<ClimbingWorkout>();
   const [duration, setDuration] = useState(0);
   const [climbingTime, setClimbingTime] = useState(0);
   const [restingTime, setRestingTime] = useState(0);
+  const { fetchUniqueWorkout } = useWorkout();
 
   const workoutId = id;
-  //TODO: change to useWorkoutData hook
-
   useEffect(() => {
     const fetchWorkout = async () => {
-      const workout = (await db
-        .select()
-        .from(workoutsTable)
-        .where(eq(workoutsTable.id, workoutId))) as ClimbingWorkout[];
-      if ((workout.length = 1)) {
-        setWorkout(workout[0]);
-        setDuration(workout[0].rest_time + workout[0].climb_time);
-        setRestingTime(workout[0].rest_time);
-        setClimbingTime(workout[0].climb_time);
+      const workout = await fetchUniqueWorkout(workoutId);
+      if (!workout) {
+        alert("error loading workout");
+        return;
       }
+      setWorkout(workout[0]);
+      setDuration(workout[0].rest_time + workout[0].climb_time);
+      setRestingTime(workout[0].rest_time);
+      setClimbingTime(workout[0].climb_time);
     };
 
     fetchWorkout();
