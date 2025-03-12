@@ -46,11 +46,11 @@ describe("<RestPieChart />", () => {
     warmup_time: 0,
   };
 
-  it("renders the pie chart and labels correctly", () => {
+  it("renders the pie chart and labels correctly", async () => {
     render(<RestPieChart workout={workout} />);
 
-    const circles = screen.getAllByTestId("mock-circle");
-    const texts = screen.getAllByTestId("mock-text");
+    const circles = await screen.findAllByTestId("mock-circle");
+    const texts = await screen.findAllByTestId("mock-text");
 
     expect(circles.length).toBe(2);
     expect(texts.length).toBe(2);
@@ -62,8 +62,8 @@ describe("<RestPieChart />", () => {
     expect(texts[1].props.children).toEqual(["Climb:", " ", "67", "%"]);
   });
 
-  it("renders 'No workout to display.' when workout is undefined", () => {
+  it("renders 'No workout to display.' when workout is undefined", async () => {
     render(<RestPieChart workout={undefined} />);
-    expect(screen.getByText("No workout to display.")).toBeTruthy();
+    expect(await screen.findByText("No workout to display.")).toBeTruthy();
   });
 });

@@ -86,15 +86,14 @@ describe("<BarChart />", () => {
     },
   ];
 
-  it("renders bars and grade labels correctly", () => {
+  it("renders bars and grade labels correctly", async () => {
     render(<BarChart ascents={ascents} />);
 
-    expect(screen.getAllByTestId("mock-rect").length).toBe(3);
+    const rects = await screen.findAllByTestId("mock-rect");
+    const texts = await screen.findAllByTestId("mock-text");
 
-    expect(screen.getAllByTestId("mock-text").length).toBe(3);
-
-    const rects = screen.getAllByTestId("mock-rect");
-    const texts = screen.getAllByTestId("mock-text");
+    expect(rects.length).toBe(3);
+    expect(texts.length).toBe(3);
 
     expect(rects[0].props.height).toBeGreaterThan(0);
     expect(texts[0].props.children).toStrictEqual(["V", "1"]);
@@ -106,15 +105,13 @@ describe("<BarChart />", () => {
     expect(texts[2].props.children).toStrictEqual(["V", "2"]);
   });
 
-  it("renders 'No ascents to display.' when ascents is empty", () => {
+  it("renders 'No ascents to display.' when ascents is empty", async () => {
     render(<BarChart ascents={[]} />);
-
-    expect(screen.getByText("No ascents to display.")).toBeTruthy();
+    expect(await screen.findByText("No ascents to display.")).toBeTruthy();
   });
 
-  it("renders 'No ascents to display.' when ascents is null", () => {
+  it("renders 'No ascents to display.' when ascents is null", async () => {
     render(<BarChart ascents={[]} />);
-
-    expect(screen.getByText("No ascents to display.")).toBeTruthy();
+    expect(await screen.findByText("No ascents to display.")).toBeTruthy();
   });
 });

@@ -46,24 +46,26 @@ describe("<LoggingModal />", () => {
     );
   });
 
-  it("renders the modal and its components", () => {
-    expect(screen.getByText("New route")).toBeTruthy();
-    expect(screen.getByText("Grade: ")).toBeTruthy();
-    expect(screen.getByText("Colour: ")).toBeTruthy();
-    expect(screen.getByText("Style: ")).toBeTruthy();
-    expect(screen.getByText("Holds: ")).toBeTruthy();
-    expect(screen.getByText("Was your attempt successful?")).toBeTruthy();
+  it("renders the modal and its components", async () => {
+    expect(await screen.findByText("New route")).toBeTruthy();
+    expect(await screen.findByText("Grade: ")).toBeTruthy();
+    expect(await screen.findByText("Colour: ")).toBeTruthy();
+    expect(await screen.findByText("Style: ")).toBeTruthy();
+    expect(await screen.findByText("Holds: ")).toBeTruthy();
+    expect(
+      await screen.findByText("Was your attempt successful?"),
+    ).toBeTruthy();
   });
 
-  it("logs successful ascent", () => {
-    const successButton = screen.getByTestId("successful-button");
+  it("logs successful ascent", async () => {
+    const successButton = await screen.findByTestId("successful-button");
     fireEvent.press(successButton);
     expect(Haptics.notificationAsync).toHaveBeenCalled();
     expect(handleAscentLog).toHaveBeenCalledWith(true);
   });
 
-  it("logs unsuccessful ascent", () => {
-    const failureButton = screen.getByTestId("unsuccessful-button");
+  it("logs unsuccessful ascent", async () => {
+    const failureButton = await screen.findByTestId("unsuccessful-button");
     fireEvent.press(failureButton);
     expect(Haptics.notificationAsync).toHaveBeenCalled();
     expect(handleAscentLog).toHaveBeenCalledWith(false);

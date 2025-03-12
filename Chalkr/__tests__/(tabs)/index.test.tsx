@@ -36,22 +36,22 @@ describe("<Index />", () => {
     { id: 2, name: "Workout 2" },
   ];
 
-  it("renders 'No workouts' when workoutList is null", () => {
+  it("renders 'No workouts' when workoutList is null", async () => {
     (useWorkout as jest.Mock).mockReturnValue({
       fetchWorkoutsList: jest.fn().mockReturnValue(null),
     });
 
     render(<Index />);
-    expect(screen.getByText("No workouts")).toBeTruthy();
+    expect(await screen.findByText("No workouts")).toBeTruthy();
   });
 
-  it("renders WorkoutCard components when workoutList is not null", () => {
+  it("renders WorkoutCard components when workoutList is not null", async () => {
     (useWorkout as jest.Mock).mockReturnValue({
       fetchWorkoutsList: jest.fn().mockReturnValue(mockWorkouts),
     });
 
     render(<Index />);
-    expect(screen.getByTestId("workout-card-1")).toBeTruthy();
-    expect(screen.getByTestId("workout-card-2")).toBeTruthy();
+    expect(await screen.findByTestId("workout-card-1")).toBeTruthy();
+    expect(await screen.findByTestId("workout-card-2")).toBeTruthy();
   });
 });
