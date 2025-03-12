@@ -11,10 +11,8 @@ import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 cssInterop(Image, { className: "style" });
 
 export default function HoldTypeSelector({
-  selectedHoldTypes,
   contextType,
 }: {
-  selectedHoldTypes: HoldType[];
   contextType: ContextType;
 }) {
   let context;
@@ -55,11 +53,14 @@ export default function HoldTypeSelector({
         className="flex h-10 w-48 flex-row items-center justify-between whitespace-nowrap rounded-md border border-input bg-slate-50 px-3 py-2 text-lg shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
       >
         <Text className="text-lg text-center">
-          {selectedHoldTypes.length <= 1
-            ? selectedHoldTypes[0]
-            : selectedHoldTypes.length > 2
-              ? selectedHoldTypes[0] + ", " + selectedHoldTypes[1] + ", ..."
-              : selectedHoldTypes[0] + ", " + selectedHoldTypes[1]}
+          {state.selectHoldTypes.length <= 1
+            ? state.selectHoldTypes[0]
+            : state.selectHoldTypes.length > 2
+              ? state.selectHoldTypes[0] +
+                ", " +
+                state.selectHoldTypes[1] +
+                ", ..."
+              : state.selectHoldTypes[0] + ", " + state.selectHoldTypes[1]}
         </Text>
         <Ionicons name="chevron-down-sharp" />
       </TouchableOpacity>
@@ -86,23 +87,26 @@ export default function HoldTypeSelector({
                         >
                           <Checkbox
                             value={
-                              selectedHoldTypes.includes(holdType)
+                              state.selectHoldTypes.includes(holdType)
                                 ? true
                                 : false
                             }
                             testID={`checkbox-${holdType}`}
                             onValueChange={() => {
                               Haptics.selectionAsync();
-                              selectedHoldTypes.includes(holdType)
+                              state.selectHoldTypes.includes(holdType)
                                 ? dispatch({
                                     type: "SET_SELECTED_HOLD_TYPES",
-                                    payload: selectedHoldTypes.filter(
+                                    payload: state.selectHoldTypes.filter(
                                       (ht) => ht !== holdType,
                                     ),
                                   })
                                 : dispatch({
                                     type: "SET_SELECTED_HOLD_TYPES",
-                                    payload: [...selectedHoldTypes, holdType],
+                                    payload: [
+                                      ...state.selectHoldTypes,
+                                      holdType,
+                                    ],
                                   });
                             }}
                           />

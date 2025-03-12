@@ -7,10 +7,8 @@ import { WorkoutContext as WorkoutDetailsContext } from "@/app/_layout";
 import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 
 export default function GradeSelector({
-  grade,
   contextType,
 }: {
-  grade: number;
   contextType: ContextType;
 }) {
   let context;
@@ -35,14 +33,14 @@ export default function GradeSelector({
         testID="decrement-button"
         onPress={() => {
           Haptics.selectionAsync();
-          if (grade > 0) {
+          if (state.grade > 0) {
             dispatch({ type: "SET_GRADE", payload: state.grade - 1 });
           }
         }}
       >
         <Ionicons name="remove-circle-outline" size={26} className="mr-1" />
       </TouchableOpacity>
-      <Text className=" text-lg">V{grade}</Text>
+      <Text className=" text-lg">V{state.grade}</Text>
       <TouchableOpacity
         testID="increment-button"
         onPress={() => {

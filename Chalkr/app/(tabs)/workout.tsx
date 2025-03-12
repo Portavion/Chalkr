@@ -162,23 +162,14 @@ export default function WorkoutScreen() {
         </View>
 
         <View className="flex flex-row gap-4 justify-center items-center">
-          <GradeSelector grade={state.grade} contextType="workoutLog" />
-          <ColourSelector
-            routeColour={state.routeColour}
-            contextType="workoutLog"
-          />
+          <GradeSelector contextType="workoutLog" />
+          <ColourSelector contextType="workoutLog" />
         </View>
 
         <View className="flex flex-row gap-4 justify-center items-center">
-          <ClimbingStyleSelector
-            selectedStyle={state.selectedStyle}
-            contextType="workoutLog"
-          />
+          <ClimbingStyleSelector contextType="workoutLog" />
 
-          <HoldTypeSelector
-            selectedHoldTypes={state.selectHoldTypes}
-            contextType="workoutLog"
-          />
+          <HoldTypeSelector contextType="workoutLog" />
         </View>
 
         <WorkoutSectionTimer

@@ -160,22 +160,13 @@ export default function ListsScreen() {
               <RoutePicture canCreate={false} contextType="workoutStats" />
 
               <View className="flex flex-row gap-4 justify-center items-center">
-                <GradeSelector grade={state.grade} contextType="workoutStats" />
-                <ColourSelector
-                  routeColour={state.routeColour}
-                  contextType="workoutStats"
-                />
+                <GradeSelector contextType="workoutStats" />
+                <ColourSelector contextType="workoutStats" />
               </View>
 
-              <ClimbingStyleSelector
-                selectedStyle={state.selectedStyle}
-                contextType="workoutStats"
-              />
+              <ClimbingStyleSelector contextType="workoutStats" />
 
-              <HoldTypeSelector
-                selectedHoldTypes={state.selectHoldTypes}
-                contextType="workoutStats"
-              />
+              <HoldTypeSelector contextType="workoutStats" />
 
               <View className="flex flex-col items-center ">
                 <View className="flex flex-row gap-4 pb-4">

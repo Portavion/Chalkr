@@ -11,12 +11,9 @@ import { GradeColour } from "@/constants/Colors";
 import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
 import useRoutes from "@/hooks/useRoutes";
-import { useLocalSearchParams } from "expo-router";
 import { WorkoutContext } from "@/app/_layout";
 
 export default function ListsScreen() {
-  const { id } = useLocalSearchParams();
-  const workoutId = Number(id);
   const context = useContext(WorkoutContext);
   console.log(context);
   if (!context) {
@@ -159,22 +156,13 @@ export default function ListsScreen() {
               <RoutePicture canCreate={false} contextType="workoutStats" />
 
               <View className="flex flex-row gap-4 justify-center items-center">
-                <GradeSelector grade={state.grade} contextType="workoutStats" />
-                <ColourSelector
-                  routeColour={state.routeColour}
-                  contextType="workoutStats"
-                />
+                <GradeSelector contextType="workoutStats" />
+                <ColourSelector contextType="workoutStats" />
               </View>
 
-              <ClimbingStyleSelector
-                selectedStyle={state.selectedStyle}
-                contextType="workoutStats"
-              />
+              <ClimbingStyleSelector contextType="workoutStats" />
 
-              <HoldTypeSelector
-                selectedHoldTypes={state.selectHoldTypes}
-                contextType="workoutStats"
-              />
+              <HoldTypeSelector contextType="workoutStats" />
 
               <View className="flex flex-col items-center ">
                 <View className="flex flex-row gap-4 pb-4">

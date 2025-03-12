@@ -30,24 +30,12 @@ export default function LoggingModal({
         <BlurView intensity={20} className="flex-1 justify-center items-center">
           <View className="bg-stone-200 border border-stone-500 pt-2 rounded-xl">
             <RoutePicture contextType="workoutLog" />
-
             <View className="flex flex-row gap-4 justify-center items-center">
-              <GradeSelector contextType="workoutLog" grade={state.grade} />
-              <ColourSelector
-                routeColour={state.routeColour}
-                contextType="workoutLog"
-              />
+              <GradeSelector contextType="workoutLog" />
+              <ColourSelector contextType="workoutLog" />
             </View>
-
-            <ClimbingStyleSelector
-              selectedStyle={state.selectedStyle}
-              contextType="workoutLog"
-            />
-
-            <HoldTypeSelector
-              selectedHoldTypes={state.selectHoldTypes}
-              contextType="workoutLog"
-            />
+            <ClimbingStyleSelector contextType="workoutLog" />
+            <HoldTypeSelector contextType="workoutLog" />
 
             <View className="flex justify-center content-center items-center mb-5 mx-5 ">
               <Text className="mb-2 text-lg">Was your attempt successful?</Text>
