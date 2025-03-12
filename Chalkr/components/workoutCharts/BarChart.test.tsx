@@ -59,7 +59,7 @@ describe("<BarChart />", () => {
       restTime: 1,
       isSuccess: true,
       name: null,
-      grade: 3, // Changed to 3
+      grade: 3,
       area: null,
       description: null,
       style: "test",
@@ -75,7 +75,7 @@ describe("<BarChart />", () => {
       restTime: 1,
       isSuccess: true,
       name: null,
-      grade: 2, // Changed to 2
+      grade: 2,
       area: null,
       description: null,
       style: "test",
