@@ -3,15 +3,22 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
+import { WorkoutContext } from "@/app/(tabs)/workout";
+import { useContext } from "react";
 cssInterop(Image, { className: "style" });
 
 export default function ClimbingStyleSelector({
   selectedStyle,
-  setSelectedStyle,
 }: {
   selectedStyle: string;
-  setSelectedStyle: React.Dispatch<React.SetStateAction<string>>;
 }) {
+  const context = useContext(WorkoutContext);
+  if (!context) {
+    throw new Error(
+      "RoutePicture must be used within a WorkoutContext Provider",
+    );
+  }
+  const { state, dispatch } = context;
   return (
     <View className="flex flex-row justify-center items-center my-2">
       <Text className="mr-2 text-lg">Style: </Text>
@@ -19,7 +26,9 @@ export default function ClimbingStyleSelector({
         testID="climbing-style-button"
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          showActionSheet(setSelectedStyle);
+          showActionSheet((climbingStyle) =>
+            dispatch({ type: "SET_SELECTED_STYLE", payload: climbingStyle }),
+          );
         }}
         className="flex h-fit w-fit flex-row items-center justify-between whitespace-nowrap rounded-md border border-input bg-slate-50 px-3 py-2 text-lg shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
       >
@@ -30,7 +39,7 @@ export default function ClimbingStyleSelector({
   );
 }
 const showActionSheet = (
-  setSelectedStyle: React.Dispatch<React.SetStateAction<string>>,
+  setSelectedStyle: (climbingStyle: ClimbingStyle) => void,
 ) => {
   ActionSheetIOS.showActionSheetWithOptions(
     {
@@ -47,19 +56,19 @@ const showActionSheet = (
     },
     (buttonIndex) => {
       if (buttonIndex === 0) {
-        setSelectedStyle("Board");
+        setSelectedStyle("board");
       } else if (buttonIndex === 1) {
-        setSelectedStyle("Cave");
+        setSelectedStyle("cave");
       } else if (buttonIndex === 2) {
-        setSelectedStyle("Dyno");
+        setSelectedStyle("dyno");
       } else if (buttonIndex === 3) {
-        setSelectedStyle("Overhang");
+        setSelectedStyle("overhang");
       } else if (buttonIndex === 4) {
-        setSelectedStyle("Slab");
+        setSelectedStyle("slab");
       } else if (buttonIndex === 5) {
-        setSelectedStyle("Traverse");
+        setSelectedStyle("traverse");
       } else {
-        setSelectedStyle("Other");
+        setSelectedStyle("other");
       }
     },
   );

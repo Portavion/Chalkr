@@ -4,9 +4,10 @@ import { AppState, AppStateStatus } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 function useAppStateTimer(
-  setSectionTimer: React.Dispatch<React.SetStateAction<number | undefined>>,
-  setWorkoutTimer: React.Dispatch<React.SetStateAction<number>>,
+  dispatch: React.Dispatch<WorkoutAction>,
   isWorkoutStartedRef: React.MutableRefObject<boolean>,
+  setSectionTimerAction: "SET_SECTION_TIMER",
+  setWorkoutTimerAction: "SET_WORKOUT_TIMER",
 ) {
   const appState = useRef(AppState.currentState);
 
@@ -32,7 +33,6 @@ function useAppStateTimer(
       console.warn(err);
     }
   };
-
   const handleAppStateChange = async (nextAppState: AppStateStatus) => {
     if (
       appState.current === "active" &&
@@ -46,8 +46,8 @@ function useAppStateTimer(
     ) {
       const elapsed = await getElapsedTime();
       if (elapsed && isWorkoutStartedRef.current) {
-        setSectionTimer((c) => (c || 0) + elapsed);
-        setWorkoutTimer((c) => c + elapsed);
+        dispatch({ type: setSectionTimerAction, payload: elapsed });
+        dispatch({ type: setWorkoutTimerAction, payload: elapsed });
       }
     }
     appState.current = nextAppState;
@@ -61,7 +61,12 @@ function useAppStateTimer(
     return () => {
       subscription.remove();
     };
-  }, [setSectionTimer, setWorkoutTimer, isWorkoutStartedRef]);
+  }, [
+    dispatch,
+    isWorkoutStartedRef,
+    setSectionTimerAction,
+    setWorkoutTimerAction,
+  ]);
 }
 
 export default useAppStateTimer;

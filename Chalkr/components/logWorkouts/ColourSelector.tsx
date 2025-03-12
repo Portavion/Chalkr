@@ -4,15 +4,22 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
+import { WorkoutContext } from "@/app/(tabs)/workout";
+import { useContext } from "react";
 cssInterop(Image, { className: "style" });
 
 export default function ColourSelector({
   routeColour,
-  setRouteColour,
 }: {
   routeColour: RouteColour | "";
-  setRouteColour: React.Dispatch<React.SetStateAction<RouteColour | "">>;
 }) {
+  const context = useContext(WorkoutContext);
+  if (!context) {
+    throw new Error(
+      "RoutePicture must be used within a WorkoutContext Provider",
+    );
+  }
+  const { state, dispatch } = context;
   return (
     <View className="flex flex-row justify-center items-center mb-0">
       <Text className="mr-1 text-lg">Colour:</Text>
@@ -20,8 +27,9 @@ export default function ColourSelector({
         testID="colour-button"
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-
-          showActionSheet(setRouteColour);
+          showActionSheet((routeColour: RouteColour) =>
+            dispatch({ type: "SET_ROUTE_COLOUR", payload: routeColour }),
+          );
         }}
         className="flex h-fit w-fit flex-row items-center justify-between whitespace-nowrap rounded-md border border-input bg-slate-50 px-3 py-2 text-lg shadow-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50 [&>span]:line-clamp-1"
       >
@@ -31,8 +39,9 @@ export default function ColourSelector({
     </View>
   );
 }
+
 const showActionSheet = (
-  setRouteColour: React.Dispatch<React.SetStateAction<RouteColour | "">>,
+  setRouteColour: (routeColour: RouteColour) => void,
 ) => {
   const options: string[] = Object.keys(RouteColors);
   ActionSheetIOS.showActionSheetWithOptions(

@@ -1,6 +1,6 @@
 import { Modal, Text, View, TouchableOpacity, FlatList } from "react-native";
 import { BlurView } from "expo-blur";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
@@ -9,30 +9,24 @@ cssInterop(Image, { className: "style" });
 import PlaceholderImage from "@/assets/images/route.png";
 import { GradeColour } from "@/constants/Colors";
 import useRoutes from "@/hooks/useRoutes";
+import { WorkoutContext } from "@/app/(tabs)/workout";
 
 export default function RouteSelectionModal({
   showSelectionModal,
   setShowSelectionModal,
-  setRouteId,
-  setRouteImg,
-  setRouteThumbnail,
-  setGrade,
-  setStyle,
-  setSelectedHoldTypes,
-  routeColour,
-  setRouteColour,
 }: {
   showSelectionModal: boolean;
   setShowSelectionModal: React.Dispatch<React.SetStateAction<boolean>>;
-  setRouteId: React.Dispatch<React.SetStateAction<number | undefined>>;
-  setRouteImg: React.Dispatch<React.SetStateAction<string | null>>;
-  routeColour: RouteColour | "";
-  setRouteColour: React.Dispatch<React.SetStateAction<RouteColour | "">>;
-  setRouteThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
-  setStyle: React.Dispatch<React.SetStateAction<string>>;
-  setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
-  setGrade: React.Dispatch<React.SetStateAction<number>>;
 }) {
+  const context = useContext(WorkoutContext);
+  if (!context) {
+    throw new Error(
+      "RoutePicture must be used within a WorkoutContext Provider",
+    );
+  }
+
+  const { dispatch } = context;
+
   const [routes, setRoutes] = useState<Route[]>();
   const { fetchAllRoutes } = useRoutes();
 
@@ -54,14 +48,27 @@ export default function RouteSelectionModal({
       <TouchableOpacity
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          setRouteId(item.id);
-          setRouteImg(item.photo_url);
-          setRouteThumbnail(item.thumbnail_url);
-          setGrade(item.grade || 0);
-          setStyle(item.style || "other");
+          dispatch({ type: "SET_ROUTE_ID", payload: item.id });
+          dispatch({ type: "SET_ROUTE_IMG", payload: item.photo_url });
+          dispatch({
+            type: "SET_ROUTE_THUMBNAIL",
+            payload: item.thumbnail_url,
+          });
+          dispatch({ type: "SET_GRADE", payload: item.grade || 0 });
+          dispatch({
+            type: "SET_SELECTED_STYLE",
+            payload: item.style || "other",
+          });
+          dispatch({
+            type: "SET_SELECTED_HOLD_TYPES",
+            payload: item.hold_types,
+          });
+          dispatch({
+            type: "SET_ROUTE_COLOUR",
+            payload: item.color ? item.color : "",
+          });
+
           setShowSelectionModal(false);
-          setSelectedHoldTypes(item.hold_types);
-          setRouteColour(item.color ? item.color : "");
         }}
       >
         {!(item.color === "VB") && (

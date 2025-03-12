@@ -7,82 +7,38 @@ import GradeSelector from "@/components/logWorkouts/GradeSelector";
 import * as Haptics from "expo-haptics";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 import ColourSelector from "@/components/logWorkouts/ColourSelector";
+import { WorkoutContext } from "@/app/(tabs)/workout";
+import { useContext } from "react";
 
 export default function LoggingModal({
   handleAscentLog,
   showModal,
-  routeImg,
-  routeThumbnail,
-  grade,
-  routeId,
-  setGrade,
-  selectedStyle,
-  setSelectedStyle,
-  setRouteId,
-  setRouteImg,
-  setRoutes,
-  setRouteThumbnail,
-  selectedHoldTypes,
-  setSelectedHoldTypes,
-  setRouteColour,
-  routeColour,
 }: {
   handleAscentLog: (isSuccess: boolean) => void;
   showModal: boolean;
-  routeId: number | undefined;
-  routeImg: string | null;
-  routeThumbnail: string | null;
-  grade: number;
-  setGrade: React.Dispatch<React.SetStateAction<number>>;
-  selectedStyle: string;
-  setSelectedStyle: React.Dispatch<React.SetStateAction<string>>;
-  setRouteId: React.Dispatch<React.SetStateAction<number | undefined>>;
-  setRouteImg: React.Dispatch<React.SetStateAction<string | null>>;
-  setRouteThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
-  setRouteColour: React.Dispatch<React.SetStateAction<RouteColour | "">>;
-  routeColour: RouteColour | "";
-  setRoutes: React.Dispatch<React.SetStateAction<Route[] | undefined>>;
-  selectedHoldTypes: HoldType[];
-  setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
 }) {
+  const context = useContext(WorkoutContext);
+  if (!context) {
+    throw new Error(
+      "RoutePicture must be used within a WorkoutContext Provider",
+    );
+  }
+  const { state, dispatch } = context;
   return (
     <>
       <Modal animationType="slide" transparent={true} visible={showModal}>
         <BlurView intensity={20} className="flex-1 justify-center items-center">
           <View className="bg-stone-200 border border-stone-500 pt-2 rounded-xl">
-            <RoutePicture
-              routeId={routeId}
-              setRouteId={setRouteId}
-              setRouteImg={setRouteImg}
-              setGrade={setGrade}
-              setStyle={setSelectedStyle}
-              grade={grade}
-              routeImg={routeImg}
-              routeThumbnail={routeThumbnail}
-              setRouteThumbnail={setRouteThumbnail}
-              setRoutes={setRoutes}
-              routeColour={routeColour}
-              setSelectedHoldTypes={setSelectedHoldTypes}
-              setRouteColour={setRouteColour}
-            />
+            <RoutePicture />
 
             <View className="flex flex-row gap-4 justify-center items-center">
-              <GradeSelector grade={grade} setGrade={setGrade} />
-              <ColourSelector
-                routeColour={routeColour}
-                setRouteColour={setRouteColour}
-              />
+              <GradeSelector grade={state.grade} />
+              <ColourSelector routeColour={state.routeColour} />
             </View>
 
-            <ClimbingStyleSelector
-              selectedStyle={selectedStyle}
-              setSelectedStyle={setSelectedStyle}
-            />
+            <ClimbingStyleSelector selectedStyle={state.selectedStyle} />
 
-            <HoldTypeSelector
-              selectedHoldTypes={selectedHoldTypes}
-              setSelectedHoldTypes={setSelectedHoldTypes}
-            />
+            <HoldTypeSelector selectedHoldTypes={state.selectHoldTypes} />
 
             <View className="flex justify-center content-center items-center mb-5 mx-5 ">
               <Text className="mb-2 text-lg">Was your attempt successful?</Text>

@@ -1,5 +1,12 @@
 import { View } from "react-native";
-import { useState, useEffect, useRef } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useReducer,
+  createContext,
+  Dispatch,
+} from "react";
 import GradeSelector from "@/components/logWorkouts/GradeSelector";
 import * as Haptics from "expo-haptics";
 
@@ -20,180 +27,225 @@ import useAppStateTimer from "@/hooks/useAppStateTimer";
 import useWorkoutTimer from "@/hooks/useWorkoutTimer";
 import useAscents from "@/hooks/useAscents";
 
+interface WorkoutState {
+  grade: number;
+  selectedStyle: ClimbingStyle;
+  selectHoldTypes: HoldType[];
+  isClimbing: boolean;
+  isWorkoutStarted: boolean;
+  sectionTimer: number | undefined;
+  lastTimer: number;
+  workoutTimer: number;
+  routes: Route[] | undefined;
+  routeThumbnail: string | null;
+  routeColour: RouteColour;
+  showModal: boolean;
+  refresh: boolean;
+  routeImg: string | null;
+  routeId: number | undefined;
+}
+
+const initialState: WorkoutState = {
+  grade: 0,
+  selectedStyle: "other",
+  selectHoldTypes: [],
+  isClimbing: false,
+  isWorkoutStarted: false,
+  sectionTimer: undefined,
+  lastTimer: 0,
+  workoutTimer: 0,
+  routes: undefined,
+  routeThumbnail: null,
+  routeColour: "",
+  showModal: false,
+  refresh: false,
+  routeImg: null,
+  routeId: undefined,
+};
+
+interface WorkoutContextType {
+  state: WorkoutState;
+  dispatch: Dispatch<WorkoutAction>;
+}
+
+export const WorkoutContext = createContext<WorkoutContextType | undefined>(
+  undefined,
+);
+
 export default function WorkoutScreen() {
-  const [grade, setGrade] = useState(0);
-  const [selectedStyle, setSelectedStyle] = useState<string>("Other");
-  const [selectHoldTypes, setSelectedHoldTypes] = useState<HoldType[]>([]);
-
-  const [isClimbing, setIsClimbing] = useState(false);
-  const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
-  const isWorkoutStartedRef = useRef(isWorkoutStarted);
-
-  const [sectionTimer, setSectionTimer] = useState<number>();
-  const [lastTimer, setLastTimer] = useState(0);
-  const [workoutTimer, setWorkoutTimer] = useState(0);
-  const [routes, setRoutes] = useState<Route[]>();
-  const [routeThumbnail, setRouteThumbnail] = useState<null | string>(null);
-  const [routeColour, setRouteColour] = useState<RouteColour | "">("");
-
-  const [showModal, setShowModal] = useState(false);
-  const [refresh, setRefresh] = useState(false);
-  const [routeImg, setRouteImg] = useState<null | string>(null);
-  const [routeId, setRouteId] = useState<number | undefined>();
+  const [state, dispatch] = useReducer(workoutReducer, initialState);
+  const isWorkoutStartedRef = useRef(state.isWorkoutStarted);
 
   const { workoutId, createNewWorkout, updateWorkoutTimer } = useWorkout();
-
   const { logAscent, updateAscentRestTime } = useAscents();
+
+  const [showModal, setShowModal] = useState(false);
 
   const handleRecord = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    if (!isWorkoutStarted) {
-      setIsWorkoutStarted(true);
-      setSectionTimer(0);
+    if (!state.isWorkoutStarted) {
+      dispatch({ type: "SET_IS_WORKOUT_STARTED", payload: true });
+      dispatch({ type: "SET_SECTION_TIMER", payload: 0 });
+
       await createNewWorkout();
     }
-    if (isClimbing) {
+    if (state.isClimbing) {
       setShowModal(true);
     } else {
-      updateAscentRestTime(sectionTimer || 0);
+      updateAscentRestTime(state.sectionTimer || 0);
     }
-    setIsClimbing(!isClimbing);
-    setLastTimer(sectionTimer || 0);
-    setSectionTimer(0);
+    dispatch({ type: "SET_IS_CLIMBING", payload: !state.isClimbing });
+    dispatch({ type: "SET_LAST_TIMER", payload: state.sectionTimer || 0 });
+    dispatch({ type: "SET_SECTION_TIMER", payload: 0 });
   };
 
   const handleAscentLog = async (isSuccess: boolean) => {
     setShowModal(false);
-    setRefresh(false);
+
+    dispatch({ type: "SET_REFRESH", payload: false });
+
     const route = await logAscent(
-      routeId || 0,
-      lastTimer,
-      grade,
+      state.routeId || 0,
+      state.lastTimer,
+      state.grade,
       isSuccess,
-      selectedStyle,
-      selectHoldTypes,
-      routeColour,
-      routeImg,
-      routeThumbnail,
+      state.selectedStyle,
+      state.selectHoldTypes,
+      state.routeColour,
+      state.routeImg,
+      state.routeThumbnail,
     );
     if (!route) {
-      setRouteId(0);
+      dispatch({ type: "SET_ROUTE_ID", payload: 0 });
     } else {
-      setRouteId(route.id);
+      dispatch({ type: "SET_ROUTE_ID", payload: route.id });
     }
-    setRefresh(true);
+    dispatch({ type: "SET_REFRESH", payload: true });
   };
 
   const handleStopWorkout = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
-    if (isClimbing) {
+    if (state.isClimbing) {
       alert("finish logging the current climb first");
     } else {
-      await updateAscentRestTime(sectionTimer || 0);
+      await updateAscentRestTime(state.sectionTimer || 0);
       await updateWorkoutTimer();
 
-      setIsWorkoutStarted(false);
-      setRouteImg(null);
-      setSectionTimer(undefined);
-      setIsClimbing(false);
-      setWorkoutTimer(0);
-      setRouteColour("");
+      dispatch({ type: "SET_IS_WORKOUT_STARTED", payload: false });
+      dispatch({ type: "SET_ROUTE_IMG", payload: null });
+      dispatch({ type: "SET_SECTION_TIMER", payload: undefined });
+      dispatch({ type: "SET_IS_CLIMBING", payload: false });
+      dispatch({ type: "SET_WORKOUT_TIMER", payload: 0 });
+      dispatch({ type: "SET_ROUTE_COLOUR", payload: "" });
     }
   };
 
   useEffect(() => {
-    isWorkoutStartedRef.current = isWorkoutStarted;
-  }, [isWorkoutStarted]);
+    isWorkoutStartedRef.current = state.isWorkoutStarted;
+  }, [state.isWorkoutStarted]);
 
-  useAppStateTimer(setSectionTimer, setWorkoutTimer, isWorkoutStartedRef);
-  useWorkoutTimer(
-    sectionTimer,
-    setSectionTimer,
-    setWorkoutTimer,
+  useAppStateTimer(
+    dispatch,
     isWorkoutStartedRef,
+    "SET_SECTION_TIMER",
+    "SET_WORKOUT_TIMER",
+  );
+
+  useWorkoutTimer(
+    dispatch,
+    isWorkoutStartedRef,
+    "SET_SECTION_TIMER",
+    "SET_WORKOUT_TIMER",
   );
 
   return (
-    <View className="flex flex-auto pt-2 items-center bg-stone-300">
-      {isWorkoutStarted && (
-        <StopWorkoutButton handleStopWorkout={handleStopWorkout} />
-      )}
+    <WorkoutContext.Provider value={{ state, dispatch }}>
+      <View className="flex flex-auto pt-2 items-center bg-stone-300">
+        {state.isWorkoutStarted && (
+          <StopWorkoutButton handleStopWorkout={handleStopWorkout} />
+        )}
 
-      <RoutePicture
-        routeId={routeId}
-        setRouteId={setRouteId}
-        setRouteImg={setRouteImg}
-        setGrade={setGrade}
-        setStyle={setSelectedStyle}
-        setSelectedHoldTypes={setSelectedHoldTypes}
-        grade={grade}
-        routeImg={routeImg}
-        routeThumbnail={routeThumbnail}
-        routeColour={routeColour}
-        setRouteColour={setRouteColour}
-        setRouteThumbnail={setRouteThumbnail}
-        setRoutes={setRoutes}
-      />
+        <RoutePicture />
 
-      <View className="translate-x-20">
-        <AscentStats
-          id={workoutId}
-          refresh={refresh}
-          reset={!isWorkoutStarted}
-          size={"small"}
+        <View className="translate-x-20">
+          <AscentStats
+            id={workoutId}
+            refresh={state.refresh}
+            reset={!state.isWorkoutStarted}
+            size={"small"}
+          />
+        </View>
+
+        <View className="flex flex-row gap-4 justify-center items-center">
+          <GradeSelector grade={state.grade} />
+          <ColourSelector routeColour={state.routeColour} />
+        </View>
+
+        <View className="flex flex-row gap-4 justify-center items-center">
+          <ClimbingStyleSelector selectedStyle={state.selectedStyle} />
+
+          <HoldTypeSelector selectedHoldTypes={state.selectHoldTypes} />
+        </View>
+
+        <WorkoutSectionTimer
+          isClimbing={state.isClimbing}
+          sectionTimer={state.sectionTimer || 0}
         />
+
+        <RecordButton
+          handleRecord={handleRecord}
+          isClimbing={state.isClimbing}
+        />
+
+        <WorkoutTimer workoutTimer={state.workoutTimer} />
+
+        {showModal && (
+          <LoggingModal
+            handleAscentLog={handleAscentLog}
+            showModal={showModal}
+          />
+        )}
       </View>
-
-      <View className="flex flex-row gap-4 justify-center items-center">
-        <GradeSelector grade={grade} setGrade={setGrade} />
-        <ColourSelector
-          routeColour={routeColour}
-          setRouteColour={setRouteColour}
-        />
-      </View>
-
-      <View className="flex flex-row gap-4 justify-center items-center">
-        <ClimbingStyleSelector
-          selectedStyle={selectedStyle}
-          setSelectedStyle={setSelectedStyle}
-        />
-
-        <HoldTypeSelector
-          selectedHoldTypes={selectHoldTypes}
-          setSelectedHoldTypes={setSelectedHoldTypes}
-        />
-      </View>
-
-      <WorkoutSectionTimer
-        isClimbing={isClimbing}
-        sectionTimer={sectionTimer || 0}
-      />
-
-      <RecordButton handleRecord={handleRecord} isClimbing={isClimbing} />
-
-      <WorkoutTimer workoutTimer={workoutTimer} />
-
-      {showModal && (
-        <LoggingModal
-          handleAscentLog={handleAscentLog}
-          showModal={showModal}
-          routeImg={routeImg}
-          routeThumbnail={routeThumbnail}
-          grade={grade}
-          routeId={routeId}
-          setGrade={setGrade}
-          selectedStyle={selectedStyle}
-          setSelectedStyle={setSelectedStyle}
-          setRouteId={setRouteId}
-          selectedHoldTypes={selectHoldTypes}
-          setSelectedHoldTypes={setSelectedHoldTypes}
-          setRouteImg={setRouteImg}
-          setRoutes={setRoutes}
-          setRouteThumbnail={setRouteThumbnail}
-          routeColour={routeColour}
-          setRouteColour={setRouteColour}
-        />
-      )}
-    </View>
+    </WorkoutContext.Provider>
   );
 }
+
+const workoutReducer = (
+  state: WorkoutState,
+  action: WorkoutAction,
+): WorkoutState => {
+  switch (action.type) {
+    case "SET_GRADE":
+      return { ...state, grade: action.payload };
+    case "SET_SELECTED_STYLE":
+      return { ...state, selectedStyle: action.payload };
+    case "SET_SELECTED_HOLD_TYPES":
+      return { ...state, selectHoldTypes: action.payload };
+    case "SET_IS_CLIMBING":
+      return { ...state, isClimbing: action.payload };
+    case "SET_IS_WORKOUT_STARTED":
+      return { ...state, isWorkoutStarted: action.payload };
+    case "SET_SECTION_TIMER":
+      return { ...state, sectionTimer: action.payload };
+    case "SET_LAST_TIMER":
+      return { ...state, lastTimer: action.payload };
+    case "SET_WORKOUT_TIMER":
+      return { ...state, workoutTimer: action.payload };
+    case "SET_ROUTES":
+      return { ...state, routes: action.payload };
+    case "SET_ROUTE_THUMBNAIL":
+      return { ...state, routeThumbnail: action.payload };
+    case "SET_ROUTE_COLOUR":
+      return { ...state, routeColour: action.payload };
+    case "SET_SHOW_MODAL":
+      return { ...state, showModal: action.payload };
+    case "SET_REFRESH":
+      return { ...state, refresh: action.payload };
+    case "SET_ROUTE_IMG":
+      return { ...state, routeImg: action.payload };
+    case "SET_ROUTE_ID":
+      return { ...state, routeId: action.payload };
+    default:
+      return state;
+  }
+};

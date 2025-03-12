@@ -5,16 +5,22 @@ import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 import { BlurView } from "expo-blur";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
+import { WorkoutContext } from "@/app/(tabs)/workout";
 cssInterop(Image, { className: "style" });
 
 export default function HoldTypeSelector({
   selectedHoldTypes,
-  setSelectedHoldTypes,
 }: {
   selectedHoldTypes: HoldType[];
-  setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
 }) {
+  const context = useContext(WorkoutContext);
+  if (!context) {
+    throw new Error(
+      "RoutePicture must be used within a WorkoutContext Provider",
+    );
+  }
+  const { state, dispatch } = context;
   const [showHoldModal, setShowHoldModal] = useState(false);
   const holdTypes: HoldType[] = [
     "Crimp",
@@ -78,15 +84,16 @@ export default function HoldTypeSelector({
                             onValueChange={() => {
                               Haptics.selectionAsync();
                               selectedHoldTypes.includes(holdType)
-                                ? setSelectedHoldTypes(
-                                    selectedHoldTypes.filter(
+                                ? dispatch({
+                                    type: "SET_SELECTED_HOLD_TYPES",
+                                    payload: selectedHoldTypes.filter(
                                       (ht) => ht !== holdType,
                                     ),
-                                  )
-                                : setSelectedHoldTypes([
-                                    ...selectedHoldTypes,
-                                    holdType,
-                                  ]);
+                                  })
+                                : dispatch({
+                                    type: "SET_SELECTED_HOLD_TYPES",
+                                    payload: [...selectedHoldTypes, holdType],
+                                  });
                             }}
                           />
                           <Text className="text-lg">{holdType}</Text>

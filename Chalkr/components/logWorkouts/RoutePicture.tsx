@@ -4,55 +4,38 @@ import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
 cssInterop(Image, { className: "style" });
 import PlaceholderImage from "@/assets/images/route.png";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import RouteSelectionModal from "./RouteSelectionModal";
-import { GradeColour, RouteColors } from "@/constants/Colors";
 
 import usePhoto from "@/hooks/usePhoto";
+import { WorkoutContext } from "@/app/(tabs)/workout";
 
 export default function RoutePicture({
-  routeId,
-  setRouteId,
-  routeImg,
-  setRouteImg,
-  routeThumbnail,
-  setRouteThumbnail,
-  setRoutes,
-  setStyle,
-  setGrade,
-  grade,
-  setSelectedHoldTypes,
   canCreate = true,
-  routeColour,
-  setRouteColour,
 }: {
-  routeId: number | undefined;
-  setRouteId: React.Dispatch<React.SetStateAction<number | undefined>>;
-  routeImg: string | null;
-  setRoutes: React.Dispatch<React.SetStateAction<Route[] | undefined>>;
-  setRouteImg: React.Dispatch<React.SetStateAction<string | null>>;
-  routeThumbnail: string | null;
-  setRouteThumbnail: React.Dispatch<React.SetStateAction<string | null>>;
-  setStyle: React.Dispatch<React.SetStateAction<string>>;
-  setGrade: React.Dispatch<React.SetStateAction<number>>;
-  grade: number;
-  setSelectedHoldTypes: React.Dispatch<React.SetStateAction<HoldType[]>>;
-  routeColour: RouteColour | "";
-  setRouteColour: React.Dispatch<React.SetStateAction<RouteColour | "">>;
   canCreate?: boolean;
 }) {
+  const context = useContext(WorkoutContext);
+  if (!context) {
+    throw new Error(
+      "RoutePicture must be used within a WorkoutContext Provider",
+    );
+  }
+
+  const { state, dispatch } = context;
+
   const [showSelectionModal, setShowSelectionModal] = useState(false);
-  const [gradeColour, setGradeColour] = useState("red");
+  const [gradeColour, setGradeColour] = useState<RouteColour>("red");
 
   const { pickPhotoAsync } = usePhoto();
 
   useEffect(() => {
-    if (routeColour !== "") {
-      setGradeColour(RouteColors[routeColour]);
+    if (state.routeColour !== "") {
+      dispatch({ type: "SET_ROUTE_COLOUR", payload: state.routeColour });
     } else {
-      setGradeColour(GradeColour[grade] || "black");
+      dispatch({ type: "SET_ROUTE_COLOUR", payload: gradeColour || "black" });
     }
-  }, [grade, routeColour]);
+  }, [state.grade, state.routeColour]);
 
   const handleTakePhoto = async () => {
     const images = await pickPhotoAsync();
@@ -61,29 +44,32 @@ export default function RoutePicture({
       alert("Error loading photo");
       return;
     }
-    setRouteImg(images.imageFullPath);
-    setRouteThumbnail(images.thumbnailFullPath);
+    dispatch({ type: "SET_ROUTE_IMG", payload: images.imageFullPath });
+    dispatch({
+      type: "SET_ROUTE_THUMBNAIL",
+      payload: images.thumbnailFullPath,
+    });
 
-    setRoutes((prevRoutesState) =>
-      prevRoutesState?.map(
-        (route) =>
-          route.id === routeId // Check if this is the route to update
-            ? {
-                ...route, // Keep existing properties
-                // grade: grade, // Update the grade
-                // style: style,
-                routeImg: routeImg,
-                thumbnail_url: routeThumbnail,
-              }
-            : route, // Otherwise, keep the route unchanged
-      ),
-    );
+    const routes = state.routes;
+    if (!routes) {
+      return;
+    }
+    const updatedRoutes: Route[] = routes.map((route) => {
+      return route.id === state.routeId
+        ? {
+            ...route,
+            photoUrl: images.imageFullPath,
+            thumbnail_url: images.thumbnailFullPath,
+          }
+        : route;
+    });
+    dispatch({ type: "SET_ROUTES", payload: updatedRoutes });
   };
 
   return (
     <>
       <View className="flex items-center">
-        {!(routeColour === "VB") && (
+        {!(state.routeColour === "VB") && (
           <View
             testID="route-image-container"
             style={{
@@ -93,7 +79,7 @@ export default function RoutePicture({
             }}
           >
             <Image
-              source={routeImg || PlaceholderImage}
+              source={state.routeImg || PlaceholderImage}
               testID="route-image"
               className="w-[250px] h-[400px] rounded-xl"
               contentFit="cover"
@@ -102,7 +88,7 @@ export default function RoutePicture({
             />
           </View>
         )}
-        {routeColour === "VB" && (
+        {state.routeColour === "VB" && (
           <View
             style={{
               backgroundColor: "black",
@@ -113,7 +99,7 @@ export default function RoutePicture({
             }}
           >
             <Image
-              source={routeImg || PlaceholderImage}
+              source={state.routeImg || PlaceholderImage}
               className="w-[250px] h-[400px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
@@ -143,7 +129,7 @@ export default function RoutePicture({
                   Haptics.notificationAsync(
                     Haptics.NotificationFeedbackType.Success,
                   );
-                  setRouteId(0);
+                  dispatch({ type: "SET_ROUTE_ID", payload: 0 });
                   handleTakePhoto();
                 }}
                 className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
@@ -171,14 +157,6 @@ export default function RoutePicture({
           <RouteSelectionModal
             showSelectionModal={true}
             setShowSelectionModal={setShowSelectionModal}
-            setRouteId={setRouteId}
-            setRouteImg={setRouteImg}
-            setRouteThumbnail={setRouteThumbnail}
-            setSelectedHoldTypes={setSelectedHoldTypes}
-            routeColour={routeColour}
-            setRouteColour={setRouteColour}
-            setGrade={setGrade}
-            setStyle={setStyle}
           />
         )}
       </View>
