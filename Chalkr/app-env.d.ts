@@ -93,3 +93,11 @@ type RouteColour =
   | "yellow"
   | "orange"
   | "";
+type WorkoutWithAscents = {
+  workoutId: number;
+  date: string | null;
+  timestamp: string | null;
+  totalClimbs: number;
+  successfulClimbs: number;
+  failedClimbs: number;
+};
