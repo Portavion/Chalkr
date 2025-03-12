@@ -9,6 +9,7 @@ import RouteSelectionModal from "./RouteSelectionModal";
 
 import usePhoto from "@/hooks/usePhoto";
 import { WorkoutContext } from "@/app/(tabs)/workout";
+import { GradeColour, RouteColors } from "@/constants/Colors";
 
 export default function RoutePicture({
   canCreate = true,
@@ -25,15 +26,15 @@ export default function RoutePicture({
   const { state, dispatch } = context;
 
   const [showSelectionModal, setShowSelectionModal] = useState(false);
-  const [gradeColour, setGradeColour] = useState<RouteColour>("red");
+  const [gradeColour, setGradeColour] = useState("red");
 
   const { pickPhotoAsync } = usePhoto();
 
   useEffect(() => {
     if (state.routeColour !== "") {
-      dispatch({ type: "SET_ROUTE_COLOUR", payload: state.routeColour });
+      setGradeColour(RouteColors[state.routeColour]);
     } else {
-      dispatch({ type: "SET_ROUTE_COLOUR", payload: gradeColour || "black" });
+      setGradeColour(GradeColour[state.grade] || "black");
     }
   }, [state.grade, state.routeColour]);
 
