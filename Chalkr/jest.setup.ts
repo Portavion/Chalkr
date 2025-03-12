@@ -53,6 +53,11 @@ jest.mock("@/hooks/useWorkout", () => ({
     createNewWorkout: jest.fn(),
     fetchWorkoutsList: jest.fn(),
     updateWorkoutTimer: jest.fn(),
+    fetchWorkoutStyleDistribution: jest.fn().mockResolvedValue([
+      { style: "Crimps", ascentCount: 10, successfulAttempts: 8 },
+      { style: "Slopers", ascentCount: 5, successfulAttempts: 3 },
+      { style: "Pinches", ascentCount: 12, successfulAttempts: 6 },
+    ]),
     fetchWorkoutGradeDistribution: jest.fn().mockResolvedValue([
       { grade: 0, ascentCount: 10, successfulAttempts: 8 },
       { grade: 1, ascentCount: 5, successfulAttempts: 3 },
