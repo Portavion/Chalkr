@@ -3,7 +3,6 @@ import { Text, Dimensions } from "react-native";
 import Svg, { Rect, Text as SVGText } from "react-native-svg";
 
 export default function BarChart({ ascents }: { ascents: Ascent[] }) {
-  // const BarChart = ({ ascents }: { ascents: Ascent[] }) => {
   if (!ascents || ascents.length === 0) {
     return <Text>No ascents to display.</Text>;
   }
