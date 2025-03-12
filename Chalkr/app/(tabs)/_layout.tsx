@@ -18,7 +18,7 @@ export default function TabLayout() {
     return (
       <View className="flex-1 items-center justify-center">
         <Text>Migration is in progress...</Text>
-        <ActivityIndicator size={"large"} />
+        <ActivityIndicator testID="activity-indicator" size={"large"} />
       </View>
     );
   }
@@ -26,7 +26,7 @@ export default function TabLayout() {
   if (loading) {
     return (
       <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size={"large"} />
+        <ActivityIndicator testID="activity-indicator" size={"large"} />
       </View>
     );
   }

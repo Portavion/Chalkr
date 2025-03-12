@@ -36,6 +36,10 @@ jest.mock("@/hooks/useAscents", () => ({
       ascentSuccessCount: 1,
       ascentFailCount: 2,
     }),
+    fetchAscentsWithGrade: jest.fn().mockResolvedValue([
+      { id: 1, grade: 5 },
+      { id: 2, grade: 6 },
+    ]),
   }),
 }));
 
@@ -121,6 +125,13 @@ jest.mock("drizzle-orm/expo-sqlite", () => ({
     inArray: jest.fn().mockReturnThis(),
     count: jest.fn().mockReturnThis(),
   })),
+}));
+
+jest.mock("@/firebaseConfig", () => ({
+  FIREBASE_AUTH: {
+    currentUser: { uid: "123" },
+  },
+  // ... other mocks
 }));
 
 jest.mock("firebase/auth", () => ({

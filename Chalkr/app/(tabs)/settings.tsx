@@ -1,6 +1,5 @@
 import { Text, View, Button, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useUser } from "@/context/UserContext";
 import { signOut } from "firebase/auth";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import useWorkout from "@/hooks/useWorkout";
@@ -8,13 +7,8 @@ import { Link } from "expo-router";
 import * as Haptics from "expo-haptics";
 
 export default function AboutScreen() {
-  const { user, loading } = useUser();
-
   const { resetDb } = useWorkout();
 
-  if (!user) {
-    return <Text>Error, you need to be logged. </Text>;
-  }
   return (
     <View className="flex flex-1 justify-center items-center bg-stone-300">
       <Text className="text-black text-3xl">Settings screen</Text>

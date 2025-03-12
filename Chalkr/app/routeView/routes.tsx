@@ -136,7 +136,12 @@ export default function Routes() {
       />
 
       {showModal && (
-        <Modal animationType="slide" transparent={true} visible={showModal}>
+        <Modal
+          testID="dialog"
+          animationType="slide"
+          transparent={true}
+          visible={showModal}
+        >
           <BlurView
             intensity={20}
             className="flex-1 justify-center items-center"
