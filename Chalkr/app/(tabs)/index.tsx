@@ -1,31 +1,9 @@
-import {
-  Text,
-  View,
-  ActivityIndicator,
-  SafeAreaView,
-  ScrollView,
-} from "react-native";
+import { Text, View, SafeAreaView, ScrollView } from "react-native";
 import React, { useState } from "react";
-
-import * as WebBrowser from "expo-web-browser";
-import SignInScreen from "../screens/SignInScreen";
-//TODO: refactor migration and remaining db stuff out of index
-
-import { drizzle } from "drizzle-orm/expo-sqlite";
-import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
-import migrations from "../..//drizzle/migrations";
-const expo = SQLite.openDatabaseSync("db.db");
-const db = drizzle(expo);
-import { useAuth } from "@/context/AuthContext";
-import * as SQLite from "expo-sqlite";
 import WorkoutCard from "@/components/WorkoutCard/WorkoutCard";
 import useWorkout from "@/hooks/useWorkout";
 
-WebBrowser.maybeCompleteAuthSession();
-
 export default function Index() {
-  const { user, loading, signInWithGoogle } = useAuth();
-  const { success, error } = useMigrations(db, migrations);
   const [expandedWorkouts, setExpandedWorkouts] = useState<{
     [workoutId: number]: boolean;
   }>({});
@@ -40,23 +18,7 @@ export default function Index() {
     });
   };
 
-  if (!success || error) {
-    return (
-      <View>
-        <Text>Migration is in progress...</Text>
-      </View>
-    );
-  }
-
-  if (loading) {
-    return (
-      <View className="flex-1 items-center justify-center">
-        <ActivityIndicator size={"large"} />
-      </View>
-    );
-  }
-
-  if (user && !workoutList) {
+  if (!workoutList) {
     return (
       <View className="flex-1 items-center justify-center">
         <Text>No workouts</Text>
@@ -64,7 +26,7 @@ export default function Index() {
     );
   }
 
-  return user ? (
+  return (
     <SafeAreaView className="flex-1">
       <ScrollView className="py-5 bg-stone-300">
         {workoutList &&
@@ -78,7 +40,5 @@ export default function Index() {
           ))}
       </ScrollView>
     </SafeAreaView>
-  ) : (
-    <SignInScreen promptAsync={signInWithGoogle} />
   );
 }
