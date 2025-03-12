@@ -5,7 +5,7 @@ import { ActionSheetIOS } from "react-native";
 import * as Haptics from "expo-haptics";
 
 describe("<ClimbingStyleSelector />", () => {
-  test("it renders the style label and climbing style value", () => {
+  test("renders the style label and climbing style value", () => {
     const selectedStyle = "board";
     const setSelectedStyle = jest.fn();
     const { getByText } = render(
@@ -19,7 +19,7 @@ describe("<ClimbingStyleSelector />", () => {
     getByText("board");
   });
 
-  test("it opens the action sheet when the button is pressed", () => {
+  test("opens the action sheet when the button is pressed", () => {
     const selectedStyle = "board";
     const setSelectedStyle = jest.fn();
     const showActionSheetSpy = jest.spyOn(

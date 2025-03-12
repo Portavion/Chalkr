@@ -2,8 +2,8 @@ import { render } from "@testing-library/react-native";
 
 import Workout from "@/app/(tabs)/workout";
 
-describe("Workout Recording", () => {
-  test("Workout components render correctly", () => {
+describe("<Workout />", () => {
+  test("renders correctly", () => {
     const { getByText } = render(<Workout></Workout>);
     getByText("Select route");
     getByText("New route");

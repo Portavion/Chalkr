@@ -50,7 +50,7 @@ describe("<RoutePicture />", () => {
     }
   });
 
-  test("it renders the component with the correct image and buttons", () => {
+  test("renders the component with the correct image and buttons", () => {
     const image = screen.getByTestId("route-image");
     expect(image).toBeTruthy();
     expect(image.props.source).toStrictEqual([{ uri: mockRouteImg }]);

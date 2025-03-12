@@ -14,7 +14,7 @@ const mockWorkout: ClimbingWorkout = {
 
 const mockOnPress = jest.fn();
 
-describe("WorkoutCard Component", () => {
+describe("<WorkoutCard />", () => {
   it("renders correctly", () => {
     const { getByText, getByTestId } = render(
       <WorkoutCard

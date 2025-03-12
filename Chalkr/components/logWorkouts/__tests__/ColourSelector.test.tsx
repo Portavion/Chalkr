@@ -33,12 +33,12 @@ describe("<ClimbingStyleSelector />", () => {
     ).getByText;
   });
 
-  test("it renders the colour label and colour value", () => {
+  test("renders the colour label and colour value", () => {
     getByText("Colour: ");
     getByText("red");
   });
 
-  test("it opens the action sheet when the button is pressed", () => {
+  test("opens the action sheet when the button is pressed", () => {
     const colourButton = screen.getByTestId("colour-button");
     fireEvent.press(colourButton);
     expect(showActionSheetSpy).toHaveBeenCalled();

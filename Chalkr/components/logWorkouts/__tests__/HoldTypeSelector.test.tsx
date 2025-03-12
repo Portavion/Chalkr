@@ -32,12 +32,12 @@ describe("<HoldTypeSelector />", () => {
     ).getByText;
   });
 
-  test("it renders the hold type label, two hold values and ...", () => {
+  test("renders the hold type label, two hold values and ...", () => {
     getByText("Holds: ");
     getByText("Crimp, Slopper, ...");
   });
 
-  test("it opens and closes the modal when the button is pressed", () => {
+  test("opens and closes the modal when the button is pressed", () => {
     const holdButton = screen.getByTestId("hold-button");
     fireEvent.press(holdButton);
     getByText("Hold Types");
@@ -46,7 +46,7 @@ describe("<HoldTypeSelector />", () => {
     expect(screen.queryByText("Hold Types")).toBeNull();
   });
 
-  test("it selects and deselects hold types", () => {
+  test("selects and deselects hold types", () => {
     const holdButton = screen.getByTestId("hold-button");
     fireEvent.press(holdButton);
     const crimpCheckbox = screen.getByTestId("checkbox-Crimp");

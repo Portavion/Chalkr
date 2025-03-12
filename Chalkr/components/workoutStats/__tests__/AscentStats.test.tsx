@@ -9,7 +9,7 @@ describe("<AscentStats />", () => {
     jest.clearAllMocks(); // Clear mocks between tests
   });
 
-  test("it renders correctly with default size", async () => {
+  test("renders correctly with default size", async () => {
     render(<AscentStats id={mockWorkoutId} />);
 
     await waitFor(() => {
@@ -25,7 +25,7 @@ describe("<AscentStats />", () => {
     });
   });
 
-  test("it renders correctly with size='small'", async () => {
+  test("renders correctly with size='small'", async () => {
     render(<AscentStats id={mockWorkoutId} size="small" />);
 
     await waitFor(() => {
