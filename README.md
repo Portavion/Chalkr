@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./Chalkr/assets/images/icon.png" width="90" alt="Logo" />
+<img src="./Chalkr/assets/images/icon-nobg.png" width="90" alt="Logo" />
 
 <h2> Project Name : Chalkr </h2>
 
