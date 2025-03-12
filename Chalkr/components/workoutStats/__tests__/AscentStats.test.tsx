@@ -6,7 +6,7 @@ describe("<AscentStats />", () => {
   const mockWorkoutId = 1;
 
   beforeEach(() => {
-    jest.clearAllMocks(); // Clear mocks between tests
+    jest.clearAllMocks();
   });
 
   test("renders correctly with default size", async () => {

@@ -42,6 +42,13 @@ jest.mock("@/hooks/useWorkout", () => ({
   __esModule: true,
   default: () => ({
     deleteWorkout: jest.fn().mockResolvedValue(true),
+    fetchUniqueWorkout: jest.fn().mockResolvedValue([
+      {
+        timestamp: "2023-10-01T12:00:00Z",
+        climb_time: 3600, // 1 hour
+        rest_time: 1800, // 30 minutes
+      },
+    ]),
   }),
 }));
 

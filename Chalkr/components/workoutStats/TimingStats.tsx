@@ -15,7 +15,7 @@ export default function TimingStats({ id }: { id: number }) {
     const fetchWorkout = async () => {
       const workout = await fetchUniqueWorkout(workoutId);
       if (!workout) {
-        alert("error loading workout");
+        console.log("error loading workout");
         return;
       }
       setWorkout(workout[0]);
@@ -27,6 +27,15 @@ export default function TimingStats({ id }: { id: number }) {
     fetchWorkout();
   }, [id]);
 
+  if (!workout) {
+    return (
+      <View className="flex flex-col justify-center">
+        <Text className="text-black pb-2 ml-5 text-sm ">
+          Error Loading Workout
+        </Text>
+      </View>
+    );
+  }
   return (
     <>
       <View className="flex flex-col justify-center">
@@ -41,7 +50,7 @@ export default function TimingStats({ id }: { id: number }) {
             <Text className="text-black w-24 text-lg">
               {climbingTime >= 3600 && (
                 <>
-                  {Math.floor(climbingTime / 360)
+                  {Math.floor(climbingTime / 3600)
                     .toString()
                     .padStart(2, "0")}
                   :
