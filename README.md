@@ -21,45 +21,29 @@ include:
 
 ## ✨ Features
 
-- 🧗 Log Routes: Record individual climbs with details like grade, style, hold
-  types, success status, and accompanying photos.
-- 🏋️ Record & Manage workouts: Log comprehensive climbing sessions, including
-  route climbed and duration.
-- 📸 Photo Integration & Route Documentation: Capture and attach photos to your
-  route logs, creating a visual record of your climbing adventures and
-  documenting specific routes.
-- 📱 Local-First Experience: Seamlessly log workouts and routes on the go
-  whether in your local gym or deep down your favourite crag.
-- 📅 Workout History & Review: Easily access and review your past workouts and
-  route logs, allowing you to analyze your performance and identify areas for
-  improvement.
-- 📊 Grade & Style Analysis: Analyze the grades and styles of your completed
-  routes, helping you identify your strengths and weaknesses.
-- 📈 Performance Analytics & Visualizations: Gain valuable insights into your
-  climbing journey with detailed statistics and intuitive charts, showcasing
-  your progress over time.
-- 🔐Google Sign-In Integration: Secure and streamlined user authentication with
-  Google Sign-In, providing a quick and easy login experience.
+- 🧗 Log Routes: Record ascents with details like grade, style, etc.
+- 🏋️ Record & Manage workouts: Log your climbing sessions.
+- 📸 Route Documentation: Attach photos to your route logs.
+- 📱 Local-First: Log your workouts on the go whether in your local gym or deep
+  down your favourite crag.
+- 📅 Workout History & Review: Access and review your past workouts and analyze
+  your performance.
+- 📊 Grade & Style Analysis: Analyze your completed routes and identify
+  strengths and weaknesses.
+- 📈 Analytics & Visualizations: Gain valuable insights into your climbing with
+  statistics and charts.
+- 🔐Google Sign-In Integration: Secure and streamlined user authentication.
 
 ## 💻 Tech Stack
 
 - React Native: A framework for building native mobile applications using React.
-- Expo: A framework and platform for universal React Native apps, simplifying
-  development, building, and deployment.
-- Firebase: A comprehensive mobile and web application development platform,
-  providing backend services like authentication, database, and storage.
-- SQLite: A self-contained, serverless, zero-configuration, transactional SQL
-  database engine.
-- Drizzle ORM: A TypeScript ORM that provides type-safe database access,
-  simplifying data interaction with SQLite.
-- NativeWind: A utility-first CSS-in-JS framework for React Native, enabling
-  rapid UI development with Tailwind CSS syntax.
-- Jest: A JavaScript testing framework for ensuring code correctness and
-  reliability.
-- React Native Testing Library: A testing utility for React Native components,
-  promoting user-centric testing practices.
-- npm (Node Package Manager): A package manager for JavaScript, used for
-  installing and managing project dependencies.
+- Expo: A framework for universal React Native apps.
+- Firebase: A mobile and web development platform, providing authentication.
+- SQLite: A self-contained SQL database engine.
+- Drizzle ORM: A TypeScript ORM providing type-safe database access.
+- NativeWind: Tailwind CSS for React Native.
+- Jest: A JavaScript testing framework.
+- React Native Testing Library: A testing utility for React Native components.
 
 # Get started
 
