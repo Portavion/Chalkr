@@ -11,7 +11,10 @@
 ![](https://img.shields.io/badge/firebase-6200EE?style=for-the-badge&logo=firebase&logoColor=white)
 
 </div>
+
 ## 💡 Overview
+
+<!--TODO: video demonstration-->
 
 Chalkr is a local-first climbing workout tracker built using React Native and
 SQLite. It aims to help climber analyse their workouts and get insightful data
@@ -51,7 +54,15 @@ To get a local copy of this project up and running, follow these steps.
 
 ### 🚀 Prerequisites
 
+- **Node.js** (v16.x or higher) and **npm** or **yarn**.
 - **Npm**: If you prefer using npm for package management and running scripts.
+- **macOS:** iOS development requires a macOS environment.
+- **Xcode:** Download and install Xcode from the Mac App Store. Xcode is Apple's
+  integrated development environment (IDE) for iOS development.
+- **Xcode Command Line Tools:** Ensure Xcode Command Line Tools are installed.
+  You can install these by opening Xcode and navigating to
+  `Xcode > Preferences > Locations` or by running `xcode-select --install` in
+  your terminal.
 
 ### 🛠️ Installation
 
