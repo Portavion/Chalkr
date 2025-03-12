@@ -41,6 +41,7 @@ jest.mock("@/hooks/useAscents", () => ({
 jest.mock("@/hooks/useWorkout", () => ({
   __esModule: true,
   default: () => ({
+    workoutId: 1,
     deleteWorkout: jest.fn().mockResolvedValue(true),
     fetchUniqueWorkout: jest.fn().mockResolvedValue([
       {
@@ -48,6 +49,14 @@ jest.mock("@/hooks/useWorkout", () => ({
         climb_time: 3600, // 1 hour
         rest_time: 1800, // 30 minutes
       },
+    ]),
+    createNewWorkout: jest.fn(),
+    fetchWorkoutsList: jest.fn(),
+    updateWorkoutTimer: jest.fn(),
+    fetchWorkoutGradeDistribution: jest.fn().mockResolvedValue([
+      { grade: 0, ascentCount: 10, successfulAttempts: 8 },
+      { grade: 1, ascentCount: 5, successfulAttempts: 3 },
+      { grade: 2, ascentCount: 12, successfulAttempts: 6 },
     ]),
   }),
 }));

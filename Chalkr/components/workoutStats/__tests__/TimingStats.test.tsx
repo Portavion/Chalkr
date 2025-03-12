@@ -44,12 +44,12 @@ describe("<TimingStats />", () => {
   });
 
   it("formats time correctly for values less than an hour", async () => {
-    const useWorkoutSpy = jest.spyOn(useWorkoutModule, "default"); // Spy on the default export
+    const useWorkoutSpy = jest.spyOn(useWorkoutModule, "default");
     useWorkoutSpy.mockReturnValue({
-      workoutId: 1, // Add the workoutId property
-      deleteWorkout: jest.fn(), // Add the deleteWorkout property
-      createNewWorkout: jest.fn().mockResolvedValue(1), // Add createNewWorkout
-      fetchWorkoutsList: jest.fn(), // add fetchWorkoutsList
+      workoutId: 1,
+      deleteWorkout: jest.fn(),
+      createNewWorkout: jest.fn().mockResolvedValue(1),
+      fetchWorkoutsList: jest.fn(),
       fetchUniqueWorkout: jest.fn().mockResolvedValue([
         {
           timestamp: "2023-10-01T12:00:00Z",
@@ -58,7 +58,7 @@ describe("<TimingStats />", () => {
         },
       ]),
       fetchWorkoutStyleDistribution: jest.fn(),
-      fetchWorkoutGradeDistribution: jest.fn(), //add fetchWorkoutGradeDistribution
+      fetchWorkoutGradeDistribution: jest.fn(),
       updateWorkoutTimer: jest.fn(),
       resetDb: jest.fn(),
     });
