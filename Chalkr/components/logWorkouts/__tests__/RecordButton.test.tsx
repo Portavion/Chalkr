@@ -14,13 +14,13 @@ describe("<RecordButton />", () => {
     expect(screen.getByTestId("radio-button-on")).toBeTruthy();
   });
 
-  test("renders the correct icons when isClimbing is true", () => {
+  it("renders the correct icons when isClimbing is true", () => {
     render(<RecordButton handleRecord={() => {}} isClimbing={true} />);
     expect(screen.getByTestId("radio-button-off")).toBeTruthy();
     expect(screen.getByTestId("square-icon")).toBeTruthy();
   });
 
-  test("calls handleRecord when pressed", () => {
+  it("calls handleRecord when pressed", () => {
     const handleRecord = jest.fn();
     render(<RecordButton handleRecord={handleRecord} isClimbing={false} />);
     const button = screen.getByTestId("record-button");

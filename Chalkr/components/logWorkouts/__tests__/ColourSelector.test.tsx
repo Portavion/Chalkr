@@ -33,19 +33,19 @@ describe("<ClimbingStyleSelector />", () => {
     ).getByText;
   });
 
-  test("renders the colour label and colour value", () => {
+  it("renders the colour label and colour value", () => {
     getByText("Colour: ");
     getByText("red");
   });
 
-  test("opens the action sheet when the button is pressed", () => {
+  it("opens the action sheet when the button is pressed", () => {
     const colourButton = screen.getByTestId("colour-button");
     fireEvent.press(colourButton);
     expect(showActionSheetSpy).toHaveBeenCalled();
     expect(Haptics.notificationAsync).toHaveBeenCalled();
   });
 
-  test("calls setRouteColour with the correct colour when an option is selected", () => {
+  it("calls setRouteColour with the correct colour when an option is selected", () => {
     showActionSheetSpy.mockImplementationOnce((options, callback) => {
       callback(3);
     });
@@ -55,7 +55,7 @@ describe("<ClimbingStyleSelector />", () => {
     expect(setRouteColour).toHaveBeenCalledWith("green");
   });
 
-  test("calls setRouteColour with '' when the last option is selected", () => {
+  it("calls setRouteColour with '' when the last option is selected", () => {
     showActionSheetSpy.mockImplementationOnce((options, callback) => {
       callback(11); // Simulate selecting "Dyno" (index 2)
     });

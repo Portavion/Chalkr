@@ -3,7 +3,7 @@ import { render } from "@testing-library/react-native";
 import Workout from "@/app/(tabs)/workout";
 
 describe("<Workout />", () => {
-  test("renders correctly", () => {
+  it("renders correctly", () => {
     const { getByText } = render(<Workout></Workout>);
     getByText("Select route");
     getByText("New route");

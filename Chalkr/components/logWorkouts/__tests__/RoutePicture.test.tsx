@@ -50,7 +50,7 @@ describe("<RoutePicture />", () => {
     }
   });
 
-  test("renders the component with the correct image and buttons", () => {
+  it("renders the component with the correct image and buttons", () => {
     const image = screen.getByTestId("route-image");
     expect(image).toBeTruthy();
     expect(image.props.source).toStrictEqual([{ uri: mockRouteImg }]);
@@ -59,7 +59,7 @@ describe("<RoutePicture />", () => {
     expect(screen.getByTestId("new-route-button")).toBeTruthy();
   });
 
-  test("sets the correct border color based on grade", () => {
+  it("sets the correct border color based on grade", () => {
     render(
       <RoutePicture
         routeId={mockRouteId}
@@ -83,12 +83,12 @@ describe("<RoutePicture />", () => {
     expect(imageContainer.props.style.borderColor).toBe(GradeColour[2]);
   });
 
-  test("sets the correct border color based on routeColour", () => {
+  it("sets the correct border color based on routeColour", () => {
     const imageContainer = screen.getByTestId("route-image-container");
     expect(imageContainer.props.style.borderColor).toBe(RouteColors["red"]);
   });
 
-  test("opens the route selection modal", async () => {
+  it("opens the route selection modal", async () => {
     const selectRouteButton = screen.getByTestId("select-route-button");
     await act(async () => {
       fireEvent.press(selectRouteButton);
@@ -97,7 +97,7 @@ describe("<RoutePicture />", () => {
     expect(screen.getByText("Select an existing route"));
   });
 
-  test("calls handleTakePhoto and updates state when 'New route' button is pressed", async () => {
+  it("calls handleTakePhoto and updates state when 'New route' button is pressed", async () => {
     const newRouteButton = screen.getByTestId("new-route-button");
     await act(async () => {
       fireEvent.press(newRouteButton);
@@ -109,7 +109,7 @@ describe("<RoutePicture />", () => {
     expect(setRouteThumbnail).toHaveBeenCalledWith("newThumbnail.jpg");
   });
 
-  test("calls handleTakePhoto when 'New photo' button is pressed (canCreate=false)", async () => {
+  it("calls handleTakePhoto when 'New photo' button is pressed (canCreate=false)", async () => {
     render(
       <RoutePicture
         routeId={mockRouteId}

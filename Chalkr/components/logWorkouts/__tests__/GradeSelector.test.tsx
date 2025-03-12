@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react-native";
 import GradeSelector from "@/components/logWorkouts/GradeSelector";
 
 describe("<GradeSelector />", () => {
-  test("renders the Grade: label and grade value", () => {
+  it("renders the Grade: label and grade value", () => {
     const setGrade = jest.fn();
     const grade = 2;
     const { getByText } = render(
@@ -13,7 +13,7 @@ describe("<GradeSelector />", () => {
     getByText("V2");
     getByText("Grade: ");
   });
-  test(`increments the grade when the increment button is pressed`, () => {
+  it(`increments the grade when the increment button is pressed`, () => {
     const grade = 2;
     const setGrade = jest.fn();
 
@@ -24,7 +24,7 @@ describe("<GradeSelector />", () => {
 
     expect(setGrade).toHaveBeenCalledWith(3);
   });
-  test(`decrements the grade when the decrement button is pressed`, () => {
+  it(`decrements the grade when the decrement button is pressed`, () => {
     const grade = 2;
     const setGrade = jest.fn();
 
@@ -34,7 +34,7 @@ describe("<GradeSelector />", () => {
     fireEvent.press(decrementButton);
     expect(setGrade).toHaveBeenCalledWith(1);
   });
-  test("doesn't decrement the grade when the grade is 0", () => {
+  it("doesn't decrement the grade when the grade is 0", () => {
     const grade = 0;
     const setGrade = jest.fn();
 

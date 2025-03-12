@@ -9,7 +9,7 @@ describe("<AscentStats />", () => {
     jest.clearAllMocks();
   });
 
-  test("renders correctly with default size", async () => {
+  it("renders correctly with default size", async () => {
     render(<AscentStats id={mockWorkoutId} />);
 
     await waitFor(() => {
@@ -25,7 +25,7 @@ describe("<AscentStats />", () => {
     });
   });
 
-  test("renders correctly with size='small'", async () => {
+  it("renders correctly with size='small'", async () => {
     render(<AscentStats id={mockWorkoutId} size="small" />);
 
     await waitFor(() => {
@@ -39,7 +39,7 @@ describe("<AscentStats />", () => {
     expect(screen.queryByText("Send Rate")).toBeNull();
   });
 
-  test("resets statistics when reset prop is true", async () => {
+  it("resets statistics when reset prop is true", async () => {
     render(<AscentStats id={mockWorkoutId} reset={true} />);
 
     await waitFor(() => {

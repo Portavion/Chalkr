@@ -22,7 +22,7 @@ describe("<RouteSelectionModal />", () => {
     cleanup();
   });
 
-  test("renders the modal and its components", async () => {
+  it("renders the modal and its components", async () => {
     render(
       <RouteSelectionModal
         showSelectionModal={true}
@@ -41,7 +41,7 @@ describe("<RouteSelectionModal />", () => {
     expect(await screen.findByTestId("cancel-button")).toBeTruthy();
   });
 
-  test("fetches and renders routes correctly", async () => {
+  it("fetches and renders routes correctly", async () => {
     render(
       <RouteSelectionModal
         showSelectionModal={true}
@@ -61,7 +61,7 @@ describe("<RouteSelectionModal />", () => {
     expect(await screen.findByText("V6")).toBeTruthy();
   });
 
-  test("selects a route and updates state", async () => {
+  it("selects a route and updates state", async () => {
     render(
       <RouteSelectionModal
         showSelectionModal={true}
@@ -89,7 +89,7 @@ describe("<RouteSelectionModal />", () => {
     expect(setShowSelectionModal).toHaveBeenCalledWith(false);
   });
 
-  test("closes the modal when 'Cancel' is pressed", async () => {
+  it("closes the modal when 'Cancel' is pressed", async () => {
     render(
       <RouteSelectionModal
         showSelectionModal={true}

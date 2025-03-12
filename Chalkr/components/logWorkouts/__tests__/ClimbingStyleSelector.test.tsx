@@ -5,7 +5,7 @@ import { ActionSheetIOS } from "react-native";
 import * as Haptics from "expo-haptics";
 
 describe("<ClimbingStyleSelector />", () => {
-  test("renders the style label and climbing style value", () => {
+  it("renders the style label and climbing style value", () => {
     const selectedStyle = "board";
     const setSelectedStyle = jest.fn();
     const { getByText } = render(
@@ -19,7 +19,7 @@ describe("<ClimbingStyleSelector />", () => {
     getByText("board");
   });
 
-  test("opens the action sheet when the button is pressed", () => {
+  it("opens the action sheet when the button is pressed", () => {
     const selectedStyle = "board";
     const setSelectedStyle = jest.fn();
     const showActionSheetSpy = jest.spyOn(
@@ -39,7 +39,7 @@ describe("<ClimbingStyleSelector />", () => {
     expect(Haptics.notificationAsync).toHaveBeenCalled();
   });
 
-  test("calls setSelectedStyle with the correct style when an option is selected", () => {
+  it("calls setSelectedStyle with the correct style when an option is selected", () => {
     const selectedStyle = "Board";
     const setSelectedStyle = jest.fn();
 
@@ -63,7 +63,7 @@ describe("<ClimbingStyleSelector />", () => {
     expect(setSelectedStyle).toHaveBeenCalledWith("Dyno");
   });
 
-  test("calls setSelectedStyle with 'Other' when the last option is selected", () => {
+  it("calls setSelectedStyle with 'Other' when the last option is selected", () => {
     const selectedStyle = "Board";
     const setSelectedStyle = jest.fn();
 

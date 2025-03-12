@@ -19,13 +19,13 @@ describe("<DeleteWorkoutButton />", () => {
     });
   });
 
-  test("renders correctly", () => {
+  it("renders correctly", () => {
     render(<DeleteWorkoutButton id={mockWorkoutId} />);
 
     expect(screen.getByText("Delete")).toBeTruthy();
   });
 
-  test("calls deleteWorkout when the 'Delete' button is pressed", async () => {
+  it("calls deleteWorkout when the 'Delete' button is pressed", async () => {
     render(<DeleteWorkoutButton id={mockWorkoutId} />);
     const { getByTestId } = render(<DeleteWorkoutButton id={mockWorkoutId} />);
 
@@ -35,7 +35,7 @@ describe("<DeleteWorkoutButton />", () => {
     });
   });
 
-  test("calls router.back when the delete button is pressed", async () => {
+  it("calls router.back when the delete button is pressed", async () => {
     render(<DeleteWorkoutButton id={mockWorkoutId} />);
     const { getByTestId } = screen;
     fireEvent.press(getByTestId("delete-button"));
