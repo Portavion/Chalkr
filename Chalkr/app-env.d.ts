@@ -1,6 +1,7 @@
 // @ts-ignore
 /// <reference types="nativewind/types" />
 declare module "*.png";
+type ContextType = "workoutLog" | "workoutStats";
 
 type WorkoutAction =
   | { type: "SET_GRADE"; payload: number }
@@ -17,7 +18,8 @@ type WorkoutAction =
   | { type: "SET_SHOW_MODAL"; payload: boolean }
   | { type: "SET_REFRESH"; payload: boolean }
   | { type: "SET_ROUTE_IMG"; payload: string | null }
-  | { type: "SET_ROUTE_ID"; payload: number | undefined };
+  | { type: "SET_ROUTE_ID"; payload: number | undefined }
+  | { type: "SET_WORKOUT_ID"; payload: number | undefined };
 type HoldType =
   | "Crimp"
   | "Jug"
@@ -75,7 +77,7 @@ type Route = {
   photo_url: string | null;
   thumbnail_url: string | null;
   style: ClimbingStyle | null;
-  color: string;
+  color: RouteColour;
   hold_types: HoldType[];
 };
 type RouteColour =

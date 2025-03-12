@@ -1,4 +1,4 @@
-// __mocks__/@rneui/themed.js  (Note the corrected file name)
+// __mocks__/@rneui/themed.js
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 

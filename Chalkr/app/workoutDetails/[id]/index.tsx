@@ -6,11 +6,10 @@ import GradeDistribution from "@/components/workoutStats/GradeDistribution";
 import StyleDistribution from "@/components/workoutStats/StyleDistribution";
 import TimingStats from "@/components/workoutStats/TimingStats";
 import DeleteWorkoutButton from "@/components/workoutStats/DeleteWorkoutButton";
-import { WorkoutContext } from "./_layout";
+import { useLocalSearchParams } from "expo-router";
 
 const WorkoutDetailsScreen: React.FC = () => {
-  const id = useContext(WorkoutContext);
-
+  const { id } = useLocalSearchParams();
   const workoutId = Number(id);
 
   return (

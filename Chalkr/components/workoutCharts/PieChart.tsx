@@ -26,7 +26,7 @@ export default function RestPieChart({
     Math.PI *
     radius;
 
-  const labelOffset = -25; // How far from the center to place the labels
+  const labelOffset = -25;
   const climbLabelX = screenWidth / 2 + labelOffset;
   const climbLabelY = chartHeight / 2 + 40;
   const restLabelX = screenWidth / 2 + labelOffset;
@@ -44,7 +44,6 @@ export default function RestPieChart({
       />
       <Circle
         origin={`${screenWidth / 2}, ${chartHeight / 2}`}
-        // rotation="-90"
         cy={chartHeight / 2}
         cx={screenWidth / 2}
         r={radius}

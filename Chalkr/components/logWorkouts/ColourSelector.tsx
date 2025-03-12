@@ -1,22 +1,32 @@
 import { Text, View, TouchableOpacity, ActionSheetIOS } from "react-native";
-import { RouteColors } from "@/constants/Colors"; // Import routeColors
+import { RouteColors } from "@/constants/Colors";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
-import { WorkoutContext } from "@/app/(tabs)/workout";
+import { WorkoutContext as WorkoutDetailsContext } from "@/app/_layout";
+import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import { useContext } from "react";
 cssInterop(Image, { className: "style" });
 
 export default function ColourSelector({
   routeColour,
+  contextType,
 }: {
   routeColour: RouteColour | "";
+  contextType: ContextType;
 }) {
-  const context = useContext(WorkoutContext);
+  let context;
+  if (contextType === "workoutLog") {
+    context = useContext(WorkoutLogContext);
+  } else if (contextType === "workoutStats") {
+    context = useContext(WorkoutDetailsContext);
+  } else {
+    throw new Error("Invalid contextType prop");
+  }
   if (!context) {
     throw new Error(
-      "RoutePicture must be used within a WorkoutContext Provider",
+      "GradeSelector must be used within a WorkoutContext Provider",
     );
   }
   const { state, dispatch } = context;

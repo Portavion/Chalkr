@@ -17,7 +17,6 @@ describe("<RouteSelectionModal />", () => {
   const setSelectedHoldTypes = jest.fn();
   const setRouteColour = jest.fn();
 
-  // Clean up after each test
   afterEach(() => {
     cleanup();
   });

@@ -1,31 +1,32 @@
-import { Text, View, TouchableOpacity, FlatList, Modal } from "react-native";
-import { useState, useEffect } from "react";
-import GradeSelector from "@/components/logWorkouts/GradeSelector";
+import { useContext, useEffect, useState } from "react";
 import PlaceholderImage from "@/assets/images/route.png";
-import RoutePicture from "@/components/logWorkouts/RoutePicture";
+import { View, Text, FlatList, Modal, TouchableOpacity } from "react-native";
 import ClimbingStyleSelector from "@/components/logWorkouts/ClimbingStyleSelector";
-import React from "react";
-import { GradeColour } from "@/constants/Colors";
-import { cssInterop } from "nativewind";
-import { Image } from "expo-image";
-import { BlurView } from "expo-blur";
-import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 import ColourSelector from "@/components/logWorkouts/ColourSelector";
+import GradeSelector from "@/components/logWorkouts/GradeSelector";
+import { Image } from "expo-image";
+import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
+import RoutePicture from "@/components/logWorkouts/RoutePicture";
+import { GradeColour } from "@/constants/Colors";
+import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
 import useRoutes from "@/hooks/useRoutes";
+import { useLocalSearchParams } from "expo-router";
+import { WorkoutContext } from "@/app/_layout";
 
-cssInterop(Image, { className: "style" });
+export default function ListsScreen() {
+  const { id } = useLocalSearchParams();
+  const workoutId = Number(id);
+  const context = useContext(WorkoutContext);
+  console.log(context);
+  if (!context) {
+    throw new Error(
+      "RoutePicture must be used within a WorkoutContext Provider",
+    );
+  }
 
-export default function Routes() {
-  const [grade, setGrade] = useState(0);
-  const [style, setStyle] = useState<string>("other");
-  const [routeId, setRouteId] = useState<number | undefined>();
-  const [routeImg, setRouteImg] = useState<null | string>(null);
-  const [routeThumbnail, setRouteThumbnail] = useState<null | string>(null);
-  const [routes, setRoutes] = useState<Route[]>();
+  const { state, dispatch } = context;
   const [showModal, setShowModal] = useState(false);
-  const [selectHoldTypes, setSelectedHoldTypes] = useState<HoldType[]>([]);
-  const [routeColour, setRouteColour] = useState<RouteColour | "">("");
 
   const { fetchAllRoutes, logRoute, deleteRoute } = useRoutes();
 
@@ -37,7 +38,8 @@ export default function Routes() {
           console.log("error loading probles");
           return;
         }
-        setRoutes(routes);
+        dispatch({ type: "SET_ROUTES", payload: routes });
+        console.log(routes);
       } catch (error) {
         console.log("error loading routes: " + error);
       }
@@ -46,19 +48,31 @@ export default function Routes() {
     loadRoutes();
   }, []);
 
-  //TODO: refactor with lists.tsx to avoid duplicate code
+  //TODO: refactor with routes.tsx to avoid duplicate code
   const renderRouteItem = ({ item }: { item: Route }) => (
     <View key={item.id} className="m-2">
       <TouchableOpacity
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-          setRouteId(item.id);
-          setRouteImg(item.photo_url);
-          setRouteThumbnail(item.thumbnail_url);
-          setSelectedHoldTypes(item.hold_types);
-          setRouteColour(item.color ? item.color : "");
-          setGrade(item.grade || 0);
-          setStyle(item.style || "other");
+          dispatch({ type: "SET_ROUTE_ID", payload: item.id });
+          dispatch({ type: "SET_ROUTE_IMG", payload: item.photo_url });
+          dispatch({
+            type: "SET_ROUTE_THUMBNAIL",
+            payload: item.thumbnail_url,
+          });
+          dispatch({
+            type: "SET_SELECTED_HOLD_TYPES",
+            payload: item.hold_types,
+          });
+          dispatch({
+            type: "SET_ROUTE_COLOUR",
+            payload: item.color ? item.color : "",
+          });
+          dispatch({ type: "SET_GRADE", payload: item.grade || 0 });
+          dispatch({
+            type: "SET_SELECTED_STYLE",
+            payload: item.style || "other",
+          });
           setShowModal(true);
         }}
       >
@@ -118,7 +132,7 @@ export default function Routes() {
   return (
     <View className="flex flex-auto pt-2 items-center bg-stone-300">
       <FlatList
-        data={routes}
+        data={state.routes}
         renderItem={renderRouteItem}
         keyExtractor={(item) => item.id.toString()}
         numColumns={3}
@@ -136,50 +150,30 @@ export default function Routes() {
       />
 
       {showModal && (
-        <Modal
-          testID="dialog"
-          animationType="slide"
-          transparent={true}
-          visible={showModal}
-        >
+        <Modal animationType="slide" transparent={true} visible={showModal}>
           <BlurView
             intensity={20}
             className="flex-1 justify-center items-center"
           >
             <View className="bg-stone-200 border border-stone-500 p-2 rounded-xl">
-              <RoutePicture
-                routeImg={routeImg}
-                routeThumbnail={routeThumbnail}
-                routeId={routeId}
-                setRouteId={setRouteId}
-                setRouteImg={setRouteImg}
-                setRoutes={setRoutes}
-                setRouteThumbnail={setRouteThumbnail}
-                setGrade={setGrade}
-                setStyle={setStyle}
-                setSelectedHoldTypes={setSelectedHoldTypes}
-                grade={grade}
-                routeColour={routeColour}
-                setRouteColour={setRouteColour}
-                canCreate={false}
-              />
+              <RoutePicture canCreate={false} contextType="workoutStats" />
 
               <View className="flex flex-row gap-4 justify-center items-center">
-                <GradeSelector grade={grade} setGrade={setGrade} />
+                <GradeSelector grade={state.grade} contextType="workoutStats" />
                 <ColourSelector
-                  routeColour={routeColour}
-                  setRouteColour={setRouteColour}
+                  routeColour={state.routeColour}
+                  contextType="workoutStats"
                 />
               </View>
 
               <ClimbingStyleSelector
-                selectedStyle={style}
-                setSelectedStyle={setStyle}
+                selectedStyle={state.selectedStyle}
+                contextType="workoutStats"
               />
 
               <HoldTypeSelector
-                selectedHoldTypes={selectHoldTypes}
-                setSelectedHoldTypes={setSelectedHoldTypes}
+                selectedHoldTypes={state.selectHoldTypes}
+                contextType="workoutStats"
               />
 
               <View className="flex flex-col items-center ">
@@ -191,31 +185,33 @@ export default function Routes() {
                         Haptics.NotificationFeedbackType.Success,
                       );
                       await logRoute(
-                        routeId,
-                        grade,
-                        style,
+                        state.routeId,
+                        state.grade,
+                        state.selectedStyle,
                         "",
                         "",
                         "",
-                        selectHoldTypes,
-                        routeImg,
-                        routeThumbnail,
-                        routeColour,
+                        state.selectHoldTypes,
+                        state.routeImg,
+                        state.routeThumbnail,
+                        state.routeColour,
                       );
-                      setRoutes((prevRoutesState) =>
-                        prevRoutesState?.map((route) =>
-                          route.id === routeId
-                            ? {
-                                ...route,
-                                grade: grade,
-                                style: style,
-                                photo_url: routeImg,
-                                thumbnail_url: routeThumbnail,
-                                color: routeColour,
-                              }
-                            : route,
-                        ),
+                      const updatedRoutes = state.routes?.map((route) =>
+                        route.id === state.routeId
+                          ? {
+                              ...route,
+                              grade: state.grade,
+                              style: state.selectedStyle,
+                              photo_url: state.routeImg,
+                              thumbnail_url: state.routeThumbnail,
+                              color: state.routeColour,
+                            }
+                          : route,
                       );
+                      dispatch({
+                        type: "SET_ROUTES",
+                        payload: updatedRoutes,
+                      });
                     }}
                     className="mt-2 justify-around rounded-md border bg-slate-50 w-16  py-2 text-lg shadow-sm "
                   >
@@ -227,13 +223,15 @@ export default function Routes() {
                         Haptics.NotificationFeedbackType.Success,
                       );
                       setShowModal(false);
-                      if (routeId) {
-                        deleteRoute(routeId);
-                        setRoutes((prevRoutesState) =>
-                          prevRoutesState?.filter(
-                            (route) => route.id !== routeId,
-                          ),
+                      if (state.routeId) {
+                        deleteRoute(state.routeId);
+                        const updatedRoutes = state.routes?.filter(
+                          (route) => route.id !== state.routeId,
                         );
+                        dispatch({
+                          type: "SET_ROUTES",
+                          payload: updatedRoutes,
+                        });
                       }
                     }}
                     className="mt-2 justify-around rounded-md border bg-slate-50 w-16  py-2 text-lg shadow-sm "

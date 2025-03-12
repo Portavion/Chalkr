@@ -1,6 +1,6 @@
 import React from "react";
 import { render, screen, waitFor } from "@testing-library/react-native";
-import AscentStats from "../AscentStats"; // Adjust path as necessary
+import AscentStats from "../AscentStats";
 
 describe("<AscentStats />", () => {
   const mockWorkoutId = 1;

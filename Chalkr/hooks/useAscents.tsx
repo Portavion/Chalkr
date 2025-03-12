@@ -18,11 +18,11 @@ import useRoutes from "./useRoutes";
 cssInterop(Image, { className: "style" });
 
 const useAscents = () => {
-  const [workoutId] = useState(0);
   const [lastAscentId, setLastAscentId] = useState<number>(0);
   const { logRoute } = useRoutes();
 
   const logAscent = async (
+    workoutId: number,
     routeId: number,
     timer: number,
     grade: number,
@@ -122,7 +122,7 @@ const useAscents = () => {
           return {
             ...ascent,
             hold_types: holdTypeNames,
-          } as Ascent; // Type assertion here
+          } as Ascent;
         }),
       );
 
@@ -177,7 +177,6 @@ const useAscents = () => {
   };
 
   return {
-    workoutId,
     fetchAscentsWithGrade,
     logAscent,
     updateAscentRestTime,

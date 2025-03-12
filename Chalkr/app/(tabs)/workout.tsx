@@ -26,34 +26,14 @@ import ColourSelector from "@/components/logWorkouts/ColourSelector";
 import useAppStateTimer from "@/hooks/useAppStateTimer";
 import useWorkoutTimer from "@/hooks/useWorkoutTimer";
 import useAscents from "@/hooks/useAscents";
-
-interface WorkoutState {
-  grade: number;
-  selectedStyle: ClimbingStyle;
-  selectHoldTypes: HoldType[];
-  isClimbing: boolean;
-  isWorkoutStarted: boolean;
-  sectionTimer: number | undefined;
-  lastTimer: number;
-  workoutTimer: number;
-  routes: Route[] | undefined;
-  routeThumbnail: string | null;
-  routeColour: RouteColour;
-  showModal: boolean;
-  refresh: boolean;
-  routeImg: string | null;
-  routeId: number | undefined;
-}
+import { workoutReducer, WorkoutState } from "@/reducers/WorkoutReducer";
 
 const initialState: WorkoutState = {
   grade: 0,
+  workoutId: undefined,
   selectedStyle: "other",
   selectHoldTypes: [],
   isClimbing: false,
-  isWorkoutStarted: false,
-  sectionTimer: undefined,
-  lastTimer: 0,
-  workoutTimer: 0,
   routes: undefined,
   routeThumbnail: null,
   routeColour: "",
@@ -74,39 +54,47 @@ export const WorkoutContext = createContext<WorkoutContextType | undefined>(
 
 export default function WorkoutScreen() {
   const [state, dispatch] = useReducer(workoutReducer, initialState);
-  const isWorkoutStartedRef = useRef(state.isWorkoutStarted);
 
-  const { workoutId, createNewWorkout, updateWorkoutTimer } = useWorkout();
-  const { logAscent, updateAscentRestTime } = useAscents();
-
+  const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
+  const isWorkoutStartedRef = useRef(isWorkoutStarted);
+  const [sectionTimer, setSectionTimer] = useState<number>();
+  const [lastTimer, setLastTimer] = useState(0);
+  const [workoutTimer, setWorkoutTimer] = useState(0);
   const [showModal, setShowModal] = useState(false);
+
+  const { createNewWorkout, updateWorkoutTimer } = useWorkout();
+  const { logAscent, updateAscentRestTime } = useAscents();
 
   const handleRecord = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    if (!state.isWorkoutStarted) {
-      dispatch({ type: "SET_IS_WORKOUT_STARTED", payload: true });
-      dispatch({ type: "SET_SECTION_TIMER", payload: 0 });
-
-      await createNewWorkout();
+    if (!isWorkoutStarted) {
+      setSectionTimer(0);
+      setIsWorkoutStarted(true);
+      const id = await createNewWorkout();
+      dispatch({ type: "SET_WORKOUT_ID", payload: id });
     }
     if (state.isClimbing) {
       setShowModal(true);
     } else {
-      updateAscentRestTime(state.sectionTimer || 0);
+      updateAscentRestTime(sectionTimer || 0);
     }
     dispatch({ type: "SET_IS_CLIMBING", payload: !state.isClimbing });
-    dispatch({ type: "SET_LAST_TIMER", payload: state.sectionTimer || 0 });
-    dispatch({ type: "SET_SECTION_TIMER", payload: 0 });
+    setLastTimer(sectionTimer || 0);
+    setSectionTimer(0);
   };
 
   const handleAscentLog = async (isSuccess: boolean) => {
     setShowModal(false);
 
     dispatch({ type: "SET_REFRESH", payload: false });
+    if (!state.workoutId) {
+      return;
+    }
 
     const route = await logAscent(
+      state.workoutId,
       state.routeId || 0,
-      state.lastTimer,
+      lastTimer,
       state.grade,
       isSuccess,
       state.selectedStyle,
@@ -128,68 +116,74 @@ export default function WorkoutScreen() {
     if (state.isClimbing) {
       alert("finish logging the current climb first");
     } else {
-      await updateAscentRestTime(state.sectionTimer || 0);
-      await updateWorkoutTimer();
+      if (!state.workoutId) {
+        return;
+      }
+      await updateAscentRestTime(sectionTimer || 0);
+      await updateWorkoutTimer(state.workoutId);
 
-      dispatch({ type: "SET_IS_WORKOUT_STARTED", payload: false });
+      setIsWorkoutStarted(false);
       dispatch({ type: "SET_ROUTE_IMG", payload: null });
-      dispatch({ type: "SET_SECTION_TIMER", payload: undefined });
+      setSectionTimer(undefined);
+      setWorkoutTimer(0);
       dispatch({ type: "SET_IS_CLIMBING", payload: false });
-      dispatch({ type: "SET_WORKOUT_TIMER", payload: 0 });
       dispatch({ type: "SET_ROUTE_COLOUR", payload: "" });
     }
   };
 
   useEffect(() => {
-    isWorkoutStartedRef.current = state.isWorkoutStarted;
-  }, [state.isWorkoutStarted]);
+    isWorkoutStartedRef.current = isWorkoutStarted;
+  }, [isWorkoutStarted]);
 
-  useAppStateTimer(
-    dispatch,
-    isWorkoutStartedRef,
-    "SET_SECTION_TIMER",
-    "SET_WORKOUT_TIMER",
-  );
-
+  useAppStateTimer(setSectionTimer, setWorkoutTimer, isWorkoutStartedRef);
   useWorkoutTimer(
-    dispatch,
+    sectionTimer,
+    setSectionTimer,
+    setWorkoutTimer,
     isWorkoutStartedRef,
-    "SET_SECTION_TIMER",
-    "SET_WORKOUT_TIMER",
   );
 
   return (
     <WorkoutContext.Provider value={{ state, dispatch }}>
       <View className="flex flex-auto pt-2 items-center bg-stone-300">
-        {state.isWorkoutStarted && (
+        {isWorkoutStarted && (
           <StopWorkoutButton handleStopWorkout={handleStopWorkout} />
         )}
 
-        <RoutePicture />
+        <RoutePicture contextType="workoutLog" />
 
         <View className="translate-x-20">
           <AscentStats
-            id={workoutId}
+            id={state.workoutId}
             refresh={state.refresh}
-            reset={!state.isWorkoutStarted}
+            reset={!isWorkoutStarted}
             size={"small"}
           />
         </View>
 
         <View className="flex flex-row gap-4 justify-center items-center">
-          <GradeSelector grade={state.grade} />
-          <ColourSelector routeColour={state.routeColour} />
+          <GradeSelector grade={state.grade} contextType="workoutLog" />
+          <ColourSelector
+            routeColour={state.routeColour}
+            contextType="workoutLog"
+          />
         </View>
 
         <View className="flex flex-row gap-4 justify-center items-center">
-          <ClimbingStyleSelector selectedStyle={state.selectedStyle} />
+          <ClimbingStyleSelector
+            selectedStyle={state.selectedStyle}
+            contextType="workoutLog"
+          />
 
-          <HoldTypeSelector selectedHoldTypes={state.selectHoldTypes} />
+          <HoldTypeSelector
+            selectedHoldTypes={state.selectHoldTypes}
+            contextType="workoutLog"
+          />
         </View>
 
         <WorkoutSectionTimer
           isClimbing={state.isClimbing}
-          sectionTimer={state.sectionTimer || 0}
+          sectionTimer={sectionTimer || 0}
         />
 
         <RecordButton
@@ -197,7 +191,7 @@ export default function WorkoutScreen() {
           isClimbing={state.isClimbing}
         />
 
-        <WorkoutTimer workoutTimer={state.workoutTimer} />
+        <WorkoutTimer workoutTimer={workoutTimer} />
 
         {showModal && (
           <LoggingModal
@@ -209,43 +203,3 @@ export default function WorkoutScreen() {
     </WorkoutContext.Provider>
   );
 }
-
-const workoutReducer = (
-  state: WorkoutState,
-  action: WorkoutAction,
-): WorkoutState => {
-  switch (action.type) {
-    case "SET_GRADE":
-      return { ...state, grade: action.payload };
-    case "SET_SELECTED_STYLE":
-      return { ...state, selectedStyle: action.payload };
-    case "SET_SELECTED_HOLD_TYPES":
-      return { ...state, selectHoldTypes: action.payload };
-    case "SET_IS_CLIMBING":
-      return { ...state, isClimbing: action.payload };
-    case "SET_IS_WORKOUT_STARTED":
-      return { ...state, isWorkoutStarted: action.payload };
-    case "SET_SECTION_TIMER":
-      return { ...state, sectionTimer: action.payload };
-    case "SET_LAST_TIMER":
-      return { ...state, lastTimer: action.payload };
-    case "SET_WORKOUT_TIMER":
-      return { ...state, workoutTimer: action.payload };
-    case "SET_ROUTES":
-      return { ...state, routes: action.payload };
-    case "SET_ROUTE_THUMBNAIL":
-      return { ...state, routeThumbnail: action.payload };
-    case "SET_ROUTE_COLOUR":
-      return { ...state, routeColour: action.payload };
-    case "SET_SHOW_MODAL":
-      return { ...state, showModal: action.payload };
-    case "SET_REFRESH":
-      return { ...state, refresh: action.payload };
-    case "SET_ROUTE_IMG":
-      return { ...state, routeImg: action.payload };
-    case "SET_ROUTE_ID":
-      return { ...state, routeId: action.payload };
-    default:
-      return state;
-  }
-};

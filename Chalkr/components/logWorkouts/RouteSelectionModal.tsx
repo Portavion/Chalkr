@@ -21,7 +21,7 @@ export default function RouteSelectionModal({
   const context = useContext(WorkoutContext);
   if (!context) {
     throw new Error(
-      "RoutePicture must be used within a WorkoutContext Provider",
+      "RouteSelection modal must be used within a WorkoutContext Provider",
     );
   }
 

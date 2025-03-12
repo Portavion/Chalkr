@@ -8,7 +8,7 @@ export default function AscentStats({
   reset = false,
   size = "full",
 }: {
-  id: number;
+  id: number | undefined;
   refresh?: boolean;
   reset?: boolean;
   size?: string;
@@ -23,6 +23,9 @@ export default function AscentStats({
 
   useEffect(() => {
     const loadStats = async () => {
+      if (!workoutId) {
+        return;
+      }
       const ascentStats = await fetchAscentsStats(workoutId);
       setAscentCount(ascentStats.ascentCount);
       setAscentFailCount(ascentStats.ascentFailCount);

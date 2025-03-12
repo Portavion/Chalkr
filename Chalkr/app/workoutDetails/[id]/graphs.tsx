@@ -1,14 +1,14 @@
 // app/workoutDetails/[id]/graphs.tsx
 import { View, Text } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
-import { WorkoutContext } from "./_layout";
+import React, { useEffect, useState } from "react";
 import useWorkout from "@/hooks/useWorkout";
 import useAscents from "@/hooks/useAscents";
 import BarChart from "@/components/workoutCharts/BarChart";
 import RestPieChart from "@/components/workoutCharts/PieChart";
+import { useLocalSearchParams } from "expo-router";
 
 export default function GraphsScreen() {
-  const id = useContext(WorkoutContext);
+  const { id } = useLocalSearchParams();
   const workoutId = Number(id);
   const [ascents, setAscents] = useState<Ascent[]>();
   const [workout, setWorkout] = useState<ClimbingWorkout | undefined>();

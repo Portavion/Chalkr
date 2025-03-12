@@ -100,7 +100,7 @@ jest.mock(
 );
 
 jest.mock("@/hooks/usePhoto", () => ({
-  __esModule: true, // Add this line
+  __esModule: true,
   default: () => ({
     pickPhotoAsync: jest.fn(),
   }),
@@ -131,7 +131,6 @@ jest.mock("@/firebaseConfig", () => ({
   FIREBASE_AUTH: {
     currentUser: { uid: "123" },
   },
-  // ... other mocks
 }));
 
 jest.mock("firebase/auth", () => ({

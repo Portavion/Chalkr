@@ -18,15 +18,12 @@ import { useFocusEffect } from "expo-router";
 cssInterop(Image, { className: "style" });
 
 const useWorkout = () => {
-  const [workoutId, setWorkoutId] = useState(0);
-
   const createNewWorkout = async () => {
     try {
       const newWorkout = await db
         .insert(workoutsTable)
         .values([{}])
         .returning();
-      setWorkoutId(newWorkout[0].id);
       return newWorkout[0].id;
     } catch (error) {
       alert("Couldn't create workout");
@@ -34,7 +31,7 @@ const useWorkout = () => {
     }
   };
 
-  const updateWorkoutTimer = async () => {
+  const updateWorkoutTimer = async (workoutId: number) => {
     const workoutAscents = await db
       .selectDistinct({ id: workoutAscentTable.ascent_id })
       .from(workoutAscentTable)
@@ -94,7 +91,6 @@ const useWorkout = () => {
       ClimbingWorkout[] | undefined
     >();
 
-    // useFocusEffect necessary to re-render list once a new workout is logged / being logged
     useFocusEffect(
       useCallback(() => {
         let isActive = true;
@@ -186,7 +182,6 @@ const useWorkout = () => {
     return gradeDistributionData;
   };
   return {
-    workoutId,
     deleteWorkout,
     createNewWorkout,
     fetchUniqueWorkout,

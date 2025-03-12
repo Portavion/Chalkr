@@ -6,20 +6,32 @@ cssInterop(Image, { className: "style" });
 import PlaceholderImage from "@/assets/images/route.png";
 import { useContext, useEffect, useState } from "react";
 import RouteSelectionModal from "./RouteSelectionModal";
-
 import usePhoto from "@/hooks/usePhoto";
-import { WorkoutContext } from "@/app/(tabs)/workout";
+
+import { WorkoutContext as WorkoutDetailsContext } from "@/app/_layout";
+import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
+
 import { GradeColour, RouteColors } from "@/constants/Colors";
 
 export default function RoutePicture({
   canCreate = true,
+  contextType,
 }: {
   canCreate?: boolean;
+  contextType: ContextType;
 }) {
-  const context = useContext(WorkoutContext);
+  let context;
+
+  if (contextType === "workoutLog") {
+    context = useContext(WorkoutLogContext);
+  } else if (contextType === "workoutStats") {
+    context = useContext(WorkoutDetailsContext);
+  } else {
+    throw new Error("Invalid contextType prop");
+  }
   if (!context) {
     throw new Error(
-      "RoutePicture must be used within a WorkoutContext Provider",
+      "GradeSelector must be used within a WorkoutContext Provider",
     );
   }
 

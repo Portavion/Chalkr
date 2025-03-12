@@ -66,7 +66,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       const credential = GoogleAuthProvider.credential(id_token);
       await signInWithCredential(FIREBASE_AUTH, credential);
     }
-    return result; // Make sure to return the result here
+    return result;
   };
 
   const signOutUser = async () => {

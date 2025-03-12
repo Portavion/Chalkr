@@ -29,16 +29,25 @@ export default function LoggingModal({
       <Modal animationType="slide" transparent={true} visible={showModal}>
         <BlurView intensity={20} className="flex-1 justify-center items-center">
           <View className="bg-stone-200 border border-stone-500 pt-2 rounded-xl">
-            <RoutePicture />
+            <RoutePicture contextType="workoutLog" />
 
             <View className="flex flex-row gap-4 justify-center items-center">
-              <GradeSelector grade={state.grade} />
-              <ColourSelector routeColour={state.routeColour} />
+              <GradeSelector contextType="workoutLog" grade={state.grade} />
+              <ColourSelector
+                routeColour={state.routeColour}
+                contextType="workoutLog"
+              />
             </View>
 
-            <ClimbingStyleSelector selectedStyle={state.selectedStyle} />
+            <ClimbingStyleSelector
+              selectedStyle={state.selectedStyle}
+              contextType="workoutLog"
+            />
 
-            <HoldTypeSelector selectedHoldTypes={state.selectHoldTypes} />
+            <HoldTypeSelector
+              selectedHoldTypes={state.selectHoldTypes}
+              contextType="workoutLog"
+            />
 
             <View className="flex justify-center content-center items-center mb-5 mx-5 ">
               <Text className="mb-2 text-lg">Was your attempt successful?</Text>
