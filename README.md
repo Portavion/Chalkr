@@ -7,6 +7,7 @@
 ![](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![](https://img.shields.io/badge/Expo-007ACC?style=for-the-badge&logo=expo&logoColor=white)
 ![](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![](https://img.shields.io/badge/SQLite-6200EE?style=for-the-badge&logo=sqlite&logoColor=white)
 ![](https://img.shields.io/badge/Drizzle-3982CE?style=for-the-badge&logo=drizzle&logoColor=white)
 ![](https://img.shields.io/badge/firebase-6200EE?style=for-the-badge&logo=firebase&logoColor=white)
 
