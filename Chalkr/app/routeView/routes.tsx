@@ -15,7 +15,6 @@ import { WorkoutContext } from "@/app/_layout";
 
 export default function ListsScreen() {
   const context = useContext(WorkoutContext);
-  console.log(context);
   if (!context) {
     throw new Error(
       "RoutePicture must be used within a WorkoutContext Provider",
@@ -36,7 +35,6 @@ export default function ListsScreen() {
           return;
         }
         dispatch({ type: "SET_ROUTES", payload: routes });
-        console.log(routes);
       } catch (error) {
         console.log("error loading routes: " + error);
       }
