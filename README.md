@@ -18,12 +18,12 @@
 ## 💡 Overview
 
 <div align="center">
-<img src="./assets/Home.PNG" height="120" alt="Home View" />
-<img src="./assets/Routes.PNG" height="120" alt="Route View" />
-<img src="./assets/Stats.PNG" height="120" alt="Stats View" />
-<img src="./assets/Workout.PNG" height="120" alt="Workout Log" />
-<img src="./assets/WorkoutCharts.PNG" height="120" alt="Workout Charts" />
-<img src="./assets/WorkoutDetails.PNG" height="120" alt="Workout Details" />
+<img src="./assets/Home.PNG" height="240" alt="Home View" />
+<img src="./assets/Routes.PNG" height="240" alt="Route View" />
+<img src="./assets/Stats.PNG" height="240" alt="Stats View" />
+<img src="./assets/Workout.PNG" height="240" alt="Workout Log" />
+<img src="./assets/WorkoutCharts.PNG" height="240" alt="Workout Charts" />
+<img src="./assets/WorkoutDetails.PNG" height="240" alt="Workout Details" />
 </div>
 
 Chalkr is a local-first climbing workout tracker built using React Native and
