@@ -90,10 +90,11 @@ export default function RoutePicture({
               borderColor: gradeColour,
             }}
           >
+            {/* need to check for fullimage being null or including ImageManipulator to avoid loading old images saved in the cache that could have been deleted since */}
             <Image
               source={
                 state.routeImg === null
-                  ? state.routeThumbnail
+                  ? state.routeThumbnail || PlaceholderImage
                   : state.routeImg.includes("ImageManipulator")
                     ? state.routeThumbnail || PlaceholderImage
                     : state.routeImg
