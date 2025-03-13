@@ -36,7 +36,6 @@ export default function RoutePicture({
   }
 
   const { state, dispatch } = context;
-
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const [gradeColour, setGradeColour] = useState("red");
 
@@ -92,7 +91,14 @@ export default function RoutePicture({
             }}
           >
             <Image
-              source={state.routeImg || PlaceholderImage}
+              source={
+                state.routeImg === null
+                  ? state.routeThumbnail
+                  : state.routeImg.includes("ImageManipulator")
+                    ? state.routeThumbnail || PlaceholderImage
+                    : state.routeImg
+              }
+              key={state.routeImg}
               testID="route-image"
               className="w-[250px] h-[400px] rounded-xl"
               contentFit="cover"
@@ -112,7 +118,10 @@ export default function RoutePicture({
             }}
           >
             <Image
-              source={state.routeImg || PlaceholderImage}
+              source={
+                state.routeImg || state.routeThumbnail || PlaceholderImage
+              }
+              key={state.routeImg}
               className="w-[250px] h-[400px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"

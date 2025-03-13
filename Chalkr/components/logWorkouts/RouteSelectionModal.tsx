@@ -25,7 +25,7 @@ export default function RouteSelectionModal({
     );
   }
 
-  const { dispatch } = context;
+  const { state, dispatch } = context;
 
   const [routes, setRoutes] = useState<Route[]>();
   const { fetchAllRoutes } = useRoutes();
@@ -67,7 +67,6 @@ export default function RouteSelectionModal({
             type: "SET_ROUTE_COLOUR",
             payload: item.color ? item.color : "",
           });
-
           setShowSelectionModal(false);
         }}
       >

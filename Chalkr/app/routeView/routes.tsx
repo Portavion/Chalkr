@@ -83,11 +83,10 @@ export default function ListsScreen() {
             }}
           >
             <Image
-              source={item.thumbnail_url}
+              source={item.thumbnail_url || item.photo_url || PlaceholderImage}
               className="w-[115px] h-[205px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
-              placeholder={PlaceholderImage}
               transition={200}
               priority="high"
             />
@@ -104,11 +103,10 @@ export default function ListsScreen() {
             }}
           >
             <Image
-              source={item.thumbnail_url}
+              source={item.thumbnail_url || item.photo_url || PlaceholderImage}
               className="w-[115px] h-[205px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
-              placeholder={PlaceholderImage}
               transition={200}
               priority="high"
             />

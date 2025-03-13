@@ -59,13 +59,30 @@ const usePhoto = () => {
       format: SaveFormat.WEBP,
     });
 
+    const fullImageInfo = await FileSystem.getInfoAsync(fullImage.uri);
+    const fullImageFilename = fullImage.uri.split("/").pop();
+    const fullImageFullPath =
+      FileSystem.documentDirectory + "route/" + "full_" + fullImageFilename;
+
+    try {
+      await FileSystem.makeDirectoryAsync(
+        FileSystem.documentDirectory + "route/",
+        { intermediates: true },
+      );
+      await FileSystem.copyAsync({
+        from: fullImageInfo.uri,
+        to: fullImageFullPath,
+      });
+    } catch (error) {
+      console.log(error);
+    }
+
     try {
       await FileSystem.deleteAsync(photoUri);
     } catch (e) {
       console.log(e);
     }
-
-    return fullImage.uri;
+    return fullImageFullPath;
   };
 
   const pickPhotoAsync = async () => {
