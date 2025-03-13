@@ -8,7 +8,7 @@ import {
   workoutsTable,
 } from "@/db/schema";
 import { openDatabaseSync } from "expo-sqlite";
-import { count, eq, inArray, sql, sum } from "drizzle-orm";
+import { count, eq, inArray, sql, sum, isNotNull } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
@@ -198,9 +198,10 @@ const useWorkout = () => {
         eq(workoutsTable.id, workoutAscentTable.workout_id),
       )
       .leftJoin(ascentsTable, eq(workoutAscentTable.ascent_id, ascentsTable.id))
+      .where(isNotNull(workoutsTable.date))
       .groupBy(workoutsTable.id, workoutsTable.date, workoutsTable.timestamp)
       .orderBy(workoutsTable.date);
-    return workoutsWithAscents;
+    return workoutsWithAscents as WorkoutWithAscents[];
   };
 
   return {

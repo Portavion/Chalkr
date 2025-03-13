@@ -50,16 +50,10 @@ export default function GraphsScreen() {
 
   return (
     <View>
-      <View className="mt-2 text-center">
-        <Text className="text-xl font-semibold">Grade Progression</Text>
+      <View className=" m-4 p-2 text-center items-center border rounded-xl bg-gray-50 ">
         {ascents && <BarChart ascents={ascents}></BarChart>}
       </View>
-      <View className="mt-6 mb-2 text-center">
-        <View>
-          <Text className="text-xl font-semibold">
-            Climbing vs Resting Time
-          </Text>
-        </View>
+      <View className=" m-4 p-2 text-center items-center border rounded-xl bg-gray-50 ">
         <View className="">
           {workout && <RestPieChart workout={workout}></RestPieChart>}
         </View>

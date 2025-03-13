@@ -95,9 +95,15 @@ type RouteColour =
   | "";
 type WorkoutWithAscents = {
   workoutId: number;
-  date: string | null;
+  date: string;
   timestamp: string | null;
   totalClimbs: number;
   successfulClimbs: number;
   failedClimbs: number;
+};
+type FlashRateData = {
+  grade: number | null;
+  total_first_ascents: number;
+  successful_flashes: number;
+  flash_rate: number;
 };
