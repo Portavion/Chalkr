@@ -1,7 +1,7 @@
 <div align="center">
 <img src="./Chalkr/assets/images/icon-nobg.png" width="90" alt="Logo" />
 
-<h2> Project Name : Chalkr </h2>
+<h2> Chalkr </h2>
 
 ![](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
 ![](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
