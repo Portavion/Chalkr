@@ -11,11 +11,20 @@
 ![](https://img.shields.io/badge/Drizzle-3982CE?style=for-the-badge&logo=drizzle&logoColor=white)
 ![](https://img.shields.io/badge/firebase-6200EE?style=for-the-badge&logo=firebase&logoColor=white)
 
+<a href="https://youtube.com/shorts/XcV6ChUhr9Q?feature=share">Link to demo</a>
+
 </div>
 
 ## 💡 Overview
 
-<!--TODO: video demonstration-->
+<div align="center">
+<img src="./assets/Home.PNG" height="120" alt="Home View" />
+<img src="./assets/Routes.PNG" height="120" alt="Route View" />
+<img src="./assets/Stats.PNG" height="120" alt="Stats View" />
+<img src="./assets/Workout.PNG" height="120" alt="Workout Log" />
+<img src="./assets/WorkoutCharts.PNG" height="120" alt="Workout Charts" />
+<img src="./assets/WorkoutDetails.PNG" height="120" alt="Workout Details" />
+</div>
 
 Chalkr is a local-first climbing workout tracker built using React Native and
 SQLite. It aims to help climber analyse their workouts and get insightful data
