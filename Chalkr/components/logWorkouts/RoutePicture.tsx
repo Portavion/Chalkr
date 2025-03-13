@@ -1,4 +1,4 @@
-import { Text, View, TouchableOpacity } from "react-native";
+import { Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
@@ -21,6 +21,7 @@ export default function RoutePicture({
   contextType: ContextType;
 }) {
   let context;
+  const [isLoading, setIsLoading] = useState(false); // Add loading state
 
   if (contextType === "workoutLog") {
     context = useContext(WorkoutLogContext);
@@ -50,6 +51,7 @@ export default function RoutePicture({
   }, [state.grade, state.routeColour]);
 
   const handleTakePhoto = async () => {
+    setIsLoading(true); // Start loading
     const images = await pickPhotoAsync();
 
     if (!images?.imageFullPath || !images?.thumbnailFullPath) {
@@ -62,6 +64,7 @@ export default function RoutePicture({
       payload: images.thumbnailFullPath,
     });
 
+    setIsLoading(false); // Stop loading (success case)
     const routes = state.routes;
     if (!routes) {
       return;
@@ -106,6 +109,11 @@ export default function RoutePicture({
               cachePolicy="memory-disk"
               placeholder={PlaceholderImage}
             />
+            {isLoading && (
+              <View className="absolute top-0 left-0 w-[250px] h-[400px] rounded-xl bg-black/50 justify-center items-center">
+                <ActivityIndicator size="large" color={"white"} />
+              </View>
+            )}
           </View>
         )}
         {state.routeColour === "VB" && (
@@ -132,6 +140,11 @@ export default function RoutePicture({
               cachePolicy="memory-disk"
               placeholder={PlaceholderImage}
             />
+            {isLoading && (
+              <View className="absolute top-0 left-0 w-[250px] h-[400px] rounded-xl bg-black/50 justify-center items-center">
+                <ActivityIndicator size="large" color={"white"} />
+              </View>
+            )}
           </View>
         )}
         <View className="flex flex-row items-center gap-5">
