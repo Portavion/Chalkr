@@ -120,7 +120,11 @@ export default function RoutePicture({
           >
             <Image
               source={
-                state.routeImg || state.routeThumbnail || PlaceholderImage
+                state.routeImg === null
+                  ? state.routeThumbnail || PlaceholderImage
+                  : state.routeImg.includes("ImageManipulator")
+                    ? state.routeThumbnail || PlaceholderImage
+                    : state.routeImg
               }
               key={state.routeImg}
               className="w-[250px] h-[400px] rounded-xl"
