@@ -22,12 +22,10 @@ const WorkoutCard = ({
       <View className="bg-white rounded-xl p-5 shadow-sm w-2/3 h-auto justify-center items-center">
         <ListItem.Accordion
           content={
-            <>
-              <Text className="text-lg">
-                {String(workout.timestamp).split(" ", 1)},{" "}
-                {String(workout.timestamp).split(" ", 2)[1]}
-              </Text>
-            </>
+            <Text className="text-lg">
+              {String(workout.timestamp).split(" ", 1)},{" "}
+              {String(workout.timestamp).split(" ", 2)[1]}
+            </Text>
           }
           isExpanded={isExpanded}
           icon={<Icon name={"chevron-down"} type="material-community" />}
