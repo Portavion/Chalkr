@@ -15,7 +15,7 @@ export default function RouteSelectionModal({
   showSelectionModal,
   setShowSelectionModal,
 }: {
-  showSelectionModal: boolean;
+  showSelectionModal: Readonly<boolean>;
   setShowSelectionModal: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const context = useContext(WorkoutContext);
@@ -25,7 +25,7 @@ export default function RouteSelectionModal({
     );
   }
 
-  const { state, dispatch } = context;
+  const { dispatch } = context;
 
   const [routes, setRoutes] = useState<Route[]>();
   const { fetchAllRoutes } = useRoutes();
@@ -34,7 +34,7 @@ export default function RouteSelectionModal({
     const loadRoutes = async () => {
       try {
         const routes = (await fetchAllRoutes()) as Route[];
-        setRoutes(routes || []);
+        setRoutes(routes ?? []);
       } catch (error) {
         console.log("error loading routes: " + error);
       }
@@ -54,10 +54,10 @@ export default function RouteSelectionModal({
             type: "SET_ROUTE_THUMBNAIL",
             payload: item.thumbnail_url,
           });
-          dispatch({ type: "SET_GRADE", payload: item.grade || 0 });
+          dispatch({ type: "SET_GRADE", payload: item.grade ?? 0 });
           dispatch({
             type: "SET_SELECTED_STYLE",
-            payload: item.style || "other",
+            payload: item.style ?? "other",
           });
           dispatch({
             type: "SET_SELECTED_HOLD_TYPES",
@@ -77,12 +77,12 @@ export default function RouteSelectionModal({
               borderWidth: 5,
               borderColor:
                 item.color === ""
-                  ? GradeColour[item.grade || 0] || "black"
+                  ? (GradeColour[item.grade ?? 0] ?? "black")
                   : item.color,
             }}
           >
             <Image
-              source={item.thumbnail_url || PlaceholderImage}
+              source={item.thumbnail_url ?? PlaceholderImage}
               className="w-[125px] h-[222px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
@@ -101,7 +101,7 @@ export default function RouteSelectionModal({
             }}
           >
             <Image
-              source={item.thumbnail_url || PlaceholderImage}
+              source={item.thumbnail_url ?? PlaceholderImage}
               className="w-[125px] h-[222px] rounded-xl"
               contentFit="cover"
               cachePolicy="memory-disk"
@@ -111,7 +111,7 @@ export default function RouteSelectionModal({
         )}
         <Text
           className="absolute bottom-1 right-3 font-extrabold text-xl"
-          style={{ color: GradeColour[item.grade || 0] || "black" }}
+          style={{ color: GradeColour[item.grade ?? 0] ?? "black" }}
         >
           V{item.grade}
         </Text>
