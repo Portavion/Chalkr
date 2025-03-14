@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import {
@@ -9,7 +9,7 @@ import {
   routesHoldTypesTable,
 } from "@/db/schema";
 import { openDatabaseSync } from "expo-sqlite";
-import { eq, inArray, sum, ne, and, count } from "drizzle-orm";
+import { eq, ne } from "drizzle-orm";
 const expo = openDatabaseSync("db.db");
 const db = drizzle(expo);
 
