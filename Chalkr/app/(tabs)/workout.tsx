@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import {
+import React, {
   useState,
   useEffect,
   useRef,
@@ -20,7 +20,6 @@ import WorkoutTimer from "@/components/logWorkouts/WorkoutTimer";
 import WorkoutSectionTimer from "@/components/logWorkouts/WorkoutSectionTimer";
 import RecordButton from "@/components/logWorkouts/RecordButton";
 import LoggingModal from "@/components/logWorkouts/LoggingModal";
-import React from "react";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 import ColourSelector from "@/components/logWorkouts/ColourSelector";
 import useAppStateTimer from "@/hooks/useAppStateTimer";
