@@ -70,7 +70,7 @@ export default function RouteSelectionModal({
           setShowSelectionModal(false);
         }}
       >
-        {!(item.color === "VB") && (
+        {item.color !== "VB" && (
           <View
             style={{
               borderRadius: 16,
