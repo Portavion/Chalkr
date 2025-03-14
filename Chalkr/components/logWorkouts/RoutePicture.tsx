@@ -83,7 +83,7 @@ export default function RoutePicture({
 
   return (
     <View className="flex items-center">
-      {!(state.routeColour === "VB") && (
+      {state.routeColour !== "VB" && (
         <View
           testID="route-image-container"
           style={{
