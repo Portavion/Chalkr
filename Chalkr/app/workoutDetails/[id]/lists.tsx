@@ -67,10 +67,10 @@ export default function ListsScreen() {
             type: "SET_ROUTE_COLOUR",
             payload: item.color ? item.color : "",
           });
-          dispatch({ type: "SET_GRADE", payload: item.grade || 0 });
+          dispatch({ type: "SET_GRADE", payload: item.grade ?? 0 });
           dispatch({
             type: "SET_SELECTED_STYLE",
-            payload: item.style || "other",
+            payload: item.style ?? "other",
           });
           setShowModal(true);
         }}
@@ -81,9 +81,7 @@ export default function ListsScreen() {
               borderRadius: 16,
               borderWidth: 5,
               borderColor:
-                item.color === ""
-                  ? GradeColour[item.grade || 0] || "black"
-                  : item.color,
+                item.color === "" ? GradeColour[item.grade ?? 0] : item.color,
             }}
           >
             <Image
@@ -120,7 +118,7 @@ export default function ListsScreen() {
         )}
         <Text
           className="absolute bottom-1 right-3 font-extrabold text-xl"
-          style={{ color: GradeColour[item.grade || 0] || "black" }}
+          style={{ color: GradeColour[item.grade ?? 0] }}
         >
           V{item.grade}
         </Text>
