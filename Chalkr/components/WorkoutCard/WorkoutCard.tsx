@@ -1,7 +1,7 @@
 import React from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { ListItem, Divider, Icon } from "@rneui/themed";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import * as Haptics from "expo-haptics";
 
 const WorkoutCard = ({
