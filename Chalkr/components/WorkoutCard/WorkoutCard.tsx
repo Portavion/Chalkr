@@ -32,7 +32,6 @@ const WorkoutCard = ({
           isExpanded={isExpanded}
           icon={<Icon name={"chevron-down"} type="material-community" />}
           onPress={() => {
-            Haptics.selectionAsync;
             handlePress(workout.id);
           }}
         >
