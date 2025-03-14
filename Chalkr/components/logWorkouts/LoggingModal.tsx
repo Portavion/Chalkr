@@ -23,7 +23,6 @@ export default function LoggingModal({
       "RoutePicture must be used within a WorkoutContext Provider",
     );
   }
-  const { state, dispatch } = context;
   return (
     <>
       <Modal animationType="slide" transparent={true} visible={showModal}>
