@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/context/AuthContext";
 import { View, Text, ActivityIndicator } from "react-native";
 import * as SQLite from "expo-sqlite";
@@ -7,6 +6,12 @@ import { drizzle } from "drizzle-orm/expo-sqlite";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
 import migrations from "../../drizzle/migrations";
 import SignInScreen from "../screens/SignInScreen";
+import {
+  IndexTabIcon,
+  WorkoutTabIcon,
+  StatsTabIcon,
+  SettingsTabIcon,
+} from "@/components/TabIcons/TabIcons";
 
 export default function TabLayout() {
   const { user, loading, signInWithGoogle } = useAuth();
@@ -47,52 +52,28 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "home-sharp" : "home-outline"}
-              color={color}
-              size={24}
-            />
-          ),
+          tabBarIcon: IndexTabIcon,
         }}
       />
       <Tabs.Screen
         name="workout"
         options={{
           title: "Workout",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "barbell-sharp" : "barbell-outline"}
-              color={color}
-              size={24}
-            />
-          ),
+          tabBarIcon: WorkoutTabIcon,
         }}
       />
       <Tabs.Screen
         name="stats"
         options={{
           title: "Stats",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "stats-chart-sharp" : "stats-chart-outline"}
-              color={color}
-              size={24}
-            />
-          ),
+          tabBarIcon: StatsTabIcon,
         }}
       />
       <Tabs.Screen
         name="settings"
         options={{
           title: "Settings",
-          tabBarIcon: ({ color, focused }) => (
-            <Ionicons
-              name={focused ? "settings-sharp" : "settings-outline"}
-              color={color}
-              size={24}
-            />
-          ),
+          tabBarIcon: SettingsTabIcon,
         }}
       />
     </Tabs>
