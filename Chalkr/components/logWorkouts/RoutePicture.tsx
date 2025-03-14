@@ -82,124 +82,122 @@ export default function RoutePicture({
   };
 
   return (
-    <>
-      <View className="flex items-center">
-        {!(state.routeColour === "VB") && (
-          <View
-            testID="route-image-container"
-            style={{
-              borderRadius: 16,
-              borderWidth: 5,
-              borderColor: gradeColour,
-            }}
-          >
-            {/* need to check for fullimage being null or including ImageManipulator to avoid loading old images saved in the cache that could have been deleted since */}
-            <Image
-              source={
-                state.routeImg === null
+    <View className="flex items-center">
+      {!(state.routeColour === "VB") && (
+        <View
+          testID="route-image-container"
+          style={{
+            borderRadius: 16,
+            borderWidth: 5,
+            borderColor: gradeColour,
+          }}
+        >
+          {/* need to check for fullimage being null or including ImageManipulator to avoid loading old images saved in the cache that could have been deleted since */}
+          <Image
+            source={
+              state.routeImg === null
+                ? state.routeThumbnail || PlaceholderImage
+                : state.routeImg.includes("ImageManipulator")
                   ? state.routeThumbnail || PlaceholderImage
-                  : state.routeImg.includes("ImageManipulator")
-                    ? state.routeThumbnail || PlaceholderImage
-                    : state.routeImg
-              }
-              key={state.routeImg}
-              testID="route-image"
-              className="w-[250px] h-[400px] rounded-xl"
-              contentFit="cover"
-              cachePolicy="memory-disk"
-              placeholder={PlaceholderImage}
-            />
-            {isLoading && (
-              <View className="absolute top-0 left-0 w-[250px] h-[400px] rounded-xl bg-black/50 justify-center items-center">
-                <ActivityIndicator size="large" color={"white"} />
-              </View>
-            )}
-          </View>
-        )}
-        {state.routeColour === "VB" && (
-          <View
-            style={{
-              backgroundColor: "black",
-              borderRadius: 16,
-              borderWidth: 5,
-              borderColor: "yellow",
-              borderStyle: "dashed",
-            }}
-          >
-            <Image
-              source={
-                state.routeImg === null
-                  ? state.routeThumbnail || PlaceholderImage
-                  : state.routeImg.includes("ImageManipulator")
-                    ? state.routeThumbnail || PlaceholderImage
-                    : state.routeImg
-              }
-              key={state.routeImg}
-              className="w-[250px] h-[400px] rounded-xl"
-              contentFit="cover"
-              cachePolicy="memory-disk"
-              placeholder={PlaceholderImage}
-            />
-            {isLoading && (
-              <View className="absolute top-0 left-0 w-[250px] h-[400px] rounded-xl bg-black/50 justify-center items-center">
-                <ActivityIndicator size="large" color={"white"} />
-              </View>
-            )}
-          </View>
-        )}
-        <View className="flex flex-row items-center gap-5">
-          {canCreate && (
-            <>
-              <TouchableOpacity
-                testID="select-route-button"
-                onPress={() => {
-                  Haptics.notificationAsync(
-                    Haptics.NotificationFeedbackType.Success,
-                  );
-                  setShowSelectionModal(true);
-                }}
-                className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
-              >
-                <Text className="">Select route</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                testID="new-route-button"
-                onPress={() => {
-                  Haptics.notificationAsync(
-                    Haptics.NotificationFeedbackType.Success,
-                  );
-                  dispatch({ type: "SET_ROUTE_ID", payload: 0 });
-                  handleTakePhoto();
-                }}
-                className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
-              >
-                <Text className="">New route</Text>
-              </TouchableOpacity>
-            </>
+                  : state.routeImg
+            }
+            key={state.routeImg}
+            testID="route-image"
+            className="w-[250px] h-[400px] rounded-xl"
+            contentFit="cover"
+            cachePolicy="memory-disk"
+            placeholder={PlaceholderImage}
+          />
+          {isLoading && (
+            <View className="absolute top-0 left-0 w-[250px] h-[400px] rounded-xl bg-black/50 justify-center items-center">
+              <ActivityIndicator size="large" color={"white"} />
+            </View>
           )}
-          {!canCreate && (
+        </View>
+      )}
+      {state.routeColour === "VB" && (
+        <View
+          style={{
+            backgroundColor: "black",
+            borderRadius: 16,
+            borderWidth: 5,
+            borderColor: "yellow",
+            borderStyle: "dashed",
+          }}
+        >
+          <Image
+            source={
+              state.routeImg === null
+                ? state.routeThumbnail || PlaceholderImage
+                : state.routeImg.includes("ImageManipulator")
+                  ? state.routeThumbnail || PlaceholderImage
+                  : state.routeImg
+            }
+            key={state.routeImg}
+            className="w-[250px] h-[400px] rounded-xl"
+            contentFit="cover"
+            cachePolicy="memory-disk"
+            placeholder={PlaceholderImage}
+          />
+          {isLoading && (
+            <View className="absolute top-0 left-0 w-[250px] h-[400px] rounded-xl bg-black/50 justify-center items-center">
+              <ActivityIndicator size="large" color={"white"} />
+            </View>
+          )}
+        </View>
+      )}
+      <View className="flex flex-row items-center gap-5">
+        {canCreate && (
+          <>
             <TouchableOpacity
-              testID="new-photo-button"
+              testID="select-route-button"
               onPress={() => {
                 Haptics.notificationAsync(
                   Haptics.NotificationFeedbackType.Success,
                 );
+                setShowSelectionModal(true);
+              }}
+              className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
+            >
+              <Text className="">Select route</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              testID="new-route-button"
+              onPress={() => {
+                Haptics.notificationAsync(
+                  Haptics.NotificationFeedbackType.Success,
+                );
+                dispatch({ type: "SET_ROUTE_ID", payload: 0 });
                 handleTakePhoto();
               }}
               className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
             >
-              <Text className="">New photo</Text>
+              <Text className="">New route</Text>
             </TouchableOpacity>
-          )}
-        </View>
-        {showSelectionModal && (
-          <RouteSelectionModal
-            showSelectionModal={true}
-            setShowSelectionModal={setShowSelectionModal}
-          />
+          </>
+        )}
+        {!canCreate && (
+          <TouchableOpacity
+            testID="new-photo-button"
+            onPress={() => {
+              Haptics.notificationAsync(
+                Haptics.NotificationFeedbackType.Success,
+              );
+              handleTakePhoto();
+            }}
+            className="mt-2 justify-around rounded-md border bg-slate-50 px-3 py-2 text-lg shadow-sm "
+          >
+            <Text className="">New photo</Text>
+          </TouchableOpacity>
         )}
       </View>
-    </>
+      {showSelectionModal && (
+        <RouteSelectionModal
+          showSelectionModal={true}
+          setShowSelectionModal={setShowSelectionModal}
+        />
+      )}
+    </View>
   );
 }
