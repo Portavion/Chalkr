@@ -75,7 +75,7 @@ export default function ListsScreen() {
           setShowModal(true);
         }}
       >
-        {!(item.color === "VB") && (
+        {item.color !== "VB" && (
           <View
             style={{
               borderRadius: 16,
