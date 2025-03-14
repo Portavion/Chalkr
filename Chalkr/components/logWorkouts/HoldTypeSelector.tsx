@@ -81,11 +81,7 @@ export default function HoldTypeSelector({
                         className="flex flex-row justify-center content-center gap-2 items-center mb-5 mx-5 "
                       >
                         <Checkbox
-                          value={
-                            state.selectHoldTypes.includes(holdType)
-                              ? true
-                              : false
-                          }
+                          value={state.selectHoldTypes.includes(holdType)}
                           testID={`checkbox-${holdType}`}
                           onValueChange={() => {
                             Haptics.selectionAsync();
