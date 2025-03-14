@@ -5,7 +5,7 @@ import Svg, { Rect, Text as SvgText, Line, G } from "react-native-svg";
 export default function BarChartFlashRatePerGrade({
   data,
 }: {
-  data: FlashRateData[] | undefined;
+  data: Readonly<FlashRateData[] | undefined>;
 }) {
   const { width } = Dimensions.get("window");
   const chartWidth = width * 0.8;
@@ -17,9 +17,6 @@ export default function BarChartFlashRatePerGrade({
   if (!data || data.length === 0) {
     return <Text>No data to display.</Text>;
   }
-
-  const flashRates = data.map((item) => item.flash_rate * 100); // Convert to percentages
-  const maxFlashRate = maxYAxisValue; // Use 125 as the max
 
   const yAxisValues = [0, 25, 50, 75, 100]; // Fixed Y-axis ticks
 

@@ -5,7 +5,7 @@ import Svg, { Rect, Text as SvgText, Line, G } from "react-native-svg";
 export default function BarChartAscentsPerWorkout({
   workoutsWithAscents,
 }: {
-  workoutsWithAscents?: WorkoutWithAscents[];
+  workoutsWithAscents?: Readonly<WorkoutWithAscents[]>;
 }) {
   if (!workoutsWithAscents || workoutsWithAscents.length === 0) {
     return (
