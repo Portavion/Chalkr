@@ -1,105 +1,87 @@
 import { Ionicons } from "@expo/vector-icons";
 
-//TODO: refactor in single component pass name of icon as prop?
-const IndexTabIcon = ({
-  color,
-  focused,
-}: {
+type TabIconProps = {
   color: string;
   focused: boolean;
-}) => (
-  <Ionicons
-    name={focused ? "home-sharp" : "home-outline"}
-    color={color}
-    size={24}
-  />
-);
-const WorkoutTabIcon = ({
+  focusedIconName: keyof typeof Ionicons.glyphMap;
+  unfocusedIconName: keyof typeof Ionicons.glyphMap;
+};
+
+const TabIcon = ({
   color,
   focused,
-}: {
-  color: string;
-  focused: boolean;
-}) => (
+  focusedIconName,
+  unfocusedIconName,
+}: TabIconProps) => (
   <Ionicons
-    name={focused ? "barbell-sharp" : "barbell-outline"}
+    name={focused ? focusedIconName : unfocusedIconName}
     color={color}
     size={24}
   />
 );
 
-const StatsTabIcon = ({
-  color,
-  focused,
-}: {
-  color: string;
-  focused: boolean;
-}) => (
-  <Ionicons
-    name={focused ? "stats-chart-sharp" : "stats-chart-outline"}
-    color={color}
-    size={24}
-  />
-);
-const SettingsTabIcon = ({
-  color,
-  focused,
-}: {
-  color: string;
-  focused: boolean;
-}) => (
-  <Ionicons
-    name={focused ? "settings-sharp" : "settings-outline"}
-    color={color}
-    size={24}
+const IndexTabIconWrapper = (props: any) => (
+  <TabIcon
+    {...props}
+    focusedIconName="home-sharp"
+    unfocusedIconName="home-outline"
   />
 );
 
-const WorkoutListTabIcon = ({
-  color,
-  focused,
-}: {
-  color: string;
-  focused: boolean;
-}) => (
-  <Ionicons
-    name={focused ? "list-sharp" : "list-outline"}
-    color={color}
-    size={24}
+const WorkoutTabIconWrapper = (props: any) => (
+  <TabIcon
+    {...props}
+    focusedIconName="barbell-sharp"
+    unfocusedIconName="barbell-outline"
   />
 );
-const GraphsTabIcon = ({
-  color,
-  focused,
-}: {
-  color: string;
-  focused: boolean;
-}) => (
-  <Ionicons
-    name={focused ? "bar-chart-sharp" : "bar-chart-outline"}
-    color={color}
-    size={24}
+
+const StatsTabIconWrapper = (props: any) => (
+  <TabIcon
+    {...props}
+    focusedIconName="stats-chart-sharp"
+    unfocusedIconName="stats-chart-outline"
   />
 );
-const ListsTabIcon = ({
-  color,
-  focused,
-}: {
-  color: string;
-  focused: boolean;
-}) => (
-  <Ionicons
-    name={focused ? "images" : "image-outline"}
-    color={color}
-    size={24}
+
+const SettingsTabIconWrapper = (props: any) => (
+  <TabIcon
+    {...props}
+    focusedIconName="settings-sharp"
+    unfocusedIconName="settings-outline"
   />
 );
+
+const WorkoutListTabIconWrapper = (props: any) => (
+  <TabIcon
+    {...props}
+    focusedIconName="list-sharp"
+    unfocusedIconName="list-outline"
+  />
+);
+
+const GraphsTabIconWrapper = (props: any) => (
+  <TabIcon
+    {...props}
+    focusedIconName="bar-chart-sharp"
+    unfocusedIconName="bar-chart-outline"
+  />
+);
+
+const ListsTabIconWrapper = (props: any) => (
+  <TabIcon
+    {...props}
+    focusedIconName="images"
+    unfocusedIconName="image-outline"
+  />
+);
+
 export {
-  IndexTabIcon,
-  WorkoutTabIcon,
-  StatsTabIcon,
-  SettingsTabIcon,
-  WorkoutListTabIcon,
-  GraphsTabIcon,
-  ListsTabIcon,
+  IndexTabIconWrapper as IndexTabIcon,
+  WorkoutTabIconWrapper as WorkoutTabIcon,
+  StatsTabIconWrapper as StatsTabIcon,
+  SettingsTabIconWrapper as SettingsTabIcon,
+  WorkoutListTabIconWrapper as WorkoutListTabIcon,
+  GraphsTabIconWrapper as GraphsTabIcon,
+  ListsTabIconWrapper as ListsTabIcon,
 };
