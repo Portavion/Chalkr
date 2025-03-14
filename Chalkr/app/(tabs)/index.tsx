@@ -29,15 +29,14 @@ export default function Index() {
   return (
     <SafeAreaView className="flex-1">
       <ScrollView className="py-5 bg-stone-300">
-        {workoutList &&
-          workoutList.map((workout) => (
-            <WorkoutCard
-              key={workout.id}
-              workout={workout}
-              isExpanded={expandedWorkouts[workout.id] || false}
-              handlePress={handlePress}
-            />
-          ))}
+        {workoutList.map((workout) => (
+          <WorkoutCard
+            key={workout.id}
+            workout={workout}
+            isExpanded={expandedWorkouts[workout.id] || false}
+            handlePress={handlePress}
+          />
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
