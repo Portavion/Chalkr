@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-
+//TODO: check if useEffects should be lifted from components to here
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import {
   ascentsTable,
