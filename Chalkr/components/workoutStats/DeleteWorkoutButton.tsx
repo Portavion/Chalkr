@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import * as Haptics from "expo-haptics";
 import useWorkout from "@/hooks/useWorkout";
 
-export default function DeleteWorkoutButton({ id }: { id: number }) {
+export default function DeleteWorkoutButton({ id }: { id: Readonly<number> }) {
   const workoutId = id;
   const { deleteWorkout } = useWorkout();
 
