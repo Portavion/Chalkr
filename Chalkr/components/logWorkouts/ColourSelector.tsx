@@ -12,7 +12,7 @@ cssInterop(Image, { className: "style" });
 export default function ColourSelector({
   contextType,
 }: {
-  contextType: ContextType;
+  contextType: Readonly<ContextType>;
 }) {
   let context;
   if (contextType === "workoutLog") {
