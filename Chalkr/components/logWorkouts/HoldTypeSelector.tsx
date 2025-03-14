@@ -13,7 +13,7 @@ cssInterop(Image, { className: "style" });
 export default function HoldTypeSelector({
   contextType,
 }: {
-  contextType: Readonly<ContextType>;
+  contextType: DeepReadonly<ContextType>;
 }) {
   let context;
   if (contextType === "workoutLog") {

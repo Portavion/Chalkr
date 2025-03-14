@@ -107,3 +107,8 @@ type FlashRateData = {
   successful_flashes: number;
   flash_rate: number;
 };
+type DeepReadonly<T> = T extends (infer Item)[]
+  ? DeepReadonlyArray<Item>
+  : T extends object
+    ? DeepReadonlyObject<T>
+    : T;

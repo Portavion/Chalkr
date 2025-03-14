@@ -5,7 +5,7 @@ import Svg, { Rect, Text as SvgText, Line, G } from "react-native-svg";
 export default function BarChartAscentsPerWorkout({
   workoutsWithAscents,
 }: {
-  workoutsWithAscents?: Readonly<WorkoutWithAscents[]>;
+  workoutsWithAscents?: DeepReadonly<WorkoutWithAscents[]>;
 }) {
   if (!workoutsWithAscents || workoutsWithAscents.length === 0) {
     return (
@@ -22,7 +22,9 @@ export default function BarChartAscentsPerWorkout({
   const sidePadding = 30;
 
   const maxClimbs = Math.max(
-    ...workoutsWithAscents.map((workout) => workout.totalClimbs),
+    ...workoutsWithAscents.map(
+      (workout: WorkoutWithAscents) => workout.totalClimbs,
+    ),
   );
 
   const barWidth = 20;
@@ -92,7 +94,7 @@ export default function BarChartAscentsPerWorkout({
         })}
 
         {/* Bars */}
-        {workoutsWithAscents.map((workout) => {
+        {workoutsWithAscents.map((workout: WorkoutWithAscents) => {
           const barHeightTotal =
             (workout.totalClimbs / maxClimbs) * chartHeight;
           const barHeightSuccessful =

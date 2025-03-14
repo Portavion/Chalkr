@@ -5,7 +5,7 @@ import Svg, { Rect, Text as SvgText, Line, G } from "react-native-svg";
 export default function BarChartFlashRatePerGrade({
   data,
 }: {
-  data: Readonly<FlashRateData[] | undefined>;
+  data: DeepReadonly<FlashRateData[] | undefined>;
 }) {
   const { width } = Dimensions.get("window");
   const chartWidth = width * 0.8;
@@ -69,7 +69,7 @@ export default function BarChartFlashRatePerGrade({
         })}
 
         {/* X-Axis Labels (Grades) */}
-        {data.map((item, index) => {
+        {data.map((item: FlashRateData, index: number) => {
           const x =
             sidePadding +
             ((index + 0.5) / data.length) * (chartWidth - 2 * sidePadding);
@@ -88,7 +88,7 @@ export default function BarChartFlashRatePerGrade({
         })}
 
         {/* Bars */}
-        {data.map((item, index) => {
+        {data.map((item: FlashRateData, index: number) => {
           const barHeight =
             ((item.flash_rate * 100) / maxYAxisValue) * chartHeight;
           const x =
