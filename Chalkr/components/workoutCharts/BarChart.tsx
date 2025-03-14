@@ -15,7 +15,7 @@ export default function BarChart({
   const chartHeight = 200;
 
   const maxGrade = Math.max(
-    ...ascents.map((ascent: Ascent) => ascent.grade || 0),
+    ...ascents.map((ascent: Ascent) => ascent.grade ?? 0),
   );
 
   const totalSpacing = 20;
