@@ -89,17 +89,20 @@ export default function HoldTypeSelector({
                           testID={`checkbox-${holdType}`}
                           onValueChange={() => {
                             Haptics.selectionAsync();
-                            state.selectHoldTypes.includes(holdType)
-                              ? dispatch({
-                                  type: "SET_SELECTED_HOLD_TYPES",
-                                  payload: state.selectHoldTypes.filter(
-                                    (ht) => ht !== holdType,
-                                  ),
-                                })
-                              : dispatch({
-                                  type: "SET_SELECTED_HOLD_TYPES",
-                                  payload: [...state.selectHoldTypes, holdType],
-                                });
+                            state.selectHoldTypes.includes(holdType);
+                            if (state.selectHoldTypes.includes(holdType)) {
+                              dispatch({
+                                type: "SET_SELECTED_HOLD_TYPES",
+                                payload: state.selectHoldTypes.filter(
+                                  (ht) => ht !== holdType,
+                                ),
+                              });
+                            } else {
+                              dispatch({
+                                type: "SET_SELECTED_HOLD_TYPES",
+                                payload: [...state.selectHoldTypes, holdType],
+                              });
+                            }
                           }}
                         />
                         <Text className="text-lg">{holdType}</Text>
