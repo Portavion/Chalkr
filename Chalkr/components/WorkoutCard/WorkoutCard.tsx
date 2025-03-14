@@ -83,7 +83,6 @@ const WorkoutCard = ({
               id={`${workout.id}`}
               className="flex items-center rounded-md border border-amber-400 bg-amber-200 px-2 py-1 text-xs "
               onPress={() => {
-                Haptics.selectionAsync;
                 handleDetailsPress();
               }}
             >
