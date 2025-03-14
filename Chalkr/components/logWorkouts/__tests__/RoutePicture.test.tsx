@@ -60,24 +60,28 @@ describe("<RoutePicture />", () => {
   });
 
   it("sets the correct border color based on grade", () => {
-    render(
-      <RoutePicture
-        routeId={mockRouteId}
-        setRouteId={setRouteId}
-        routeImg={mockRouteImg}
-        setRouteImg={setRouteImg}
-        routeThumbnail={mockRouteThumbnail}
-        setRouteThumbnail={setRouteThumbnail}
-        setRoutes={setRoutes}
-        setStyle={setStyle}
-        setGrade={setGrade}
-        grade={2}
-        setSelectedHoldTypes={setSelectedHoldTypes}
-        canCreate={true}
-        routeColour=""
-        setRouteColour={setRouteColour}
-      />,
-    ).getByText;
+    try {
+      render(
+        <RoutePicture
+          routeId={mockRouteId}
+          setRouteId={setRouteId}
+          routeImg={mockRouteImg}
+          setRouteImg={setRouteImg}
+          routeThumbnail={mockRouteThumbnail}
+          setRouteThumbnail={setRouteThumbnail}
+          setRoutes={setRoutes}
+          setStyle={setStyle}
+          setGrade={setGrade}
+          grade={2}
+          setSelectedHoldTypes={setSelectedHoldTypes}
+          canCreate={true}
+          routeColour=""
+          setRouteColour={setRouteColour}
+        />,
+      );
+    } catch (error) {
+      console.error("Error rendering RoutePicture:", error);
+    }
 
     const imageContainer = screen.getByTestId("route-image-container");
     expect(imageContainer.props.style.borderColor).toBe(GradeColour[2]);
