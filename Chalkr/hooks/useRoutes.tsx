@@ -18,8 +18,6 @@ import { Image } from "expo-image";
 cssInterop(Image, { className: "style" });
 
 const useRoutes = () => {
-  const [workoutId, setWorkoutId] = useState(0);
-
   const logRoute = async (
     id: number | undefined,
     grade: number,
@@ -240,7 +238,6 @@ const useRoutes = () => {
   };
 
   return {
-    workoutId,
     deleteRoute,
     fetchAllRoutes,
     fetchUniqueWorkoutRoutes,
