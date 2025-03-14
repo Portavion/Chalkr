@@ -2,7 +2,11 @@ import React from "react";
 import { Text, Dimensions, View } from "react-native";
 import Svg, { Rect, Text as SVGText } from "react-native-svg";
 
-export default function BarChart({ ascents }: { ascents: Ascent[] }) {
+export default function BarChart({
+  ascents,
+}: {
+  ascents: DeepReadonly<Ascent[]>;
+}) {
   if (!ascents || ascents.length === 0) {
     return <Text>No ascents to display.</Text>;
   }
@@ -10,7 +14,9 @@ export default function BarChart({ ascents }: { ascents: Ascent[] }) {
   const screenWidth = 0.9 * Dimensions.get("window").width;
   const chartHeight = 200;
 
-  const maxGrade = Math.max(...ascents.map((ascent) => ascent.grade || 0));
+  const maxGrade = Math.max(
+    ...ascents.map((ascent: Ascent) => ascent.grade || 0),
+  );
 
   const totalSpacing = 20;
   const availableWidth = screenWidth - totalSpacing;
@@ -21,7 +27,7 @@ export default function BarChart({ ascents }: { ascents: Ascent[] }) {
     <View className="p-4 items-center justify-center ">
       <Text className="text-xl font-semibold">Grade Progression</Text>
       <Svg width={screenWidth} height={chartHeight}>
-        {ascents.map((ascent, index) => {
+        {ascents.map((ascent: Ascent, index: number) => {
           const barHeight = ascent.grade
             ? (ascent.grade / maxGrade) * (chartHeight - 30)
             : 0;
