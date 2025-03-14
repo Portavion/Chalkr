@@ -5,7 +5,7 @@ import Svg, { Circle, Text as SVGText } from "react-native-svg";
 export default function RestPieChart({
   workout,
 }: {
-  workout: ClimbingWorkout | undefined;
+  workout: Readonly<ClimbingWorkout | undefined>;
 }) {
   if (!workout) {
     return <Text>No workout to display.</Text>;
