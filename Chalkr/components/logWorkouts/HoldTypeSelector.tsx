@@ -65,73 +65,64 @@ export default function HoldTypeSelector({
         <Ionicons name="chevron-down-sharp" />
       </TouchableOpacity>
       {showHoldModal && (
-        <>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={showHoldModal}
+        <Modal animationType="slide" transparent={true} visible={showHoldModal}>
+          <BlurView
+            intensity={20}
+            className="flex-1 justify-center items-center"
           >
-            <BlurView
-              intensity={20}
-              className="flex-1 justify-center items-center"
-            >
-              <View className="bg-stone-200 border border-stone-500 pt-2 rounded-xl">
-                <View className="flex justify-center content-center items-center mb-5 mt-2 mx-5 ">
-                  <Text className="mb-4 text-xl font-bold">Hold Types</Text>
-                  <View className="flex flex-col items-start  mx-5 ">
-                    {holdTypes.map((holdType) => {
-                      return (
-                        <View
-                          key={holdType}
-                          className="flex flex-row justify-center content-center gap-2 items-center mb-5 mx-5 "
-                        >
-                          <Checkbox
-                            value={
-                              state.selectHoldTypes.includes(holdType)
-                                ? true
-                                : false
-                            }
-                            testID={`checkbox-${holdType}`}
-                            onValueChange={() => {
-                              Haptics.selectionAsync();
-                              state.selectHoldTypes.includes(holdType)
-                                ? dispatch({
-                                    type: "SET_SELECTED_HOLD_TYPES",
-                                    payload: state.selectHoldTypes.filter(
-                                      (ht) => ht !== holdType,
-                                    ),
-                                  })
-                                : dispatch({
-                                    type: "SET_SELECTED_HOLD_TYPES",
-                                    payload: [
-                                      ...state.selectHoldTypes,
-                                      holdType,
-                                    ],
-                                  });
-                            }}
-                          />
-                          <Text className="text-lg">{holdType}</Text>
-                        </View>
-                      );
-                    })}
-                  </View>
-                  <TouchableOpacity
-                    onPress={() => {
-                      Haptics.notificationAsync(
-                        Haptics.NotificationFeedbackType.Success,
-                      );
-                      setShowHoldModal(false);
-                    }}
-                  >
-                    <Text className="flex items-center rounded-md border border-amber-400 bg-amber-200 text-xl px-2 py-2">
-                      Update
-                    </Text>
-                  </TouchableOpacity>
+            <View className="bg-stone-200 border border-stone-500 pt-2 rounded-xl">
+              <View className="flex justify-center content-center items-center mb-5 mt-2 mx-5 ">
+                <Text className="mb-4 text-xl font-bold">Hold Types</Text>
+                <View className="flex flex-col items-start  mx-5 ">
+                  {holdTypes.map((holdType) => {
+                    return (
+                      <View
+                        key={holdType}
+                        className="flex flex-row justify-center content-center gap-2 items-center mb-5 mx-5 "
+                      >
+                        <Checkbox
+                          value={
+                            state.selectHoldTypes.includes(holdType)
+                              ? true
+                              : false
+                          }
+                          testID={`checkbox-${holdType}`}
+                          onValueChange={() => {
+                            Haptics.selectionAsync();
+                            state.selectHoldTypes.includes(holdType)
+                              ? dispatch({
+                                  type: "SET_SELECTED_HOLD_TYPES",
+                                  payload: state.selectHoldTypes.filter(
+                                    (ht) => ht !== holdType,
+                                  ),
+                                })
+                              : dispatch({
+                                  type: "SET_SELECTED_HOLD_TYPES",
+                                  payload: [...state.selectHoldTypes, holdType],
+                                });
+                          }}
+                        />
+                        <Text className="text-lg">{holdType}</Text>
+                      </View>
+                    );
+                  })}
                 </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    Haptics.notificationAsync(
+                      Haptics.NotificationFeedbackType.Success,
+                    );
+                    setShowHoldModal(false);
+                  }}
+                >
+                  <Text className="flex items-center rounded-md border border-amber-400 bg-amber-200 text-xl px-2 py-2">
+                    Update
+                  </Text>
+                </TouchableOpacity>
               </View>
-            </BlurView>
-          </Modal>
-        </>
+            </View>
+          </BlurView>
+        </Modal>
       )}
     </View>
   );
