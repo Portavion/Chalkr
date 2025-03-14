@@ -17,8 +17,8 @@ export default function RoutePicture({
   canCreate = true,
   contextType,
 }: {
-  canCreate?: boolean;
-  contextType: ContextType;
+  canCreate?: Readonly<boolean>;
+  contextType: Readonly<ContextType>;
 }) {
   let context;
   const [isLoading, setIsLoading] = useState(false); // Add loading state
