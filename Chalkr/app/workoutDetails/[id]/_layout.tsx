@@ -1,12 +1,10 @@
 // app/workoutDetails/[id]/_layout.tsx
 import { Ionicons } from "@expo/vector-icons";
-import { Tabs } from "expo-router";
-import { useLocalSearchParams } from "expo-router";
-import React, { createContext, Dispatch, useReducer } from "react";
+import { Tabs, useLocalSearchParams } from "expo-router";
+import React from "react";
 
 export default function WorkoutDetailsTabs() {
   const { id } = useLocalSearchParams();
-  const workoutId = Number(id);
 
   return (
     <Tabs

@@ -1,11 +1,11 @@
 // app/workoutDetails/[id]/graphs.tsx
-import { View, Text } from "react-native";
-import React, { useEffect, useState } from "react";
-import useWorkout from "@/hooks/useWorkout";
-import useAscents from "@/hooks/useAscents";
 import BarChart from "@/components/workoutCharts/BarChart";
 import RestPieChart from "@/components/workoutCharts/PieChart";
+import useAscents from "@/hooks/useAscents";
+import useWorkout from "@/hooks/useWorkout";
 import { useLocalSearchParams } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { View } from "react-native";
 
 export default function GraphsScreen() {
   const { id } = useLocalSearchParams();

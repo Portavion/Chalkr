@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import { SafeAreaView, Text } from "react-native";
 
 import AscentStats from "@/components/workoutStats/AscentStats";

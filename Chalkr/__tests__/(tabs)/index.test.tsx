@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen, fireEvent } from "@testing-library/react-native";
+import { render, screen } from "@testing-library/react-native";
 import Index from "@/app/(tabs)/index";
 import useWorkout from "@/hooks/useWorkout";
 
