@@ -1,7 +1,7 @@
 import { Text, View, Button, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { signOut } from "firebase/auth";
-import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { FIREBASE_AUTH } from "@/firebaseConfig";
 import useWorkout from "@/hooks/useWorkout";
 import { Link } from "expo-router";
 import * as Haptics from "expo-haptics";
