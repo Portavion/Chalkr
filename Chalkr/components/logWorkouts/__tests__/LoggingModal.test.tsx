@@ -1,49 +1,41 @@
-import React from "react";
+import React, { useReducer } from "react";
 import { render, screen, fireEvent } from "@testing-library/react-native";
+import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import LoggingModal from "@/components/logWorkouts/LoggingModal";
 import * as Haptics from "expo-haptics";
+import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
 
 jest.mock("expo-haptics");
 
 describe("<LoggingModal />", () => {
   const handleAscentLog = jest.fn();
-  const setGrade = jest.fn();
-  const setSelectedStyle = jest.fn();
-  const setSelectedHoldTypes = jest.fn();
-  const setRouteColour = jest.fn();
-  const setRouteId = jest.fn();
-  const setRouteImg = jest.fn();
-  const setRouteThumbnail = jest.fn();
-  const setRoutes = jest.fn();
-  let getByText;
 
   beforeEach(() => {
     handleAscentLog.mockClear();
-    setGrade.mockClear();
-    setSelectedStyle.mockClear();
-    setSelectedHoldTypes.mockClear();
-    setRouteColour.mockClear();
-    getByText = render(
-      <LoggingModal
-        handleAscentLog={handleAscentLog}
-        showModal={true}
-        routeId={1}
-        routeImg="mockImage.jpg"
-        routeThumbnail="mockThumbnail.jpg"
-        grade={5}
-        setGrade={setGrade}
-        selectedStyle="Board"
-        setSelectedStyle={setSelectedStyle}
-        setRouteId={setRouteId}
-        setRouteImg={setRouteImg}
-        setRoutes={setRoutes}
-        setRouteThumbnail={setRouteThumbnail}
-        selectedHoldTypes={["Crimp"]}
-        setSelectedHoldTypes={setSelectedHoldTypes}
-        setRouteColour={setRouteColour}
-        routeColour="red"
-      />,
-    );
+    const initialState: WorkoutState = {
+      grade: 0,
+      workoutId: undefined,
+      selectedStyle: "other",
+      selectHoldTypes: [],
+      isClimbing: false,
+      routes: undefined,
+      routeThumbnail: null,
+      routeColour: "red",
+      showModal: false,
+      refresh: false,
+      routeImg: null,
+      routeId: undefined,
+    };
+
+    function TestComponent() {
+      const [state, dispatch] = useReducer(workoutReducer, initialState);
+      return (
+        <WorkoutLogContext.Provider value={{ state, dispatch }}>
+          <LoggingModal showModal={true} handleAscentLog={handleAscentLog} />
+        </WorkoutLogContext.Provider>
+      );
+    }
+    render(<TestComponent />);
   });
 
   it("renders the modal and its components", async () => {

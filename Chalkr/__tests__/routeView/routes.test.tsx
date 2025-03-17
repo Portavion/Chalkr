@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer } from "react";
 import {
   render,
   screen,
@@ -8,7 +8,23 @@ import {
 import Routes from "@/app/routeView/routes";
 import useRoutes from "@/hooks/useRoutes";
 import * as Haptics from "expo-haptics";
+import { WorkoutContext } from "@/app/_layout";
+import { workoutReducer, WorkoutState } from "@/reducers/WorkoutReducer";
 
+const initialState: WorkoutState = {
+  grade: 0,
+  workoutId: undefined,
+  selectedStyle: "other",
+  selectHoldTypes: [],
+  isClimbing: false,
+  routes: undefined,
+  routeThumbnail: null,
+  routeColour: "red",
+  showModal: false,
+  refresh: false,
+  routeImg: null,
+  routeId: undefined,
+};
 jest.mock("@/hooks/useRoutes", () => ({
   __esModule: true,
   default: jest.fn(),
@@ -148,17 +164,24 @@ describe("<Routes />", () => {
       logRoute: mockLogRoute,
       deleteRoute: mockDeleteRoute,
     });
+    function TestComponent() {
+      const [state, dispatch] = useReducer(workoutReducer, initialState);
+      return (
+        <WorkoutContext.Provider value={{ state, dispatch }}>
+          <Routes />
+        </WorkoutContext.Provider>
+      );
+    }
+    render(<TestComponent />);
   });
 
   it("renders routes from fetchAllRoutes", async () => {
-    render(<Routes />);
     expect(mockFetchAllRoutes).toHaveBeenCalled();
     expect(screen.findByText("V3")).toBeTruthy();
     expect(screen.findByText("V5")).toBeTruthy();
   });
 
   it("opens modal on route press", async () => {
-    render(<Routes />);
     await waitFor(() => {
       fireEvent.press(screen.getByText("V3"));
     });
@@ -166,7 +189,6 @@ describe("<Routes />", () => {
   });
 
   it("updates route and closes modal on update press", async () => {
-    render(<Routes />);
     await waitFor(() => {
       fireEvent.press(screen.getByText("V3"));
       fireEvent.press(screen.getByText("Update"));
@@ -176,7 +198,6 @@ describe("<Routes />", () => {
   });
 
   it("deletes route and closes modal on delete press", async () => {
-    render(<Routes />);
     await waitFor(() => {
       fireEvent.press(screen.getByText("V3"));
       fireEvent.press(screen.getByText("Delete"));
@@ -186,7 +207,6 @@ describe("<Routes />", () => {
   });
 
   it("calls Haptics.notificationAsync on route press", async () => {
-    render(<Routes />);
     await waitFor(() => {
       fireEvent.press(screen.getByText("V3"));
       expect(Haptics.notificationAsync).toHaveBeenCalled();
@@ -194,7 +214,6 @@ describe("<Routes />", () => {
   });
 
   it("calls Haptics.notificationAsync on update press", async () => {
-    render(<Routes />);
     await waitFor(() => {
       fireEvent.press(screen.getByText("V3"));
       fireEvent.press(screen.getByText("Update"));
@@ -203,7 +222,6 @@ describe("<Routes />", () => {
   });
 
   it("calls Haptics.notificationAsync on delete press", async () => {
-    render(<Routes />);
     await waitFor(() => {
       fireEvent.press(screen.getByText("V3"));
       fireEvent.press(screen.getByText("Delete"));

@@ -3,8 +3,8 @@ import React, { useContext } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import * as Haptics from "expo-haptics";
 
-import { WorkoutContext as WorkoutDetailsContext } from "@/app/_layout";
-import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
+import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout"; // Import WorkoutLogContext
+import { WorkoutContext as WorkoutDetailsContext } from "@/app/_layout"; // Import WorkoutDetailsContext
 
 export default function GradeSelector({
   contextType,

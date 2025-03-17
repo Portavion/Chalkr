@@ -1,44 +1,49 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
 import ColourSelector from "@/components/logWorkouts/ColourSelector";
 
-import { ActionSheetIOS, ActionSheetIOSOptions } from "react-native";
+import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import * as Haptics from "expo-haptics";
-import { GetByQuery } from "@testing-library/react-native/build/queries/make-queries";
-import {
-  TextMatch,
-  TextMatchOptions,
-} from "@testing-library/react-native/build/matches";
-import { CommonQueryOptions } from "@testing-library/react-native/build/queries/options";
+import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
+import { useReducer } from "react";
+import { ActionSheetIOS } from "react-native";
 
 describe("<ClimbingStyleSelector />", () => {
-  let getByText: GetByQuery<TextMatch, CommonQueryOptions & TextMatchOptions>;
-  let setRouteColour: jest.Mock<any, any, any>;
-  let showActionSheetSpy: jest.SpyInstance<
-    void,
-    [options: ActionSheetIOSOptions, callback: (buttonIndex: number) => void],
-    any
-  >;
   beforeEach(() => {
-    const routeColour = "red";
-    setRouteColour = jest.fn();
-    showActionSheetSpy = jest.spyOn(
-      ActionSheetIOS,
-      "showActionSheetWithOptions",
-    );
-    getByText = render(
-      <ColourSelector
-        setRouteColour={setRouteColour}
-        routeColour={routeColour}
-      />,
-    ).getByText;
-  });
+    const initialState: WorkoutState = {
+      grade: 0,
+      workoutId: undefined,
+      selectedStyle: "other",
+      selectHoldTypes: [],
+      isClimbing: false,
+      routes: undefined,
+      routeThumbnail: null,
+      routeColour: "red",
+      showModal: false,
+      refresh: false,
+      routeImg: null,
+      routeId: undefined,
+    };
 
+    function TestComponent() {
+      const [state, dispatch] = useReducer(workoutReducer, initialState);
+      return (
+        <WorkoutLogContext.Provider value={{ state, dispatch }}>
+          <ColourSelector contextType="workoutLog" />
+        </WorkoutLogContext.Provider>
+      );
+    }
+    render(<TestComponent />);
+  });
   it("renders the colour label and colour value", () => {
-    getByText("Colour: ");
-    getByText("red");
+    screen.getByText("Colour: ");
+    screen.getByText("red");
   });
 
   it("opens the action sheet when the button is pressed", () => {
+    const showActionSheetSpy = jest.spyOn(
+      ActionSheetIOS,
+      "showActionSheetWithOptions",
+    );
     const colourButton = screen.getByTestId("colour-button");
     fireEvent.press(colourButton);
     expect(showActionSheetSpy).toHaveBeenCalled();
@@ -46,22 +51,32 @@ describe("<ClimbingStyleSelector />", () => {
   });
 
   it("calls setRouteColour with the correct colour when an option is selected", () => {
+    const showActionSheetSpy = jest.spyOn(
+      ActionSheetIOS,
+      "showActionSheetWithOptions",
+    );
     showActionSheetSpy.mockImplementationOnce((options, callback) => {
       callback(3);
     });
 
     const colourButton = screen.getByTestId("colour-button");
     fireEvent.press(colourButton);
-    expect(setRouteColour).toHaveBeenCalledWith("green");
+    screen.getByText("green");
+    // expect(setRouteColour).toHaveBeenCalledWith("green");
   });
 
   it("calls setRouteColour with '' when the last option is selected", () => {
+    const showActionSheetSpy = jest.spyOn(
+      ActionSheetIOS,
+      "showActionSheetWithOptions",
+    );
     showActionSheetSpy.mockImplementationOnce((options, callback) => {
       callback(11); // Simulate selecting "Dyno" (index 2)
     });
 
     const colourButton = screen.getByTestId("colour-button");
     fireEvent.press(colourButton);
-    expect(setRouteColour).toHaveBeenCalledWith("");
+    screen.getByText("");
+    // expect(setRouteColour).toHaveBeenCalledWith("");
   });
 });

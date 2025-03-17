@@ -1,20 +1,13 @@
-import React, { act } from "react";
+import React, { act, useReducer } from "react";
 import { render, screen, fireEvent } from "@testing-library/react-native";
 import RoutePicture from "../RoutePicture";
 import { GradeColour, RouteColors } from "@/constants/Colors";
+import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
+import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 
 describe("<RoutePicture />", () => {
-  const mockRouteId = 1;
   const mockRouteImg = "mockImage.jpg";
   const mockRouteThumbnail = "mockThumbnail.jpg";
-  const setRouteId = jest.fn();
-  const setRouteImg = jest.fn();
-  const setRouteThumbnail = jest.fn();
-  const setRoutes = jest.fn();
-  const setStyle = jest.fn();
-  const setGrade = jest.fn();
-  const setSelectedHoldTypes = jest.fn();
-  const setRouteColour = jest.fn();
 
   const mockPickPhotoAsync = jest.fn().mockResolvedValue({
     imageFullPath: "newImage.jpg",
@@ -26,28 +19,30 @@ describe("<RoutePicture />", () => {
   });
 
   beforeEach(() => {
-    try {
-      render(
-        <RoutePicture
-          routeId={mockRouteId}
-          setRouteId={setRouteId}
-          routeImg={mockRouteImg}
-          setRouteImg={setRouteImg}
-          routeThumbnail={mockRouteThumbnail}
-          setRouteThumbnail={setRouteThumbnail}
-          setRoutes={setRoutes}
-          setStyle={setStyle}
-          setGrade={setGrade}
-          grade={5}
-          setSelectedHoldTypes={setSelectedHoldTypes}
-          canCreate={true}
-          routeColour="red"
-          setRouteColour={setRouteColour}
-        />,
+    const initialState: WorkoutState = {
+      grade: 0,
+      workoutId: undefined,
+      selectedStyle: "board",
+      selectHoldTypes: [],
+      isClimbing: false,
+      routes: undefined,
+      routeThumbnail: mockRouteThumbnail,
+      routeColour: "",
+      showModal: false,
+      refresh: false,
+      routeImg: mockRouteImg,
+      routeId: undefined,
+    };
+
+    function TestComponent() {
+      const [state, dispatch] = useReducer(workoutReducer, initialState);
+      return (
+        <WorkoutLogContext.Provider value={{ state, dispatch }}>
+          <RoutePicture canCreate={true} contextType="workoutLog" />
+        </WorkoutLogContext.Provider>
       );
-    } catch (error) {
-      console.error("Error rendering RoutePicture:", error);
     }
+    render(<TestComponent />);
   });
 
   it("renders the component with the correct image and buttons", () => {
@@ -60,34 +55,35 @@ describe("<RoutePicture />", () => {
   });
 
   it("sets the correct border color based on grade", () => {
-    try {
-      render(
-        <RoutePicture
-          routeId={mockRouteId}
-          setRouteId={setRouteId}
-          routeImg={mockRouteImg}
-          setRouteImg={setRouteImg}
-          routeThumbnail={mockRouteThumbnail}
-          setRouteThumbnail={setRouteThumbnail}
-          setRoutes={setRoutes}
-          setStyle={setStyle}
-          setGrade={setGrade}
-          grade={2}
-          setSelectedHoldTypes={setSelectedHoldTypes}
-          canCreate={true}
-          routeColour=""
-          setRouteColour={setRouteColour}
-        />,
-      );
-    } catch (error) {
-      console.error("Error rendering RoutePicture:", error);
-    }
-
     const imageContainer = screen.getByTestId("route-image-container");
-    expect(imageContainer.props.style.borderColor).toBe(GradeColour[2]);
+    expect(imageContainer.props.style.borderColor).toBe(GradeColour[0]);
   });
 
   it("sets the correct border color based on routeColour", () => {
+    const initialState: WorkoutState = {
+      grade: 0,
+      workoutId: undefined,
+      selectedStyle: "board",
+      selectHoldTypes: [],
+      isClimbing: false,
+      routes: undefined,
+      routeThumbnail: mockRouteThumbnail,
+      routeColour: "red",
+      showModal: false,
+      refresh: false,
+      routeImg: mockRouteImg,
+      routeId: undefined,
+    };
+
+    function TestComponent() {
+      const [state, dispatch] = useReducer(workoutReducer, initialState);
+      return (
+        <WorkoutLogContext.Provider value={{ state, dispatch }}>
+          <RoutePicture canCreate={true} contextType="workoutLog" />
+        </WorkoutLogContext.Provider>
+      );
+    }
+    render(<TestComponent />);
     const imageContainer = screen.getByTestId("route-image-container");
     expect(imageContainer.props.style.borderColor).toBe(RouteColors["red"]);
   });
@@ -108,31 +104,34 @@ describe("<RoutePicture />", () => {
     });
 
     expect(mockPickPhotoAsync).toHaveBeenCalled();
-    expect(setRouteId).toHaveBeenCalledWith(0);
-    expect(setRouteImg).toHaveBeenCalledWith("newImage.jpg");
-    expect(setRouteThumbnail).toHaveBeenCalledWith("newThumbnail.jpg");
+    const image = screen.getByTestId("route-image");
+    expect(image.props.source).toStrictEqual([{ uri: "newImage.jpg" }]);
   });
 
   it("calls handleTakePhoto when 'New photo' button is pressed (canCreate=false)", async () => {
-    render(
-      <RoutePicture
-        routeId={mockRouteId}
-        setRouteId={setRouteId}
-        routeImg={mockRouteImg}
-        setRouteImg={setRouteImg}
-        routeThumbnail={mockRouteThumbnail}
-        setRouteThumbnail={setRouteThumbnail}
-        setRoutes={setRoutes}
-        setStyle={setStyle}
-        setGrade={setGrade}
-        grade={5}
-        setSelectedHoldTypes={setSelectedHoldTypes}
-        canCreate={false}
-        routeColour="red"
-        setRouteColour={setRouteColour}
-      />,
-    );
-
+    const initialState: WorkoutState = {
+      grade: 0,
+      workoutId: undefined,
+      selectedStyle: "board",
+      selectHoldTypes: [],
+      isClimbing: false,
+      routes: undefined,
+      routeThumbnail: mockRouteThumbnail,
+      routeColour: "red",
+      showModal: false,
+      refresh: false,
+      routeImg: mockRouteImg,
+      routeId: undefined,
+    };
+    function TestComponent() {
+      const [state, dispatch] = useReducer(workoutReducer, initialState);
+      return (
+        <WorkoutLogContext.Provider value={{ state, dispatch }}>
+          <RoutePicture canCreate={false} contextType="workoutLog" />
+        </WorkoutLogContext.Provider>
+      );
+    }
+    render(<TestComponent />);
     const newPhotoButton = screen.getByTestId("new-photo-button");
 
     await act(async () => {

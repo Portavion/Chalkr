@@ -46,6 +46,7 @@ export default function RouteSelectionModal({
   const renderRouteItem = ({ item }: { item: Route }) => (
     <View key={item.id} className="m-2">
       <TouchableOpacity
+        testID={`route-id-${item.id}`}
         onPress={() => {
           Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
           dispatch({ type: "SET_ROUTE_ID", payload: item.id });

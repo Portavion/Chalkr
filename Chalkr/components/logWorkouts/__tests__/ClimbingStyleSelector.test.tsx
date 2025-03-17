@@ -1,37 +1,47 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
 import ClimbingStyleSelector from "@/components/logWorkouts/ClimbingStyleSelector";
-
-import { ActionSheetIOS } from "react-native";
+import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import * as Haptics from "expo-haptics";
+import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
+import { useReducer } from "react";
+import { ActionSheetIOS } from "react-native";
 
 describe("<ClimbingStyleSelector />", () => {
-  it("renders the style label and climbing style value", () => {
-    const selectedStyle = "board";
-    const setSelectedStyle = jest.fn();
-    const { getByText } = render(
-      <ClimbingStyleSelector
-        selectedStyle={selectedStyle}
-        setSelectedStyle={setSelectedStyle}
-      />,
-    );
+  beforeEach(() => {
+    const initialState: WorkoutState = {
+      grade: 0,
+      workoutId: undefined,
+      selectedStyle: "board",
+      selectHoldTypes: [],
+      isClimbing: false,
+      routes: undefined,
+      routeThumbnail: null,
+      routeColour: "",
+      showModal: false,
+      refresh: false,
+      routeImg: null,
+      routeId: undefined,
+    };
 
-    getByText("Style: ");
-    getByText("board");
+    function TestComponent() {
+      const [state, dispatch] = useReducer(workoutReducer, initialState);
+      return (
+        <WorkoutLogContext.Provider value={{ state, dispatch }}>
+          <ClimbingStyleSelector contextType="workoutLog" />
+        </WorkoutLogContext.Provider>
+      );
+    }
+    render(<TestComponent />);
+  });
+  it("renders the style label and climbing style value", () => {
+    screen.getByText("Style: ");
+    screen.getByText("board");
   });
 
   it("opens the action sheet when the button is pressed", () => {
-    const selectedStyle = "board";
-    const setSelectedStyle = jest.fn();
     const showActionSheetSpy = jest.spyOn(
       ActionSheetIOS,
       "showActionSheetWithOptions",
-    );
-
-    render(
-      <ClimbingStyleSelector
-        selectedStyle={selectedStyle}
-        setSelectedStyle={setSelectedStyle}
-      />,
     );
     const climbingStyleButton = screen.getByTestId("climbing-style-button");
     fireEvent.press(climbingStyleButton);
@@ -40,33 +50,20 @@ describe("<ClimbingStyleSelector />", () => {
   });
 
   it("calls setSelectedStyle with the correct style when an option is selected", () => {
-    const selectedStyle = "Board";
-    const setSelectedStyle = jest.fn();
-
     const showActionSheetSpy = jest.spyOn(
       ActionSheetIOS,
       "showActionSheetWithOptions",
     );
-
     showActionSheetSpy.mockImplementationOnce((options, callback) => {
       callback(2); // Simulate selecting "Dyno" (index 2)
     });
 
-    render(
-      <ClimbingStyleSelector
-        selectedStyle={selectedStyle}
-        setSelectedStyle={setSelectedStyle}
-      />,
-    );
     const climbingStyleButton = screen.getByTestId("climbing-style-button");
     fireEvent.press(climbingStyleButton);
-    expect(setSelectedStyle).toHaveBeenCalledWith("Dyno");
+    screen.getByText("dyno");
   });
 
   it("calls setSelectedStyle with 'Other' when the last option is selected", () => {
-    const selectedStyle = "Board";
-    const setSelectedStyle = jest.fn();
-
     const showActionSheetSpy = jest.spyOn(
       ActionSheetIOS,
       "showActionSheetWithOptions",
@@ -75,15 +72,8 @@ describe("<ClimbingStyleSelector />", () => {
     showActionSheetSpy.mockImplementationOnce((options, callback) => {
       callback(6); // Simulate selecting "Dyno" (index 2)
     });
-
-    render(
-      <ClimbingStyleSelector
-        selectedStyle={selectedStyle}
-        setSelectedStyle={setSelectedStyle}
-      />,
-    );
     const climbingStyleButton = screen.getByTestId("climbing-style-button");
     fireEvent.press(climbingStyleButton);
-    expect(setSelectedStyle).toHaveBeenCalledWith("Other");
+    screen.getByText("other");
   });
 });

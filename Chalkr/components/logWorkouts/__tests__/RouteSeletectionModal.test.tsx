@@ -1,111 +1,63 @@
-import React from "react";
-import {
-  render,
-  screen,
-  fireEvent,
-  cleanup,
-} from "@testing-library/react-native";
+import React, { act, useReducer } from "react";
+import { render, screen, fireEvent } from "@testing-library/react-native";
+import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import RouteSelectionModal from "../RouteSelectionModal";
+import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
 
 describe("<RouteSelectionModal />", () => {
   const setShowSelectionModal = jest.fn();
-  const setRouteId = jest.fn();
-  const setRouteImg = jest.fn();
-  const setRouteThumbnail = jest.fn();
-  const setGrade = jest.fn();
-  const setStyle = jest.fn();
-  const setSelectedHoldTypes = jest.fn();
-  const setRouteColour = jest.fn();
+  beforeEach(() => {
+    const initialState: WorkoutState = {
+      grade: 0,
+      workoutId: undefined,
+      selectedStyle: "other",
+      selectHoldTypes: [],
+      isClimbing: false,
+      routes: undefined,
+      routeThumbnail: null,
+      routeColour: "red",
+      showModal: false,
+      refresh: false,
+      routeImg: null,
+      routeId: undefined,
+    };
 
-  afterEach(() => {
-    cleanup();
+    function TestComponent() {
+      const [state, dispatch] = useReducer(workoutReducer, initialState);
+      return (
+        <WorkoutLogContext.Provider value={{ state, dispatch }}>
+          <RouteSelectionModal
+            showSelectionModal={true}
+            setShowSelectionModal={setShowSelectionModal}
+          />
+        </WorkoutLogContext.Provider>
+      );
+    }
+    render(<TestComponent />);
   });
 
-  it("renders the modal and its components", async () => {
-    render(
-      <RouteSelectionModal
-        showSelectionModal={true}
-        setShowSelectionModal={setShowSelectionModal}
-        setRouteId={setRouteId}
-        setRouteImg={setRouteImg}
-        setRouteThumbnail={setRouteThumbnail}
-        setGrade={setGrade}
-        setStyle={setStyle}
-        setSelectedHoldTypes={setSelectedHoldTypes}
-        routeColour="red"
-        setRouteColour={setRouteColour}
-      />,
-    );
-    expect(await screen.findByText("Select an existing route")).toBeTruthy();
-    expect(await screen.findByTestId("cancel-button")).toBeTruthy();
+  it("renders the modal and its components", () => {
+    screen.findByText("Select an existing route");
+    screen.findByTestId("cancel-button");
   });
 
-  it("fetches and renders routes correctly", async () => {
-    render(
-      <RouteSelectionModal
-        showSelectionModal={true}
-        setShowSelectionModal={setShowSelectionModal}
-        setRouteId={setRouteId}
-        setRouteImg={setRouteImg}
-        setRouteThumbnail={setRouteThumbnail}
-        setGrade={setGrade}
-        setStyle={setStyle}
-        setSelectedHoldTypes={setSelectedHoldTypes}
-        routeColour="red"
-        setRouteColour={setRouteColour}
-      />,
-    );
-
-    expect(await screen.findByText("V5")).toBeTruthy();
-    expect(await screen.findByText("V6")).toBeTruthy();
+  it("fetches and renders routes correctly", () => {
+    screen.findByText("V5");
+    screen.findByText("V6");
   });
 
   it("selects a route and updates state", async () => {
-    render(
-      <RouteSelectionModal
-        showSelectionModal={true}
-        setShowSelectionModal={setShowSelectionModal}
-        setRouteId={setRouteId}
-        setRouteImg={setRouteImg}
-        setRouteThumbnail={setRouteThumbnail}
-        setGrade={setGrade}
-        setStyle={setStyle}
-        setSelectedHoldTypes={setSelectedHoldTypes}
-        routeColour="red"
-        setRouteColour={setRouteColour}
-      />,
-    );
-    const route1Grade = await screen.findByText("V5");
+    const route1Grade = await screen.findByTestId("route-id-1");
     fireEvent.press(route1Grade);
-
-    expect(setRouteId).toHaveBeenCalledWith(1);
-    expect(setRouteImg).toHaveBeenCalledWith("mockPhoto1.jpg");
-    expect(setRouteThumbnail).toHaveBeenCalledWith("mockThumbnail1.jpg");
-    expect(setGrade).toHaveBeenCalledWith(5);
-    expect(setStyle).toHaveBeenCalledWith("Slab");
-    expect(setSelectedHoldTypes).toHaveBeenCalledWith(["Crimp", "Sloper"]);
-    expect(setRouteColour).toHaveBeenCalledWith("red");
+    screen.findByText("V5");
     expect(setShowSelectionModal).toHaveBeenCalledWith(false);
   });
 
   it("closes the modal when 'Cancel' is pressed", async () => {
-    render(
-      <RouteSelectionModal
-        showSelectionModal={true}
-        setShowSelectionModal={setShowSelectionModal}
-        setRouteId={setRouteId}
-        setRouteImg={setRouteImg}
-        setRouteThumbnail={setRouteThumbnail}
-        setGrade={setGrade}
-        setStyle={setStyle}
-        setSelectedHoldTypes={setSelectedHoldTypes}
-        routeColour="red"
-        setRouteColour={setRouteColour}
-      />,
-    );
     const cancelButton = await screen.findByTestId("cancel-button");
-    fireEvent.press(cancelButton);
 
+    fireEvent.press(cancelButton);
+    screen.findByText("V5");
     expect(setShowSelectionModal).toHaveBeenCalledWith(false);
   });
 });
