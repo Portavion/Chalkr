@@ -54,14 +54,12 @@ export default function WorkoutScreen() {
       <View className="flex flex-auto pt-2 items-center bg-stone-300">
         <RoutePicture />
 
-        <View className="translate-x-20">
-          <AscentStats
-            id={state.workoutId}
-            refresh={state.refresh}
-            reset={!isWorkoutStarted}
-            size={"small"}
-          />
-        </View>
+        <AscentStats
+          id={state.workoutId}
+          refresh={state.refresh}
+          reset={!isWorkoutStarted}
+          size={"small"}
+        />
 
         <RouteAttributeSelectors />
 

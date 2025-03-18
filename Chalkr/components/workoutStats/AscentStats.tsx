@@ -42,7 +42,7 @@ export default function AscentStats({
 
   return (
     <>
-      <View className="flex flex-col justify-center ">
+      <View className="flex flex-col justify-center translate-x-20">
         {size === "full" && (
           <Text className="text-black font-bold pt-4 ml-7 text-xl ">
             Climbs
