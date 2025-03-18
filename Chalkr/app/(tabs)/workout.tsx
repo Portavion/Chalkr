@@ -20,7 +20,7 @@ export default function WorkoutScreen() {
   const [lastTimer, setLastTimer] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
-  const { logAscent } = useAscents();
+  const { logAscent, updateAscentRestTime } = useAscents();
 
   const handleAscentLog = async (isSuccess: boolean) => {
     setShowModal(false);
@@ -69,6 +69,7 @@ export default function WorkoutScreen() {
           setIsWorkoutStarted={setIsWorkoutStarted}
           setShowModal={setShowModal}
           setLastTimer={setLastTimer}
+          updateAscentRestTime={updateAscentRestTime}
         />
 
         {showModal && (

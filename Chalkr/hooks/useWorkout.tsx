@@ -58,13 +58,14 @@ const useWorkout = () => {
     const totalClimbTime = sumClimbTime[0]?.total || 0;
     const totalRestTime = sumRestTime[0]?.total || 0;
 
-    await db
+    const workout = await db
       .update(workoutsTable)
       .set({
         climb_time: Number(totalClimbTime),
         rest_time: Number(totalRestTime),
       })
-      .where(eq(workoutsTable.id, workoutId));
+      .where(eq(workoutsTable.id, workoutId))
+      .returning();
   };
 
   const resetDb = async () => {

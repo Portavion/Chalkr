@@ -28,7 +28,7 @@ export default function LoggingModal({
       <Modal animationType="slide" transparent={true} visible={showModal}>
         <BlurView intensity={20} className="flex-1 justify-center items-center">
           <View className="bg-stone-200 border border-stone-500 pt-2 rounded-xl">
-            <RoutePicture contextType="workoutLog" />
+            <RoutePicture />
             <View className="flex flex-row gap-4 justify-center items-center">
               <GradeSelector />
               <ColourSelector />

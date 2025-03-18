@@ -2,33 +2,38 @@
 import useAppStateTimer from "@/hooks/useAppStateTimer";
 import useWorkout from "@/hooks/useWorkout";
 import useWorkoutTimer from "@/hooks/useWorkoutTimer";
-import React, { useEffect, useReducer, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import RecordButton from "./RecordButton";
 import StopWorkoutButton from "./StopWorkoutButton";
 import WorkoutSectionTimer from "./WorkoutSectionTimer";
 import WorkoutTimer from "./WorkoutTimer";
 import * as Haptics from "expo-haptics";
-import initialWorkoutState from "@/constants/initialWorkoutState";
-import { workoutReducer } from "@/reducers/WorkoutReducer";
-import useAscents from "@/hooks/useAscents";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 export default function RecordWorkout({
   isWorkoutStarted,
   setIsWorkoutStarted,
   setShowModal,
   setLastTimer,
+  updateAscentRestTime,
 }: {
   isWorkoutStarted: boolean;
   setIsWorkoutStarted: React.Dispatch<React.SetStateAction<boolean>>;
   setShowModal: React.Dispatch<React.SetStateAction<boolean>>;
   setLastTimer: React.Dispatch<React.SetStateAction<number>>;
+  updateAscentRestTime: any;
 }) {
+  const context = useContext(WorkoutContext);
+  if (!context) {
+    throw new Error(
+      "RoutePicture must be used within a WorkoutContext Provider",
+    );
+  }
   const isWorkoutStartedRef = useRef(isWorkoutStarted);
   const [workoutTimer, setWorkoutTimer] = useState(0);
   const [sectionTimer, setSectionTimer] = useState<number>();
   const { createNewWorkout, updateWorkoutTimer } = useWorkout();
-  const { updateAscentRestTime } = useAscents();
-  const [state, dispatch] = useReducer(workoutReducer, initialWorkoutState);
+  const { state, dispatch } = context;
 
   const handleRecord = async () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
