@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
 import ClimbingStyleSelector from "@/components/logWorkouts/ClimbingStyleSelector";
-import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import * as Haptics from "expo-haptics";
 import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
 import { useReducer } from "react";
 import { ActionSheetIOS } from "react-native";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 describe("<ClimbingStyleSelector />", () => {
   beforeEach(() => {
@@ -26,9 +26,9 @@ describe("<ClimbingStyleSelector />", () => {
     function TestComponent() {
       const [state, dispatch] = useReducer(workoutReducer, initialState);
       return (
-        <WorkoutLogContext.Provider value={{ state, dispatch }}>
-          <ClimbingStyleSelector contextType="workoutLog" />
-        </WorkoutLogContext.Provider>
+        <WorkoutContext.Provider value={{ state, dispatch }}>
+          <ClimbingStyleSelector />
+        </WorkoutContext.Provider>
       );
     }
     render(<TestComponent />);

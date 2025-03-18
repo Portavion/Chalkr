@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
-import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import { useReducer } from "react";
 import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 describe("<HoldTypeSelector />", () => {
   beforeEach(() => {
@@ -24,9 +24,9 @@ describe("<HoldTypeSelector />", () => {
     function TestComponent() {
       const [state, dispatch] = useReducer(workoutReducer, initialState);
       return (
-        <WorkoutLogContext.Provider value={{ state, dispatch }}>
-          <HoldTypeSelector contextType="workoutLog" />
-        </WorkoutLogContext.Provider>
+        <WorkoutContext.Provider value={{ state, dispatch }}>
+          <HoldTypeSelector />
+        </WorkoutContext.Provider>
       );
     }
     render(<TestComponent />);

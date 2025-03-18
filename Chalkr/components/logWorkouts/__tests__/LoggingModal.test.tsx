@@ -1,9 +1,9 @@
 import React, { useReducer } from "react";
 import { render, screen, fireEvent } from "@testing-library/react-native";
-import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import LoggingModal from "@/components/logWorkouts/LoggingModal";
 import * as Haptics from "expo-haptics";
 import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 jest.mock("expo-haptics");
 
@@ -30,9 +30,9 @@ describe("<LoggingModal />", () => {
     function TestComponent() {
       const [state, dispatch] = useReducer(workoutReducer, initialState);
       return (
-        <WorkoutLogContext.Provider value={{ state, dispatch }}>
+        <WorkoutContext.Provider value={{ state, dispatch }}>
           <LoggingModal showModal={true} handleAscentLog={handleAscentLog} />
-        </WorkoutLogContext.Provider>
+        </WorkoutContext.Provider>
       );
     }
     render(<TestComponent />);

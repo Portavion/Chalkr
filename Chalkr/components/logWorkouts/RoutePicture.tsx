@@ -8,34 +8,22 @@ import { useContext, useEffect, useState } from "react";
 import RouteSelectionModal from "./RouteSelectionModal";
 import usePhoto from "@/hooks/usePhoto";
 
-import { WorkoutContext as WorkoutDetailsContext } from "@/app/_layout";
-import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
-
 import { GradeColour, RouteColors } from "@/constants/Colors";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 export default function RoutePicture({
   canCreate = true,
-  contextType,
 }: {
   canCreate?: Readonly<boolean>;
-  contextType: Readonly<ContextType>;
 }) {
-  let context;
   const [isLoading, setIsLoading] = useState(false); // Add loading state
 
-  if (contextType === "workoutLog") {
-    context = useContext(WorkoutLogContext);
-  } else if (contextType === "workoutStats") {
-    context = useContext(WorkoutDetailsContext);
-  } else {
-    throw new Error("Invalid contextType prop");
-  }
+  let context = useContext(WorkoutContext);
   if (!context) {
     throw new Error(
       "GradeSelector must be used within a WorkoutContext Provider",
     );
   }
-
   const { state, dispatch } = context;
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const [gradeColour, setGradeColour] = useState("red");

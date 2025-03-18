@@ -1,12 +1,5 @@
 import { View } from "react-native";
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useReducer,
-  createContext,
-  Dispatch,
-} from "react";
+import React, { useState, useEffect, useRef, useReducer } from "react";
 import GradeSelector from "@/components/logWorkouts/GradeSelector";
 import * as Haptics from "expo-haptics";
 
@@ -26,33 +19,11 @@ import useAppStateTimer from "@/hooks/useAppStateTimer";
 import useWorkoutTimer from "@/hooks/useWorkoutTimer";
 import useAscents from "@/hooks/useAscents";
 import { workoutReducer, WorkoutState } from "@/reducers/WorkoutReducer";
-
-const initialState: WorkoutState = {
-  grade: 0,
-  workoutId: undefined,
-  selectedStyle: "other",
-  selectHoldTypes: [],
-  isClimbing: false,
-  routes: undefined,
-  routeThumbnail: null,
-  routeColour: "",
-  showModal: false,
-  refresh: false,
-  routeImg: null,
-  routeId: undefined,
-};
-
-interface WorkoutContextType {
-  state: WorkoutState;
-  dispatch: Dispatch<WorkoutAction>;
-}
-
-export const WorkoutContext = createContext<WorkoutContextType | undefined>(
-  undefined,
-);
+import initialWorkoutState from "@/constants/initialWorkoutState";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 export default function WorkoutScreen() {
-  const [state, dispatch] = useReducer(workoutReducer, initialState);
+  const [state, dispatch] = useReducer(workoutReducer, initialWorkoutState);
 
   const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
   const isWorkoutStartedRef = useRef(isWorkoutStarted);
@@ -149,7 +120,7 @@ export default function WorkoutScreen() {
           <StopWorkoutButton handleStopWorkout={handleStopWorkout} />
         )}
 
-        <RoutePicture contextType="workoutLog" />
+        <RoutePicture />
 
         <View className="translate-x-20">
           <AscentStats
@@ -161,14 +132,13 @@ export default function WorkoutScreen() {
         </View>
 
         <View className="flex flex-row gap-4 justify-center items-center">
-          <GradeSelector contextType="workoutLog" />
-          <ColourSelector contextType="workoutLog" />
+          <GradeSelector />
+          <ColourSelector />
         </View>
 
         <View className="flex flex-row gap-4 justify-center items-center">
-          <ClimbingStyleSelector contextType="workoutLog" />
-
-          <HoldTypeSelector contextType="workoutLog" />
+          <ClimbingStyleSelector />
+          <HoldTypeSelector />
         </View>
 
         <WorkoutSectionTimer

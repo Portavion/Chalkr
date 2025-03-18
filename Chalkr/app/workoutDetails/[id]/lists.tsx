@@ -13,7 +13,7 @@ import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
 import useRoutes from "@/hooks/useRoutes";
 import { useLocalSearchParams } from "expo-router";
-import { WorkoutContext } from "@/app/_layout";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 export default function ListsScreen() {
   const { id } = useLocalSearchParams();

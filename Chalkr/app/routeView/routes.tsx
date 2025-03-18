@@ -11,7 +11,7 @@ import { GradeColour } from "@/constants/Colors";
 import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
 import useRoutes from "@/hooks/useRoutes";
-import { WorkoutContext } from "@/app/_layout";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 export default function ListsScreen() {
   const context = useContext(WorkoutContext);

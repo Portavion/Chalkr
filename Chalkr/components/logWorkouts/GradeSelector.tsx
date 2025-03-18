@@ -2,23 +2,10 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useContext } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import * as Haptics from "expo-haptics";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
-import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout"; // Import WorkoutLogContext
-import { WorkoutContext as WorkoutDetailsContext } from "@/app/_layout"; // Import WorkoutDetailsContext
-
-export default function GradeSelector({
-  contextType,
-}: {
-  contextType: ContextType;
-}) {
-  let context;
-  if (contextType === "workoutLog") {
-    context = useContext(WorkoutLogContext);
-  } else if (contextType === "workoutStats") {
-    context = useContext(WorkoutDetailsContext);
-  } else {
-    throw new Error("Invalid contextType prop");
-  }
+export default function GradeSelector({}: {}) {
+  let context = useContext(WorkoutContext);
   if (!context) {
     throw new Error(
       "GradeSelector must be used within a WorkoutContext Provider",

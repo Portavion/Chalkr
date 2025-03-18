@@ -1,8 +1,8 @@
 import React, { act, useReducer } from "react";
 import { render, screen, fireEvent } from "@testing-library/react-native";
-import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import RouteSelectionModal from "../RouteSelectionModal";
 import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 describe("<RouteSelectionModal />", () => {
   const setShowSelectionModal = jest.fn();
@@ -25,12 +25,12 @@ describe("<RouteSelectionModal />", () => {
     function TestComponent() {
       const [state, dispatch] = useReducer(workoutReducer, initialState);
       return (
-        <WorkoutLogContext.Provider value={{ state, dispatch }}>
+        <WorkoutContext.Provider value={{ state, dispatch }}>
           <RouteSelectionModal
             showSelectionModal={true}
             setShowSelectionModal={setShowSelectionModal}
           />
-        </WorkoutLogContext.Provider>
+        </WorkoutContext.Provider>
       );
     }
     render(<TestComponent />);

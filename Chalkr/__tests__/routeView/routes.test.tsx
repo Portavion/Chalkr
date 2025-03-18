@@ -8,8 +8,8 @@ import {
 import Routes from "@/app/routeView/routes";
 import useRoutes from "@/hooks/useRoutes";
 import * as Haptics from "expo-haptics";
-import { WorkoutContext } from "@/app/_layout";
 import { workoutReducer, WorkoutState } from "@/reducers/WorkoutReducer";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 const initialState: WorkoutState = {
   grade: 0,

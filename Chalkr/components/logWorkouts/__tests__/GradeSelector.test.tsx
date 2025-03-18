@@ -1,8 +1,8 @@
 import { render, screen, fireEvent } from "@testing-library/react-native";
 import GradeSelector from "@/components/logWorkouts/GradeSelector";
 import { workoutReducer, WorkoutState } from "@/reducers/WorkoutReducer";
-import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import { useReducer } from "react";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 describe("<GradeSelector />", () => {
   beforeEach(() => {
@@ -24,9 +24,9 @@ describe("<GradeSelector />", () => {
     function TestComponent() {
       const [state, dispatch] = useReducer(workoutReducer, initialState);
       return (
-        <WorkoutLogContext.Provider value={{ state, dispatch }}>
-          <GradeSelector contextType="workoutLog" />
-        </WorkoutLogContext.Provider>
+        <WorkoutContext.Provider value={{ state, dispatch }}>
+          <GradeSelector />
+        </WorkoutContext.Provider>
       );
     }
     render(<TestComponent />);

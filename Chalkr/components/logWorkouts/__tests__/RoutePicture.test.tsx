@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react-native";
 import RoutePicture from "../RoutePicture";
 import { GradeColour, RouteColors } from "@/constants/Colors";
 import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
-import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 describe("<RoutePicture />", () => {
   const mockRouteImg = "mockImage.jpg";
@@ -37,9 +37,9 @@ describe("<RoutePicture />", () => {
     function TestComponent() {
       const [state, dispatch] = useReducer(workoutReducer, initialState);
       return (
-        <WorkoutLogContext.Provider value={{ state, dispatch }}>
-          <RoutePicture canCreate={true} contextType="workoutLog" />
-        </WorkoutLogContext.Provider>
+        <WorkoutContext.Provider value={{ state, dispatch }}>
+          <RoutePicture canCreate={true} />
+        </WorkoutContext.Provider>
       );
     }
     render(<TestComponent />);
@@ -78,9 +78,9 @@ describe("<RoutePicture />", () => {
     function TestComponent() {
       const [state, dispatch] = useReducer(workoutReducer, initialState);
       return (
-        <WorkoutLogContext.Provider value={{ state, dispatch }}>
-          <RoutePicture canCreate={true} contextType="workoutLog" />
-        </WorkoutLogContext.Provider>
+        <WorkoutContext.Provider value={{ state, dispatch }}>
+          <RoutePicture canCreate={true} />
+        </WorkoutContext.Provider>
       );
     }
     render(<TestComponent />);
@@ -126,9 +126,9 @@ describe("<RoutePicture />", () => {
     function TestComponent() {
       const [state, dispatch] = useReducer(workoutReducer, initialState);
       return (
-        <WorkoutLogContext.Provider value={{ state, dispatch }}>
-          <RoutePicture canCreate={false} contextType="workoutLog" />
-        </WorkoutLogContext.Provider>
+        <WorkoutContext.Provider value={{ state, dispatch }}>
+          <RoutePicture canCreate={false} />
+        </WorkoutContext.Provider>
       );
     }
     render(<TestComponent />);

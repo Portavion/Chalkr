@@ -2,33 +2,14 @@ import { Stack } from "expo-router";
 import "../global.css";
 import { UserProvider } from "@/context/UserContext";
 import { AuthProvider } from "@/context/AuthContext";
-import { workoutReducer, WorkoutState } from "@/reducers/WorkoutReducer";
-import { Dispatch, createContext, useReducer } from "react";
+import { workoutReducer } from "@/reducers/WorkoutReducer";
+import { useReducer } from "react";
 
-const initialState: WorkoutState = {
-  grade: 0,
-  workoutId: undefined,
-  selectedStyle: "other",
-  selectHoldTypes: [],
-  isClimbing: false,
-  routes: undefined,
-  routeThumbnail: null,
-  routeColour: "",
-  showModal: false,
-  refresh: false,
-  routeImg: null,
-  routeId: undefined,
-};
+import initialWorkoutState from "@/constants/initialWorkoutState";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
-interface WorkoutContextType {
-  state: WorkoutState;
-  dispatch: Dispatch<WorkoutAction>;
-}
-export const WorkoutContext = createContext<WorkoutContextType | undefined>(
-  undefined,
-);
 export default function RootLayout() {
-  const [state, dispatch] = useReducer(workoutReducer, initialState);
+  const [state, dispatch] = useReducer(workoutReducer, initialWorkoutState);
   return (
     <UserProvider>
       <AuthProvider>

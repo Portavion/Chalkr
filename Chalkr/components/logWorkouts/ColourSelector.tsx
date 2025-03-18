@@ -4,24 +4,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import * as Haptics from "expo-haptics";
 import { cssInterop } from "nativewind";
 import { Image } from "expo-image";
-import { WorkoutContext as WorkoutDetailsContext } from "@/app/_layout";
-import { WorkoutContext as WorkoutLogContext } from "@/app/(tabs)/workout";
 import { useContext } from "react";
+import { WorkoutContext } from "@/context/WorkoutContext";
 cssInterop(Image, { className: "style" });
 
-export default function ColourSelector({
-  contextType,
-}: {
-  contextType: DeepReadonly<ContextType>;
-}) {
-  let context;
-  if (contextType === "workoutLog") {
-    context = useContext(WorkoutLogContext);
-  } else if (contextType === "workoutStats") {
-    context = useContext(WorkoutDetailsContext);
-  } else {
-    throw new Error("Invalid contextType prop");
-  }
+export default function ColourSelector({}: {}) {
+  let context = useContext(WorkoutContext);
   if (!context) {
     throw new Error(
       "GradeSelector must be used within a WorkoutContext Provider",

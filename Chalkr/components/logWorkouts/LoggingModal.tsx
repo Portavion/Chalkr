@@ -7,8 +7,8 @@ import GradeSelector from "@/components/logWorkouts/GradeSelector";
 import * as Haptics from "expo-haptics";
 import HoldTypeSelector from "@/components/logWorkouts/HoldTypeSelector";
 import ColourSelector from "@/components/logWorkouts/ColourSelector";
-import { WorkoutContext } from "@/app/(tabs)/workout";
 import { useContext } from "react";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 export default function LoggingModal({
   handleAscentLog,
@@ -30,11 +30,11 @@ export default function LoggingModal({
           <View className="bg-stone-200 border border-stone-500 pt-2 rounded-xl">
             <RoutePicture contextType="workoutLog" />
             <View className="flex flex-row gap-4 justify-center items-center">
-              <GradeSelector contextType="workoutLog" />
-              <ColourSelector contextType="workoutLog" />
+              <GradeSelector />
+              <ColourSelector />
             </View>
-            <ClimbingStyleSelector contextType="workoutLog" />
-            <HoldTypeSelector contextType="workoutLog" />
+            <ClimbingStyleSelector />
+            <HoldTypeSelector />
 
             <View className="flex justify-center content-center items-center mb-5 mx-5 ">
               <Text className="mb-2 text-lg">Was your attempt successful?</Text>

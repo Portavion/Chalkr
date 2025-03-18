@@ -1,7 +1,6 @@
 import React, { useReducer } from "react";
 import { render, screen } from "@testing-library/react-native";
 import WorkoutDetailsScreen from "@/app/workoutDetails/[id]/index";
-import { WorkoutContext } from "@/app/_layout";
 import AscentStats from "@/components/workoutStats/AscentStats";
 import GradeDistribution from "@/components/workoutStats/GradeDistribution";
 import StyleDistribution from "@/components/workoutStats/StyleDistribution";
@@ -9,6 +8,7 @@ import TimingStats from "@/components/workoutStats/TimingStats";
 import DeleteWorkoutButton from "@/components/workoutStats/DeleteWorkoutButton";
 import { WorkoutState, workoutReducer } from "@/reducers/WorkoutReducer";
 import { useLocalSearchParams } from "expo-router";
+import { WorkoutContext } from "@/context/WorkoutContext";
 jest.mock("expo-router", () => ({
   useLocalSearchParams: jest.fn(),
 }));

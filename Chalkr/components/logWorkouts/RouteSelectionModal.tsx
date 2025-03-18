@@ -9,7 +9,7 @@ cssInterop(Image, { className: "style" });
 import PlaceholderImage from "@/assets/images/route.png";
 import { GradeColour } from "@/constants/Colors";
 import useRoutes from "@/hooks/useRoutes";
-import { WorkoutContext } from "@/app/(tabs)/workout";
+import { WorkoutContext } from "@/context/WorkoutContext";
 
 export default function RouteSelectionModal({
   showSelectionModal,
