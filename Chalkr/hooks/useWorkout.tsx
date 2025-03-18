@@ -182,33 +182,10 @@ const useWorkout = () => {
     return gradeDistributionData;
   };
 
-  const fetchAllWorkoutWithAscents = async () => {
-    const workoutsWithAscents = await db
-      .select({
-        workoutId: workoutsTable.id,
-        date: workoutsTable.date,
-        timestamp: workoutsTable.timestamp,
-        totalClimbs: count(ascentsTable.id),
-        successfulClimbs: sql<number>`CAST(SUM(CASE WHEN ${ascentsTable.isSuccess} = 1 THEN 1 ELSE 0 END) AS INTEGER)`,
-        failedClimbs: sql<number>`CAST(SUM(CASE WHEN ${ascentsTable.isSuccess} = 0 THEN 1 ELSE 0 END) AS INTEGER)`,
-      })
-      .from(workoutsTable)
-      .leftJoin(
-        workoutAscentTable,
-        eq(workoutsTable.id, workoutAscentTable.workout_id),
-      )
-      .leftJoin(ascentsTable, eq(workoutAscentTable.ascent_id, ascentsTable.id))
-      .where(isNotNull(workoutsTable.date))
-      .groupBy(workoutsTable.id, workoutsTable.date, workoutsTable.timestamp)
-      .orderBy(workoutsTable.date);
-    return workoutsWithAscents as WorkoutWithAscents[];
-  };
-
   return {
     deleteWorkout,
     createNewWorkout,
     fetchUniqueWorkout,
-    fetchAllWorkoutWithAscents,
     fetchWorkoutsList,
     updateWorkoutTimer,
     resetDb,

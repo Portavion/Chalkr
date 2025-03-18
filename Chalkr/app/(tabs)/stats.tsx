@@ -1,33 +1,19 @@
 import { View } from "react-native";
 import React, { useCallback, useState } from "react";
-import useWorkout from "@/hooks/useWorkout";
 import { useFocusEffect } from "expo-router";
 import BarChartAscentsPerWorkout from "@/components/Charts/BarChartAscentsPerWorkout/BarChartAscentsPerWorkout";
 import useAscents from "@/hooks/useAscents";
 import BarChartFlashRatePerGrade from "@/components/Charts/BarChartFlashRatePerGrade/BarChartFlashRatePerGrade";
+import useFetchAllWorkouts from "@/hooks/fetchWorkouts/useFetchAllWorkouts";
 
 export default function StatScreen() {
-  const [workoutWithAscents, setWorkoutWithAscents] =
-    useState<WorkoutWithAscents[]>();
-
   const [flashRateData, setFlashRateData] = useState<FlashRateData[]>();
-  const { fetchAllWorkoutWithAscents } = useWorkout();
+  const { workoutWithAscents } = useFetchAllWorkouts();
   const { fetchFlashStats } = useAscents();
 
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
-
-      const fetchWorkout = async () => {
-        try {
-          const workoutAscents = await fetchAllWorkoutWithAscents();
-          if (isActive) {
-            setWorkoutWithAscents(workoutAscents);
-          }
-        } catch (error) {
-          console.error("Error fetching workouts:", error);
-        }
-      };
 
       const fetchFlashRates = async () => {
         try {
@@ -39,7 +25,6 @@ export default function StatScreen() {
           console.error("Error fetching workouts:", error);
         }
       };
-      fetchWorkout();
       fetchFlashRates();
 
       return () => {
