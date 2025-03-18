@@ -4,7 +4,6 @@ import {
   GraphsTabIcon,
   ListsTabIcon,
 } from "@/components/TabIcons/TabIcons";
-import { Ionicons } from "@expo/vector-icons";
 import { Tabs, useLocalSearchParams } from "expo-router";
 import React from "react";
 
