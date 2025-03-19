@@ -12,6 +12,7 @@ import { BlurView } from "expo-blur";
 import * as Haptics from "expo-haptics";
 import useRoutes from "@/hooks/useRoutes";
 import { WorkoutContext } from "@/context/WorkoutContext";
+import RouteAttributeSelectors from "@/components/logWorkouts/RouteAttributeSelectors";
 
 export default function ListsScreen() {
   const context = useContext(WorkoutContext);
@@ -150,16 +151,7 @@ export default function ListsScreen() {
           >
             <View className="bg-stone-200 border border-stone-500 p-2 rounded-xl">
               <RoutePicture canCreate={false} />
-
-              <View className="flex flex-row gap-4 justify-center items-center">
-                <GradeSelector />
-                <ColourSelector />
-              </View>
-
-              <ClimbingStyleSelector />
-
-              <HoldTypeSelector />
-
+              <RouteAttributeSelectors />
               <View className="flex flex-col items-center ">
                 <View className="flex flex-row gap-4 pb-4">
                   <TouchableOpacity
