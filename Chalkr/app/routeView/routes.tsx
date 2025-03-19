@@ -149,16 +149,16 @@ export default function ListsScreen() {
             className="flex-1 justify-center items-center"
           >
             <View className="bg-stone-200 border border-stone-500 p-2 rounded-xl">
-              <RoutePicture canCreate={false} contextType="workoutStats" />
+              <RoutePicture canCreate={false} />
 
               <View className="flex flex-row gap-4 justify-center items-center">
-                <GradeSelector contextType="workoutStats" />
-                <ColourSelector contextType="workoutStats" />
+                <GradeSelector />
+                <ColourSelector />
               </View>
 
-              <ClimbingStyleSelector contextType="workoutStats" />
+              <ClimbingStyleSelector />
 
-              <HoldTypeSelector contextType="workoutStats" />
+              <HoldTypeSelector />
 
               <View className="flex flex-col items-center ">
                 <View className="flex flex-row gap-4 pb-4">
