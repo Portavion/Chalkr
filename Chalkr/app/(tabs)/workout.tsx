@@ -22,6 +22,7 @@ export default function WorkoutScreen() {
 
   const { logAscent, updateAscentRestTime } = useAscents();
 
+  //TODO: extract to logging modal
   const handleAscentLog = async (isSuccess: boolean) => {
     setShowModal(false);
 
