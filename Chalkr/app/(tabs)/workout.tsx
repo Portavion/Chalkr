@@ -54,16 +54,13 @@ export default function WorkoutScreen() {
     <WorkoutContext.Provider value={{ state: workoutState, dispatch }}>
       <View className="flex flex-auto pt-2 items-center bg-stone-300">
         <RoutePicture />
-
         <AscentStats
           id={workoutState.workoutId}
           refresh={workoutState.refresh}
           reset={!isWorkoutStarted}
           size={"small"}
         />
-
         <RouteAttributeSelectors />
-
         <RecordWorkout
           isWorkoutStarted={isWorkoutStarted}
           setIsWorkoutStarted={setIsWorkoutStarted}
@@ -71,7 +68,6 @@ export default function WorkoutScreen() {
           setLastTimer={setLastTimer}
           updateAscentRestTime={updateAscentRestTime}
         />
-
         {showModal && (
           <LoggingModal
             handleAscentLog={handleAscentLog}
