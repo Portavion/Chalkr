@@ -4,6 +4,8 @@
 <h2> Chalkr </h2>
 
 ![](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)
+![](https://img.shields.io/badge/Python-007ACC?style=for-the-badge&logo=python&logoColor=white)
+![](https://img.shields.io/badge/FastAPI-007ACC?style=for-the-badge&logo=fastapi&logoColor=white)
 ![](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=black)
 ![](https://img.shields.io/badge/Expo-007ACC?style=for-the-badge&logo=expo&logoColor=white)
 ![](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
@@ -48,12 +50,15 @@ include:
 ## 💻 Tech Stack
 
 - React Native: A framework for building native mobile applications using React.
+- FastAPI: A fast framework for building APIs with Python based on standard
+  Python type hints.
 - Expo: A framework for universal React Native apps.
 - Firebase: A mobile and web development platform, providing authentication.
 - SQLite: A self-contained SQL database engine.
 - Drizzle ORM: A TypeScript ORM providing type-safe database access.
 - NativeWind: Tailwind CSS for React Native.
 - Jest: A JavaScript testing framework.
+- Pytest: A Python testing framework.
 - React Native Testing Library: A testing utility for React Native components.
 
 ## 📦 Getting Started
